@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-06-28T14:11:25.276Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="wJQdH3KNa1PQad-fKowI" version="24.6.1" type="device" pages="2">
+<mxfile host="Electron" modified="2024-06-28T14:13:06.827Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="lJtQ9X_NG5IZEqtDZAco" version="24.6.1" type="device" pages="2">
   <diagram id="ry-10qStgprq8L2oOEOW" name="Datetime">
     <mxGraphModel dx="1235" dy="731" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" background="#000000" math="0" shadow="0">
       <root>
@@ -39,6 +39,9 @@
         </mxCell>
         <mxCell id="bgXajhgErnMEfA2u1EGg-2" value="&amp;lt;--- This is going to require type stripping&lt;div&gt;and static casting on the other end&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="1220" y="620" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="bgXajhgErnMEfA2u1EGg-3" value="&amp;lt;--- Class can have method that does&lt;div&gt;casting natively&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1460" y="630" width="220" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
