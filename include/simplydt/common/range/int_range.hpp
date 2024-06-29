@@ -9,6 +9,38 @@
 #include<ostream>
 
 
+
+/* /// \\\ /// \\\ /// \\\ /// | DEV NOTES | \\\ /// \\\ /// \\\ /// \\\ *\
+* 
+* > RULES GOVERNED IN THIS CLASS:
+*	-> A range may only consist of positive integers.
+*	-> All member methods assume attributes to be valid.
+*	-> A ranges starting integer can never be greater than
+*	   its ending integer.
+*	-> A ranges ending integer can never be less than
+*	   its starting integer.
+*	-> A range is inclusive of its edges.
+*	-> A ranges position can never be outside the bounds
+*	   of the ranges starting and ending integers.
+*		> (Except in case of boundless ranges)
+*		> (If a non-boundless range seeks to exceed its
+*		  ending integer, it will wrap back around to the
+*		  starting integer)
+*	-> A range that is not given a starting integer or a
+*	   starting position defaults to 0.
+*	-> A range with an equal starting and ending integer
+*	   constitutes a boundless range starting from the
+*	   given equal value.
+*	-> A boundless range can only account for integers that
+*	   can be represented with the amount of bytes available
+*	   to a given integer type.
+*		> (If a boundless range seeks to exceed an integer
+*		  types maximum, it will overflow!)
+* 
+\* /// \\\ /// \\\ /// \\\ ///    | END |    \\\ /// \\\ /// \\\ /// \\\ */
+
+
+
 /* Range of positive integers */
 template <typename UInt_T>
 class Range {
@@ -133,7 +165,7 @@ public:
 		return this->m_rangeEnd;
 	}
 
-	/* Returns total number of integers within range limitations */
+	/* Returns total number of integers within range limitation */
 	UInt_T rangeSize() const noexcept
 	{
 		return (UInt_T)(this->rangeEnd() - this->m_rangeStart + 1);// +1 to convert 0-index
@@ -145,7 +177,7 @@ public:
 		return this->m_position;
 	}
 
-	/* Returns true if range is all positive integers */
+	/* Returns true if range is all positive integers within limitation */
 	bool isBoundless() const noexcept
 	{
 		return (this->m_rangeStart == this->m_rangeEnd);
@@ -445,6 +477,8 @@ private:
 		// Start position is higher than end but range is NOT boundless
 		if (this->m_position > this->m_rangeEnd && !this->isBoundless())
 			this->reset();
+		
+		// WHAT ABOUT POSITION AND RANGE START???
 	}
 
 };
