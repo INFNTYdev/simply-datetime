@@ -5,6 +5,7 @@
 
 
 #include<utility>
+#include<limits>
 
 
 /* Range of positive integers */
@@ -12,31 +13,31 @@ template <typename UInt_T>
 class Range {
 
 public:
-	/* Integer range from start to stop starting at position */
+	/* Integer range from start to stop, starting at position */
 	Range(UInt_T start, UInt_T stop, UInt_T position) noexcept
 		: m_rangeStart{ start },
 		m_rangeEnd{ stop },
 		m_position{ position }
 	{
-		//
+		this->normalizeAttributes();
 	}
 
-	/* Integer range from start to stop starting at 0 */
+	/* Integer range from start to stop, starting at 0 */
 	Range(UInt_T start, UInt_T stop) noexcept
 		: m_rangeStart{ start },
 		m_rangeEnd{ stop },
 		m_position{ start }
 	{
-		//
+		this->normalizeAttributes();
 	}
 
-	/* Integer range from 0 to stop starting at 0 */
+	/* Integer range from 0 to stop, starting at 0 */
 	Range(UInt_T stop) noexcept
 		: m_rangeStart{ (UInt_T)0 },
 		m_rangeEnd{ stop },
 		m_position{ (UInt_T)0 }
 	{
-		//
+		this->normalizeAttributes();
 	}
 
 	/* Copy constructor */
@@ -45,7 +46,7 @@ public:
 		m_rangeEnd{ range.m_rangeEnd },
 		m_position{ range.m_position }
 	{
-		//
+		this->normalizeAttributes();
 	}
 
 	/* Move constructor */
@@ -54,12 +55,12 @@ public:
 		m_rangeEnd{ static_cast<UInt_T&&>(range.m_rangeEnd) },
 		m_position{ static_cast<UInt_T&&>(range.m_position) }
 	{
-		//
+		this->normalizeAttributes();
 	}
 
 	~Range() = default;
 
-	/* Range position translation results */
+	/* Range position translation results (laps, position) */
 	using TranslateResult = std::pair<UInt_T, UInt_T>;
 
 	/* Range translation modes */
@@ -69,57 +70,310 @@ public:
 		NEGATIVE,// Negative translation
 	};
 
-	Range& operator=(const Range<UInt_T>& range) noexcept;
-	Range& operator=(Range<UInt_T>&& r_range) noexcept;
+	Range& operator=(const Range<UInt_T>& range) noexcept
+	{
+		if (this == &range)
+			return *this;
+		
+		this->m_rangeStart = range.m_rangeStart;
+		this->m_rangeEnd = range.m_rangeEnd;
+		this->m_position = range.m_position;
+
+		return *this;
+	}
+
+	Range& operator=(Range<UInt_T>&& r_range) noexcept
+	{
+		if (this == &r_range)
+			return *this;
+		
+		this->m_rangeStart = std::move(r_range.m_rangeStart);
+		this->m_rangeEnd = std::move(r_range.m_rangeEnd);
+		this->m_position = std::move(r_range.m_position);
+
+		return *this;
+	}
+
 	/* Returns true if both ranges have same start, end, and position */
-	bool operator==(const Range<UInt_T>& range) const noexcept;
+	bool operator==(const Range<UInt_T>& range) const noexcept
+	{
+		bool matchingStart{ (this->m_rangeStart == range.m_rangeStart) };
+		bool matchingEnd{ (this->m_rangeEnd == range.m_rangeEnd) };
+		bool matchingPos{ (this->m_position == range.m_position) };
+
+		return (matchingStart && matchingEnd && matchingPos);
+	}
+
 	/* Returns true if provided integer is within range bounds */
-	bool operator[](UInt_T integer) const noexcept;
+	bool operator[](UInt_T integer) const noexcept
+	{
+		return this->isWithinRange(integer);
+	}
 
 	/* Returns range starting integer */
-	const UInt_T& rangeStart() const noexcept;
+	const UInt_T& rangeStart() const noexcept
+	{
+		return this->m_rangeStart;
+	}
+
 	/* Returns range ending integer */
-	const UInt_T& rangeEnd() const noexcept;
+	const UInt_T rangeEnd() const noexcept
+	{
+		if (this->m_rangeStart == this->m_rangeEnd)
+			return std::numeric_limits<UInt_T>::max();
+
+		return this->m_rangeEnd;
+	}
+
+	/* Returns total number of integers within range limitations */
+	UInt_T rangeSize() const noexcept
+	{
+		return (UInt_T)(this->rangeEnd() - this->m_rangeStart + 1);// +1 to convert 0-index
+	}
+
 	/* Returns range position */
-	const UInt_T& position() const noexcept;
+	const UInt_T& position() const noexcept
+	{
+		return this->m_position;
+	}
+
 	/* Returns true if range is all positive integers */
-	bool isBoundless() const noexcept;
+	bool isBoundless() const noexcept
+	{
+		return (this->m_rangeStart == this->m_rangeEnd);
+	}
+
 	/* Returns true if provided integer is within range bounds */
-	bool isWithinRange(UInt_T integer) const noexcept;
+	bool isWithinRange(UInt_T integer) const noexcept
+	{
+		if (this->isBoundless() && integer >= this->m_rangeStart)
+			return true;
+		
+		if (integer < this->m_rangeStart)
+			return false;
+		
+		if (integer > this->rangeEnd())
+			return false;
+		
+		return true;
+	}
+
 	/* Returns total number of units position is from range start */
-	UInt_T displacement() const noexcept;
+	UInt_T displacement() const noexcept
+	{
+		if (this->isBoundless())
+			return (UInt_T)(this->m_position - this->m_rangeStart);
+
+		return (UInt_T)(this->m_position - this->m_rangeStart);
+	}
+
 	/* Returns total number of units until range position is at provided position */
-	UInt_T untilPosition(UInt_T pos) const noexcept;
+	UInt_T untilPosition(UInt_T pos) const noexcept
+	{
+		if (!this->isWithinRange(pos))
+			return (UInt_T)0;
+
+		if (pos == this->m_position)
+			return (UInt_T)0;
+		
+		if (pos < this->m_position) {
+			UInt_T remain{ (UInt_T)((this->rangeEnd() - this->m_position) + 1) };// +1 for wrap around
+			UInt_T gap{ (UInt_T)(pos - this->m_rangeStart) };
+
+			return (UInt_T)(remain + gap);
+		}
+		else
+			return (UInt_T)(pos - this->m_position);
+	}
+
+	/* Returns total number of units until position is at range start */
+	UInt_T untilStart() const noexcept
+	{
+		return this->untilPosition(this->m_rangeStart);
+	}
+
 	/* Returns total number of units until position is at range end */
-	UInt_T untilEnd() const noexcept;
+	UInt_T untilEnd() const noexcept
+	{
+		return this->untilPosition(this->rangeEnd());
+	}
+	
 	/* Returns true if range position is at range start */
-	bool isAtStart() const noexcept;
+	bool isAtStart() const noexcept
+	{
+		return (this->m_position == this->m_rangeStart);
+	}
+
 	/* Returns true if range position is at range end */
-	bool isAtEnd() const noexcept;
+	bool isAtEnd() const noexcept
+	{
+		return (this->m_position == this->rangeEnd());
+	}
+
 	/* Returns true if provided units overflow range position in positive direction */
-	bool causesOverflow(UInt_T add_units) const noexcept;
+	bool causesOverflow(UInt_T add_units) const noexcept
+	{
+		if (add_units == (UInt_T)0)
+			return false;
+
+		if (this->isAtEnd())
+			return true;
+		
+		if (this->untilEnd() < add_units)
+			return true;
+
+		return false;
+	}
+
 	/* Returns true if provided units overflow range position in negative direction */
-	bool causesUnderflow(UInt_T add_units) const noexcept;
+	bool causesUnderflow(UInt_T add_units) const noexcept
+	{
+		if (add_units == (UInt_T)0)
+			return false;
+
+		if (this->isAtStart())
+			return true;
+		
+		if (this->displacement() < add_units)
+			return true;
+
+		return false;
+	}
+
 	/* Returns true if provided units overflow range position in either direction */
-	bool causesRangeOverflow(UInt_T add_units) const noexcept;
+	bool causesRangeOverflow(UInt_T add_units) const noexcept
+	{
+		return (this->causesOverflow(add_units) || this->causesUnderflow(add_units));
+	}
+
 	/* Returns calculated range position translation */
-	TranslateResult calculateTranslation(Translate direction, UInt_T add_units) const noexcept;
+	TranslateResult calculateTranslation(Translate direction, UInt_T add_units) const noexcept
+	{
+		UInt_T laps{ 0 };
+		UInt_T position{ this->m_position };
+
+		if (add_units == (UInt_T)0 || direction == NEUTRAL)
+			return TranslateResult{ laps, position };
+
+		/*************************\
+		* AI GENERATED CODE BELOW *
+		\*************************/
+
+		switch (direction) {
+		// Positive translation
+		case POSITIVE:
+			position += add_units;
+
+			laps = (UInt_T)(
+				(position - this->m_rangeStart) / this->rangeSize()
+			);
+
+			position = (
+				this->m_rangeStart + (position - this->m_rangeStart) % this->rangeSize()
+			);
+
+			return TranslateResult{ laps, position };
+
+
+		// Negative translation
+		case NEGATIVE:
+			if (position < this->m_rangeStart + add_units) {
+				laps = (
+					1 + (this->m_rangeStart + add_units - position) / this->rangeSize()
+				);
+
+				position = (
+					this->rangeEnd() - (this->m_rangeStart + add_units - position)
+					% this->rangeSize()
+				);
+			}
+			else
+				position -= add_units;
+
+			return TranslateResult{ laps, position };
+		}
+
+		/*************************\
+		* AI GENERATED CODE ABOVE *
+		\*************************/
+
+		return TranslateResult{ laps, position };
+	}
+
 	/* Returns calculated positive range position translation */
-	TranslateResult calculatePositiveTrans(UInt_T add_units) const noexcept;
+	TranslateResult calculatePositiveTrans(UInt_T add_units) const noexcept
+	{
+		return this->calculateTranslation(Translate::POSITIVE, add_units);
+	}
+
 	/* Returns calculated negative range position translation */
-	TranslateResult calculateNegativeTrans(UInt_T add_units) const noexcept;
+	TranslateResult calculateNegativeTrans(UInt_T add_units) const noexcept
+	{
+		return this->calculateTranslation(Translate::NEGATIVE, add_units);
+	}
+
+	/* Set range position */
+	bool setPosition(UInt_T pos) noexcept
+	{
+		if (!this->isWithinRange(pos))
+			return false;
+
+		this->m_position = pos;
+
+		return true;
+	}
+
 	/* Translate range position in provided direction with provided units and return laps */
-	UInt_T translate(Translate direction, UInt_T add_units) noexcept;
+	UInt_T translate(Translate direction, UInt_T add_units) noexcept
+	{
+		TranslateResult destination{
+			this->calculateTranslation(direction, add_units)
+		};
+
+		this->setPosition(destination.second);
+
+		return destination.first;
+	}
+
 	/* Set range starting integer */
-	void setRangeStart(UInt_T start) noexcept;
+	bool setRangeStart(UInt_T start) noexcept
+	{
+		if (!this->isValidStartingInteger(start))
+			return false;
+		
+		this->m_rangeStart = start;
+		
+		return true;
+	}
+
 	/* Set range ending integer */
-	void setRangeEnd(UInt_T stop) noexcept;
+	bool setRangeEnd(UInt_T stop) noexcept
+	{
+		if (!this->isValidEndingInteger(stop))
+			return false;
+		
+		this->m_rangeEnd = stop;
+		
+		return true;
+	}
+
 	/* Increase range position provided number of units */
-	void increment(UInt_T add_units = (UInt_T)1) noexcept;
+	void increment(UInt_T add_units = (UInt_T)1) noexcept
+	{
+		this->translate(Translate::POSITIVE, add_units);
+	}
+
 	/* Decrease range position provided number of units */
-	void decrement(UInt_T add_units = (UInt_T)1) noexcept;
+	void decrement(UInt_T add_units = (UInt_T)1) noexcept
+	{
+		this->translate(Translate::NEGATIVE, add_units);
+	}
+
 	/* Reset range position to starting integer */
-	void reset() noexcept;
+	void reset() noexcept
+	{
+		this->setPosition(this->m_rangeStart);
+	}
 
 
 private:
@@ -127,10 +381,54 @@ private:
 	UInt_T m_rangeEnd;
 	UInt_T m_position;
 
-	bool isValidStartingInteger(UInt_T integer) const noexcept;
-	bool isValidEndingInteger(UInt_T integer) const noexcept;
-	bool causesIntegerTypeOverflow(UInt_T add_units) const noexcept;
-	void normalizeAttributes() noexcept;
+	bool isValidStartingInteger(UInt_T integer) const noexcept
+	{
+		if (integer == (UInt_T)0)
+			return true;
+
+		if (integer > this->m_rangeEnd)
+			return false;
+
+		if (integer > this->m_position)
+			return false;
+
+		return true;
+	}
+
+	bool isValidEndingInteger(UInt_T integer) const noexcept
+	{
+		if (integer == (UInt_T)0)
+			return true;
+
+		if (integer < this->m_rangeStart)
+			return false;
+
+		if (this->m_position > integer)
+			return false;
+
+		return true;
+	}
+
+	bool causesIntegerTypeOverflow(UInt_T add_units) const noexcept
+	{
+		// If it's not boundless then impossible
+		if (!this->isBoundless())
+			return false;
+
+		UInt_T untilLimit{ (std::numeric_limits<UInt_T>::max() - this->position()) };
+
+		return (untilLimit < add_units);
+	}
+
+	void normalizeAttributes() noexcept
+	{
+		if (this->m_rangeStart > this->m_rangeEnd)
+			this->m_rangeStart = (UInt_T)0;
+		
+		// Start position is higher than end but range is NOT boundless
+		if (this->m_position > this->m_rangeEnd && !this->isBoundless())
+			this->reset();
+	}
 
 };
 
