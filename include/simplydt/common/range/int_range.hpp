@@ -127,6 +127,9 @@ private:
 	UInt_T m_rangeEnd;
 	UInt_T m_position;
 
+	bool isValidStartingInteger(UInt_T integer) const noexcept;
+	bool isValidEndingInteger(UInt_T integer) const noexcept;
+	bool causesIntegerTypeOverflow(UInt_T add_units) const noexcept;
 	void normalizeAttributes() noexcept;
 
 };
