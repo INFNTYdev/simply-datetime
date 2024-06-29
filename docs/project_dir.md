@@ -31,6 +31,10 @@ simply-datetime/
 │       │
 │       ├── common/
 │       │   │
+│       │   ├── interval/
+│       │   │
+│       │   ├── linked_sequence/
+│       │   │
 │       │   └── range/
 │       │
 │       ├── date/
