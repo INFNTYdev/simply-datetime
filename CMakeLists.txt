@@ -23,6 +23,7 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # Build
 add_subdirectory(external)
+add_subdirectory(src)
 
 
 
