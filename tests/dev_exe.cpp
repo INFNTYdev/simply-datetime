@@ -9,12 +9,12 @@
 // Need safety checks when adding numbers to make sure they don't hit the ceiling
 
 
-void rangeTranslateOut(Range<uint16_t>& range, uint16_t units)
+void rangeTranslateOut(Range<uint32_t>& range, uint32_t units)
 {
 	//
-	Range<uint16_t>::TranslateResult result{
+	Range<uint32_t>::TranslateResult result{
 		range.calculateTranslation(
-			Range<uint16_t>::POSITIVE,
+			Range<uint32_t>::POSITIVE,
 			units
 		)
 	};
@@ -24,6 +24,7 @@ void rangeTranslateOut(Range<uint16_t>& range, uint16_t units)
 		<< "\nTranslating +" << units << " units = "
 		<< "(" << result.first << " laps, "
 		<< "position " << result.second << ")"
+		<< "\n\nOUT: " << range
 		<< std::endl;
 }
 
@@ -31,9 +32,9 @@ void rangeTranslateOut(Range<uint16_t>& range, uint16_t units)
 int main(size_t argc, char* argv[])
 {
 	//
-	Range<uint16_t> demo{ Range<uint16_t>(0, 4) };
+	Range<uint32_t> demo{ Range<uint32_t>(1) };
 
-	rangeTranslateOut(demo, 10);
+	rangeTranslateOut(demo, 16);
 
 	return NULL;
 }

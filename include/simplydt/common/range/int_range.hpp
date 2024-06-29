@@ -6,6 +6,7 @@
 
 #include<utility>
 #include<limits>
+#include<ostream>
 
 
 /* Range of positive integers */
@@ -69,6 +70,13 @@ public:
 		POSITIVE,// Positive translation
 		NEGATIVE,// Negative translation
 	};
+
+	friend std::ostream& operator<<(std::ostream& os, const Range& range) noexcept
+	{
+		os << '[' << range.m_rangeStart << " - " << range.rangeEnd() << ']';
+
+		return os;
+	}
 
 	Range& operator=(const Range<UInt_T>& range) noexcept
 	{
@@ -254,6 +262,13 @@ public:
 
 		if (add_units == (UInt_T)0 || direction == NEUTRAL)
 			return TranslateResult{ laps, position };
+
+		if (this->isBoundless()) {
+			// Not calculating laps here because this is boundless
+			position += add_units;
+
+			return TranslateResult{ laps, position };
+		}
 
 		/*************************\
 		* AI GENERATED CODE BELOW *
