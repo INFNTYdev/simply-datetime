@@ -59,9 +59,9 @@ public:
 		this->normalizeAttributes();
 	}
 
-	~Range() = default;
+	virtual ~Range() = default;
 
-	/* Range position translation results (laps, position) */
+	/* Range position translation result (laps, position) */
 	using TranslateResult = std::pair<UInt_T, UInt_T>;
 
 	/* Range translation modes */
@@ -102,7 +102,7 @@ public:
 		return *this;
 	}
 
-	/* Returns true if both ranges have same start, end, and position */
+	/* Returns true if both ranges have same start, end, and position attributes */
 	bool operator==(const Range<UInt_T>& range) const noexcept
 	{
 		bool matchingStart{ (this->m_rangeStart == range.m_rangeStart) };
@@ -270,9 +270,10 @@ public:
 			return TranslateResult{ laps, position };
 		}
 
-		/*************************\
-		* AI GENERATED CODE BELOW *
-		\*************************/
+
+		/*****************************************************************************\
+		*             vvv           AI GENERATED CODE BELOW           vvv             *
+		\*****************************************************************************/
 
 		switch (direction) {
 		// Positive translation
@@ -308,10 +309,11 @@ public:
 			return TranslateResult{ laps, position };
 		}
 
-		/*************************\
-		* AI GENERATED CODE ABOVE *
-		\*************************/
+		/*****************************************************************************\
+		*             ^^^           AI GENERATED CODE ABOVE           ^^^             *
+		\*****************************************************************************/
 
+		
 		return TranslateResult{ laps, position };
 	}
 
