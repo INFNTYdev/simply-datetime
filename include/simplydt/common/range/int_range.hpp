@@ -114,6 +114,12 @@ public:
 		return os;
 	}
 
+	/* Returns adopted integer type maximum representable value */
+	static size_t integerTypeMax() noexcept
+	{
+		return (size_t)std::numeric_limits<UInt_T>::max();
+	}
+
 	Range& operator=(const Range<UInt_T>& range) noexcept
 	{
 		if (this == &range)
@@ -164,7 +170,7 @@ public:
 	const UInt_T rangeEnd() const noexcept
 	{
 		if (this->m_rangeStart == this->m_rangeEnd)
-			return std::numeric_limits<UInt_T>::max();
+			return this->integerTypeMax();
 
 		return this->m_rangeEnd;
 	}
@@ -468,7 +474,7 @@ private:
 		if (!this->isBoundless())
 			return false;
 
-		UInt_T untilLimit{ (std::numeric_limits<UInt_T>::max() - this->position()) };
+		UInt_T untilLimit{ (this->integerTypeMax() - this->position()) };
 
 		return (untilLimit < add_units);
 	}
