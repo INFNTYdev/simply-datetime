@@ -13,6 +13,8 @@
 /* /// \\\ /// \\\ /// \\\ /// | DEV NOTES | \\\ /// \\\ /// \\\ /// \\\ *\
 * 
 * > RULES GOVERNED IN THIS CLASS:
+*	-> A range consist of a starting, ending, and position
+*	   integer.
 *	-> A range may only consist of positive integers.
 *	-> All member methods assume attributes to be valid.
 *	-> A ranges starting integer can never be greater than
@@ -23,11 +25,13 @@
 *	-> A ranges position can never be outside the bounds
 *	   of the ranges starting and ending integers.
 *		> (Except in case of boundless ranges)
-*		> (If a non-boundless range seeks to exceed its
-*		  ending integer, it will wrap back around to the
-*		  starting integer)
-*	-> A range that is not given a starting integer or a
-*	   starting position defaults to 0.
+*		> (If a non-boundless range position seeks to exceed
+*		  its ending integer, it will wrap back around to the
+*		  starting integer, the same vice versa)
+*	-> In the absence of a range constructor parameter, its
+*	   value will be defaulted to 0.
+*	-> An incorrectly constructed range will result in
+*	   normalization.
 *	-> A range with an equal starting and ending integer
 *	   constitutes a boundless range starting from the
 *	   given equal value.
@@ -297,6 +301,7 @@ public:
 
 		if (this->isBoundless()) {
 			// Not calculating laps here because this is boundless
+			// Boundless range overflows occur here
 			position += add_units;
 
 			return TranslateResult{ laps, position };
@@ -460,7 +465,6 @@ private:
 
 	bool causesIntegerTypeOverflow(UInt_T add_units) const noexcept
 	{
-		// If it's not boundless then impossible
 		if (!this->isBoundless())
 			return false;
 
@@ -474,11 +478,13 @@ private:
 		if (this->m_rangeStart > this->m_rangeEnd)
 			this->m_rangeStart = (UInt_T)0;
 		
-		// Start position is higher than end but range is NOT boundless
+		// Start position is greater than end but range is NOT boundless
 		if (this->m_position > this->m_rangeEnd && !this->isBoundless())
 			this->reset();
 		
-		// WHAT ABOUT POSITION AND RANGE START???
+		// Start position is less than start
+		if (this->m_position < this->m_rangeStart)
+			this->reset();
 	}
 
 };

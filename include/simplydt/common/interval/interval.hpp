@@ -6,7 +6,6 @@
 
 #include<string>
 
-
 #include"simplydt/common/range/int_range.hpp"
 
 
@@ -18,22 +17,93 @@ class Interval {
 	using TransResult = Range<UInt_T>::TranslateResult;
 	/* Interval translation modes */
 	using Trans = Range<UInt_T>::Translate;
+	/* Linked interval pointer */
+	using LinkedInterval = Interval<size_t>*;
 
 public:
-	Interval(UInt_T cmax, UInt_T cstart, UInt_T pos) noexcept;
-	Interval(UInt_T cmax, UInt_T cstart) noexcept;
-	Interval(UInt_T cmax) noexcept;
-	Interval(const Interval<UInt_T>& interval) noexcept;
-	Interval(Interval<UInt_T>&& r_interval) noexcept;
+	Interval(UInt_T cmax, UInt_T cstart, UInt_T pos) noexcept
+		: m_range{ cstart, cmax, pos },
+		m_preceding_ptr{ nullptr },
+		m_subsequent_ptr{ nullptr }
+	{
+		//
+	}
+
+	Interval(UInt_T cmax, UInt_T cstart) noexcept
+		: m_range{ cstart, cmax },
+		m_preceding_ptr{ nullptr },
+		m_subsequent_ptr{ nullptr }
+	{
+		//
+	}
+
+	Interval(UInt_T cmax) noexcept
+		: m_range{ cmax },
+		m_preceding_ptr{ nullptr },
+		m_subsequent_ptr{ nullptr }
+	{
+		//
+	}
+
+	Interval(const Interval<UInt_T>& interval) noexcept
+		: m_range{ interval.m_range },
+		m_preceding_ptr{ nullptr },
+		m_subsequent_ptr{ nullptr }
+	{
+		//
+	}
+
+	Interval(Interval<UInt_T>&& r_interval) noexcept
+		: m_range{ std::move(r_interval.m_range) },
+		m_preceding_ptr{ std::move(r_interval.m_preceding_ptr) },
+		m_subsequent_ptr{ std::move(r_interval.m_subsequent_ptr) }
+	{
+		//
+	}
+
 	virtual ~Interval() = default;
 
-	friend std::ostream& operator<<(std::ostream& os, const Interval<UInt_T>& interval) noexcept;
+	friend std::ostream& operator<<(std::ostream& os, const Interval<UInt_T>& interval) noexcept
+	{
+		os << interval.toStr();
 
-	Interval& operator=(const Interval<UInt_T>& interval) noexcept;
-	Interval& operator=(Interval<UInt_T>&& r_interval) noexcept;
+		return os;
+	}
+
+	Interval& operator=(const Interval<UInt_T>& interval) noexcept
+	{
+		if (this == &interval)
+			return *this;
+		
+		// INCOMPLETE!
+		// What does it mean to set one interval equal to another existing?
+
+		return *this;
+	}
+
+	Interval& operator=(Interval<UInt_T>&& r_interval) noexcept
+	{
+		if (this == &r_interval)
+			return *this;
+		
+		this->m_range = std::move(r_interval.m_range);
+		this->m_preceding_ptr = nullptr;
+		this->m_subsequent_ptr = nullptr;
+
+		return *this;
+	}
 	
 	/* Returns true if both intervals have same start, end, and position attributes */
-	bool operator==(const Interval<UInt_T>& interval) noexcept;
+	bool operator==(const Interval<UInt_T>& interval) const noexcept
+	{
+		if (!this->isSameRange(interval))
+			return false;
+		
+		if (this->m_range.position() != interval.m_range.position())
+			return false;
+		
+		return true;
+	}
 
 	/* Returns interval starting position */
 	const UInt_T& startPosition() const noexcept;
@@ -43,7 +113,7 @@ public:
 	const UInt_T& position() const noexcept;
 	/* Returns total number of integers within interval limitations */
 	UInt_T size() const noexcept;
-	/* Returns true if interval counts all positive integers */
+	/* Returns true if interval counts all positive integers within limitation */
 	bool isBoundless() const noexcept;
 	/* Returns true if interval is linked with a leading interval */
 	bool hasPrecedingInterval() const noexcept;
@@ -61,10 +131,16 @@ public:
 	bool isAtStart() const noexcept;
 	/* Returns true if position is at ending position */
 	bool isAtThreshold() const noexcept;
+
 	/* Returns string representation of interval position */
 	std::string toStr() const noexcept;
+	/* Returns true if both intervals have same starting and stoping positions */
+	template <typename Other_UInt_T>
+	bool isSameRange(const Interval<Other_UInt_T>& interval) const noexcept;
 	/* Link this interval with provided leading interval */
-	void linkPrecedingInterval(Interval<UInt_T>& interval) noexcept;
+	template <typename Other_UInt_T>
+	void linkPrecedingInterval(Interval<Other_UInt_T>& interval) noexcept;
+
 	/* Set interval position */
 	bool setPosition(UInt_T pos) noexcept;
 	/* Set linked preceding interval position */
@@ -89,16 +165,24 @@ public:
 	void doSubsequentDisplace(Trans trans, UInt_T units) noexcept;
 	/* Increase position provided number of units */
 	void increment(UInt_T units = (UInt_T)1) noexcept;
+	/* Increase linked preceding interval position provided number of units */
+	void doPrecedingIncrement(UInt_T units = (UInt_T)1) noexcept;
+	/* Increase linked subsequent interval position provided number of units */
+	void doSubsequentIncrement(UInt_T units = (UInt_T)1) noexcept;
 	/* Decrease position provided number of units */
 	void decrement(UInt_T units = (UInt_T)1) noexcept;
+	/* Decrease linked preceding interval position provided number of units */
+	void doPrecedingDecrement(UInt_T units = (UInt_T)1) noexcept;
+	/* Decrease linked subsequent interval position provided number of units */
+	void doSubsequentDecrement(UInt_T units = (UInt_T)1) noexcept;
 	/* Reset interval position to starting position */
 	void reset() noexcept;
 
 
 private:
 	Range<UInt_T> m_range;
-	Range<UInt_T>* m_preceding_ptr;
-	Range<UInt_T>* m_subsequent_ptr;
+	LinkedInterval m_preceding_ptr;
+	LinkedInterval m_subsequent_ptr;
 
 	void lap(Trans trans, UInt_T lap_units) noexcept;
 
