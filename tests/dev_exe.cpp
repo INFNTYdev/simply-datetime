@@ -2,13 +2,14 @@
 #include<iostream>
 
 // Developer Includes:
-#include"simplydt/datetime/date/date_interval.hpp"
-#include"simplydt/datetime/time/time_interval.hpp"
-#include"simplydt/duration/duration_interval.hpp"
-
 #include"simplydt/datetime/date/unit/dt_year.hpp"
 #include"simplydt/datetime/date/unit/dt_month.hpp"
 #include"simplydt/datetime/date/unit/dt_day.hpp"
+
+#include"simplydt/datetime/time/unit/dt_hour.hpp"
+#include"simplydt/datetime/time/unit/dt_minute.hpp"
+#include"simplydt/datetime/time/unit/dt_second.hpp"
+#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
 
 
@@ -17,28 +18,46 @@
 
 
 
+void datetimeOut(Year& year, Month& month, Day& day, Hour& hr, Minute& min, Second& sec)
+{
+	std::cout << "\nDatetime: "
+		<< day.getDayOfWeek() << ", "
+		<< month.toDoubleDigitStr() << '/'
+		<< day.toDoubleDigitStr() << '/'
+		<< year << ' '
+		<< hr.toDoubleDigitStr() << ':'
+		<< min.toDoubleDigitStr() << ':'
+		<< sec.toDoubleDigitStr()
+		<< ' ' << hr.getPhaseStr();
+}
+
+
 int main(size_t argc, char* argv[])
 {
 	//
-	Day day{ 1 };
-	Month month{ 7 };
 	Year year{ 2024 };
+	Month month{ 7 };
+	Day day{ 1 };
 
+	Hour hour{ 10 };
+	Minute minute{ 15 };
+	Second second{ 23 };
+	Millisecond ms{ NULL };
+
+	ms.linkPrecedingInterval(second);
+	second.linkPrecedingInterval(minute);
+	minute.linkPrecedingInterval(hour);
+	hour.linkPrecedingInterval(day);
 	day.linkPrecedingInterval(month);
 	month.linkPrecedingInterval(year);
 
-	while (year.position() != 2025) {
+	//
 
-		if (day.isAtStart()) {
-			std::cout << "\n\n" << month.getName();
-		}
+	while (hour.position() != 15) {
 
-		std::cout << "\nDate: "
-			<< month.toDoubleDigitStr() << '/'
-			<< day.toDoubleDigitStr() << '/'
-			<< year << " | " << day.getDayOfWeek();
+		datetimeOut(year, month, day, hour, minute, second);
 
-		day.increment();
+		minute.increment(5);
 
 	}
 

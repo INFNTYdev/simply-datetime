@@ -61,6 +61,8 @@ public:
 
     DateInterval& operator=(const DateInterval& date_interval) noexcept;
     DateInterval& operator=(DateInterval&& date_interval) noexcept;
+
+    /* Returns true if both date intervals have same unit of measure and position attributes */
     bool operator==(const DateInterval& date_interval) noexcept;
 
     /* Returns date interval unit of measure */
