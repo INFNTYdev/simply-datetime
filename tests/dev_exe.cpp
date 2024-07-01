@@ -21,13 +21,13 @@
 void datetimeOut(Year& year, Month& month, Day& day, Hour& hr, Minute& min, Second& sec)
 {
 	std::cout << "\nDatetime: "
+		<< day.getDayOfWeek() << ", "
 		<< month.toDoubleDigitStr() << '/'
 		<< day.toDoubleDigitStr() << '/'
 		<< year << ' '
 		<< hr.toDoubleDigitStr() << ':'
 		<< min.toDoubleDigitStr() << ':'
-		<< sec.toDoubleDigitStr()
-		<< '\n';
+		<< sec.toDoubleDigitStr();
 }
 
 
