@@ -107,6 +107,20 @@ public:
 		return true;
 	}
 
+	/* Returns true if right-side interval position is greater than left-side position */
+	template <typename Other_UInt_T>
+	bool operator<(const Interval<Other_UInt_T>& interval) const noexcept
+	{
+		return this->isAfter(interval);
+	}
+
+	/* Returns true if right-side interval position is less than left-side position */
+	template <typename Other_UInt_T>
+	bool operator>(const Interval<Other_UInt_T>& interval) const noexcept
+	{
+		return this->isBefore(interval);
+	}
+
 	/* Returns interval starting position */
 	const UInt_T& startPosition() const noexcept
 	{
@@ -161,6 +175,12 @@ public:
 		return this->m_range.untilPosition(pos);
 	}
 
+	/* Returns total number of units until position is at provided intervals position */
+	UInt_T untilPosition(const Interval<UInt_T>& interval) const noexcept
+	{
+		return this->m_range.untilPosition(interval.position());
+	}
+
 	/* Returns total number of units until position is at starting position */
 	UInt_T untilStart() const noexcept
 	{
@@ -202,6 +222,20 @@ public:
 			return false;
 		
 		return true;
+	}
+
+	/* Returns true if provided intervals position is greater than this position */
+	template <typename Other_UInt_T>
+	bool isBefore(const Interval<Other_UInt_T>& interval) const noexcept
+	{
+		return ((size_t)this->m_range.position() < (size_t)interval.m_range.position());
+	}
+
+	/* Returns true if provided intervals position is less than this position */
+	template <typename Other_UInt_T>
+	bool isAfter(const Interval<Other_UInt_T>& interval) const noexcept
+	{
+		return ((size_t)this->m_range.position() > (size_t)interval.m_range.position());
 	}
 
 	/* Link this interval with provided leading interval */
