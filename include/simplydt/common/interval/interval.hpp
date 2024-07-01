@@ -75,8 +75,9 @@ public:
 		if (this == &interval)
 			return *this;
 		
-		// INCOMPLETE!
-		// What does it mean to set one interval equal to another existing?
+		this->m_range = interval.m_range;
+		this->m_preceding_ptr = nullptr;
+		this->m_subsequent_ptr = nullptr;
 
 		return *this;
 	}
