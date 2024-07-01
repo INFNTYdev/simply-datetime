@@ -16,6 +16,7 @@
 int main(size_t argc, char* argv[])
 {
 	//
+	DateInterval demo{ DateInterval::DAY, (uint16_t)0 };
 
 	return NULL;
 }
