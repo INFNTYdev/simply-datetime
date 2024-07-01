@@ -2,7 +2,7 @@
 #include<iostream>
 
 // Developer Includes:
-#include"simplydt/common/range/int_range.hpp"
+#include"simplydt/common/interval/interval.hpp"
 
 
 
@@ -14,6 +14,25 @@
 int main(size_t argc, char* argv[])
 {
 	//
+	Interval<uint16_t> milliseconds{ 999 };
+	Interval<uint16_t> seconds{ 59 };
+	Interval<uint16_t> minutes{ 59 };
+	Interval<uint16_t> hours{ 23 };
+
+	milliseconds.linkPrecedingInterval(seconds);
+	seconds.linkPrecedingInterval(minutes);
+	minutes.linkPrecedingInterval(hours);
+
+	
+	//
+	while (minutes.position() != 2) {
+
+		std::cout << "\n Time: "
+			<< hours << ':' << minutes << ':' << seconds;
+
+		seconds.increment(2);
+
+	}
 
 	return NULL;
 }

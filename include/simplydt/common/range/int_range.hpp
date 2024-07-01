@@ -9,6 +9,42 @@
 #include<ostream>
 
 
+
+/* /// \\\ /// \\\ /// \\\ /// | DEV NOTES | \\\ /// \\\ /// \\\ /// \\\ *\
+* 
+* > RULES GOVERNED IN THIS CLASS:
+*	-> A range consist of a starting, ending, and position
+*	   integer.
+*	-> A range may only consist of positive integers.
+*	-> All member methods assume attributes to be valid.
+*	-> A ranges starting integer can never be greater than
+*	   its ending integer.
+*	-> A ranges ending integer can never be less than
+*	   its starting integer.
+*	-> A range is inclusive of its edges.
+*	-> A ranges position can never be outside the bounds
+*	   of the ranges starting and ending integers.
+*		> (Except in case of boundless ranges)
+*		> (If a non-boundless range position seeks to exceed
+*		  its ending integer, it will wrap back around to the
+*		  starting integer, the same vice versa)
+*	-> In the absence of a range constructor parameter, its
+*	   value will be defaulted to 0.
+*	-> An incorrectly constructed range will result in
+*	   normalization.
+*	-> A range with an equal starting and ending integer
+*	   constitutes a boundless range starting from the
+*	   given equal value.
+*	-> A boundless range can only account for integers that
+*	   can be represented with the amount of bytes available
+*	   to a given integer type.
+*		> (If a boundless range seeks to exceed an integer
+*		  types maximum, it will overflow!)
+* 
+\* /// \\\ /// \\\ /// \\\ ///    | END |    \\\ /// \\\ /// \\\ /// \\\ */
+
+
+
 /* Range of positive integers */
 template <typename UInt_T>
 class Range {
@@ -59,9 +95,9 @@ public:
 		this->normalizeAttributes();
 	}
 
-	~Range() = default;
+	virtual ~Range() = default;
 
-	/* Range position translation results (laps, position) */
+	/* Range position translation result (laps, position) */
 	using TranslateResult = std::pair<UInt_T, UInt_T>;
 
 	/* Range translation modes */
@@ -76,6 +112,12 @@ public:
 		os << '[' << range.m_rangeStart << " - " << range.rangeEnd() << ']';
 
 		return os;
+	}
+
+	/* Returns adopted integer type maximum representable value */
+	static size_t integerTypeMax() noexcept
+	{
+		return (size_t)std::numeric_limits<UInt_T>::max();
 	}
 
 	Range& operator=(const Range<UInt_T>& range) noexcept
@@ -102,7 +144,7 @@ public:
 		return *this;
 	}
 
-	/* Returns true if both ranges have same start, end, and position */
+	/* Returns true if both ranges have same start, end, and position attributes */
 	bool operator==(const Range<UInt_T>& range) const noexcept
 	{
 		bool matchingStart{ (this->m_rangeStart == range.m_rangeStart) };
@@ -128,12 +170,12 @@ public:
 	const UInt_T rangeEnd() const noexcept
 	{
 		if (this->m_rangeStart == this->m_rangeEnd)
-			return std::numeric_limits<UInt_T>::max();
+			return this->integerTypeMax();
 
 		return this->m_rangeEnd;
 	}
 
-	/* Returns total number of integers within range limitations */
+	/* Returns total number of integers within range limitation */
 	UInt_T rangeSize() const noexcept
 	{
 		return (UInt_T)(this->rangeEnd() - this->m_rangeStart + 1);// +1 to convert 0-index
@@ -145,7 +187,7 @@ public:
 		return this->m_position;
 	}
 
-	/* Returns true if range is all positive integers */
+	/* Returns true if range is all positive integers within limitation */
 	bool isBoundless() const noexcept
 	{
 		return (this->m_rangeStart == this->m_rangeEnd);
@@ -265,14 +307,16 @@ public:
 
 		if (this->isBoundless()) {
 			// Not calculating laps here because this is boundless
+			// Boundless range overflows occur here
 			position += add_units;
 
 			return TranslateResult{ laps, position };
 		}
 
-		/*************************\
-		* AI GENERATED CODE BELOW *
-		\*************************/
+
+		/*****************************************************************************\
+		*             vvv           AI GENERATED CODE BELOW           vvv             *
+		\*****************************************************************************/
 
 		switch (direction) {
 		// Positive translation
@@ -308,10 +352,11 @@ public:
 			return TranslateResult{ laps, position };
 		}
 
-		/*************************\
-		* AI GENERATED CODE ABOVE *
-		\*************************/
+		/*****************************************************************************\
+		*             ^^^           AI GENERATED CODE ABOVE           ^^^             *
+		\*****************************************************************************/
 
+		
 		return TranslateResult{ laps, position };
 	}
 
@@ -426,11 +471,10 @@ private:
 
 	bool causesIntegerTypeOverflow(UInt_T add_units) const noexcept
 	{
-		// If it's not boundless then impossible
 		if (!this->isBoundless())
 			return false;
 
-		UInt_T untilLimit{ (std::numeric_limits<UInt_T>::max() - this->position()) };
+		UInt_T untilLimit{ (this->integerTypeMax() - this->position()) };
 
 		return (untilLimit < add_units);
 	}
@@ -440,8 +484,12 @@ private:
 		if (this->m_rangeStart > this->m_rangeEnd)
 			this->m_rangeStart = (UInt_T)0;
 		
-		// Start position is higher than end but range is NOT boundless
+		// Start position is greater than end but range is NOT boundless
 		if (this->m_position > this->m_rangeEnd && !this->isBoundless())
+			this->reset();
+		
+		// Start position is less than start
+		if (this->m_position < this->m_rangeStart)
 			this->reset();
 	}
 
