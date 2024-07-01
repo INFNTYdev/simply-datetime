@@ -18,7 +18,7 @@ public:
     Year(uint16_t value) noexcept
         : DateInterval{ DateInterval::YEAR, value }
     {
-        // There are still ways to get around this!
+        // There are still ways to get around this maybe?
         if (this->position() < YEAR_MIN)
             this->setPosition(YEAR_MIN);
     }

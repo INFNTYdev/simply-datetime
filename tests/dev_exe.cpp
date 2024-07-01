@@ -6,7 +6,10 @@
 #include"simplydt/datetime/date/unit/dt_month.hpp"
 #include"simplydt/datetime/date/unit/dt_day.hpp"
 
-#include"simplydt/datetime/time/time_interval.hpp"
+#include"simplydt/datetime/time/unit/dt_hour.hpp"
+#include"simplydt/datetime/time/unit/dt_minute.hpp"
+#include"simplydt/datetime/time/unit/dt_second.hpp"
+#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
 
 
@@ -18,7 +21,7 @@
 int main(size_t argc, char* argv[])
 {
 	//
-	TimeInterval demo{ TimeInterval::MINUTE, 30 };
+	Hour hour{ 10 };
 
 	return NULL;
 }
