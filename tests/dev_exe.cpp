@@ -27,7 +27,8 @@ void datetimeOut(Year& year, Month& month, Day& day, Hour& hr, Minute& min, Seco
 		<< year << ' '
 		<< hr.toDoubleDigitStr() << ':'
 		<< min.toDoubleDigitStr() << ':'
-		<< sec.toDoubleDigitStr();
+		<< sec.toDoubleDigitStr()
+		<< ' ' << hr.getPhaseStr();
 }
 
 
