@@ -2,7 +2,9 @@
 #include<iostream>
 
 // Developer Includes:
-#include"simplydt/common/interval/interval.hpp"
+#include"simplydt/datetime/date/date_interval.hpp"
+#include"simplydt/datetime/time/time_interval.hpp"
+#include"simplydt/duration/duration_interval.hpp"
 
 
 
