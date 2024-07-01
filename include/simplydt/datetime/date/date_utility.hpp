@@ -5,9 +5,43 @@
 
 
 #include<cstdint>
+#include<array>
 
 
 namespace simplydt {
+
+	namespace Month {
+
+		const std::array<const char*, 12> Months{
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December"
+		};
+
+	}
+
+	namespace Day {
+
+		const std::array<const char*, 7> DaysOfWeek{
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday"
+		};
+
+	}
 
 	/* Returns true if provided year is a leap year */
 	bool isLeapYear(uint16_t year) noexcept
@@ -123,6 +157,27 @@ namespace simplydt {
 		/*****************************************************************************\
 		*             ^^^           AI GENERATED CODE ABOVE           ^^^             *
 		\*****************************************************************************/
+	}
+
+	/* Returns day of week literal from provided date */
+	const char* getDayOfWeek(uint16_t year, uint16_t month, uint16_t day) noexcept
+	{
+		uint8_t index{ getDayOfWeekIndex(year, month, day) };
+
+		// As a fail safe
+		if (index > (uint8_t)6U)
+			index = (uint8_t)0U;
+
+		return Day::DaysOfWeek[index];
+	}
+
+	/* Returns month literal from provided month */
+	const char* getMonth(uint16_t month) noexcept
+	{
+		if (month > (uint16_t)12U || month == (uint16_t)0U)
+			month = (uint16_t)1U;
+
+		return Month::Months[(month - (uint16_t)1U)];
 	}
 
 }

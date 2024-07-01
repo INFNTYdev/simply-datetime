@@ -13,9 +13,6 @@
 template <typename UInt_T>
 class Interval {
 
-	/* Linked interval pointer */
-	using LinkedInterval = Interval<UInt_T>*;
-
 public:
 	/* Interval position translation result */
 	using TransResult = Range<UInt_T>::TranslateResult;
@@ -293,6 +290,24 @@ public:
 		return this->m_subsequent_ptr->position();
 	}
 
+	/* Set interval ending position */
+	bool setThreshold(UInt_T cmax) noexcept
+	{
+		return this->m_range.setRangeEnd(cmax);
+	}
+
+	/* Set linked preceding interval ending position */
+	bool setPrecedingThreshold(UInt_T cmax) noexcept
+	{
+		return this->m_preceding_ptr->setThreshold(cmax);
+	}
+
+	/* Set linked subsequent interval ending position */
+	bool setSubsequentThreshold(UInt_T cmax) noexcept
+	{
+		return this->m_subsequent_ptr->setThreshold(cmax);
+	}
+
 	/* Returns calculated interval position translation */
 	TransResult calculateTranslation(Trans trans, UInt_T units) const noexcept
 	{
@@ -398,6 +413,23 @@ public:
 	virtual void reset() noexcept
 	{
 		this->m_range.reset();
+	}
+
+
+protected:
+	/* Linked interval pointer */
+	using LinkedInterval = Interval<UInt_T>*;
+
+	/* Returns linked preceding interval */
+	LinkedInterval getPrecedingInterval() noexcept
+	{
+		return this->m_preceding_ptr;
+	}
+
+	/* Returns linked subsequent interval */
+	LinkedInterval getSubsequentInterval() noexcept
+	{
+		return this->m_subsequent_ptr;
 	}
 
 

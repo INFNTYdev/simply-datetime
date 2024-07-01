@@ -8,9 +8,11 @@
 #include"simplydt/datetime/date/date_utility.hpp"
 
 
+/* Datetime year */
 class Year : public DateInterval {
 
 public:
+    /* Year translation mode */
     using Trans = Interval<uint16_t>::Trans;
 
     Year(uint16_t value) noexcept
@@ -43,6 +45,7 @@ public:
         return simplydt::getYearInCentury(this->position());
     }
     
+    /* Set year value */
     template <typename UInt_T>
     bool setPosition(UInt_T pos) noexcept
     {
@@ -52,6 +55,7 @@ public:
         return Interval<uint16_t>::setPosition(pos);
     }
 
+    /* Displace year in provided direction with provided units */
     void displace(Trans trans, uint16_t units) noexcept
     {
         // Year does not respond to requests below the minimum
@@ -59,24 +63,43 @@ public:
             return;
 
         Interval<uint16_t>::displace(trans, units);
+
+        if (!this->hasSubsequentInterval())
+            return;
+        
+        if (!this->getSubsequentInterval()->hasSubsequentInterval())
+            return;
+
+        // Set new threshold on day interval
+        uint16_t newDayMax{
+            simplydt::getTotalDaysInMonth(
+                this->position(),// Year value
+                this->subsequentPosition()// Month value
+            )
+        };
+
+        // Need confirmation that this is logic-safe
+        this->getSubsequentInterval()->setSubsequentThreshold(newDayMax);
     }
 
+    /* Increase year value by provided amount of units */
     void increment(uint16_t units = (uint16_t)1U) noexcept
     {
         // Year does not respond to requests below the minimum
         if (this->getExpectedPosition(Trans::POSITIVE, units) < YEAR_MIN)
             return;
 
-        Interval<uint16_t>::increment(units);
+        this->displace(Trans::POSITIVE, units);
     }
 
+    /* Decrease year value by provided amount of units */
     void decrement(uint16_t units = (uint16_t)1U) noexcept
     {
         // Year does not respond to requests below the minimum
         if (this->getExpectedPosition(Trans::NEGATIVE, units) < YEAR_MIN)
             return;
 
-        Interval<uint16_t>::decrement(units);
+        this->displace(Trans::NEGATIVE, units);
     }
 
 
