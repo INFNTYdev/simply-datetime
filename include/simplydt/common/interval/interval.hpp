@@ -13,14 +13,15 @@
 template <typename UInt_T>
 class Interval {
 
-	/* Interval position translation result */
-	using TransResult = Range<UInt_T>::TranslateResult;
-	/* Interval translation modes */
-	using Trans = Range<UInt_T>::Translate;
 	/* Linked interval pointer */
 	using LinkedInterval = Interval<UInt_T>*;
 
 public:
+	/* Interval position translation result */
+	using TransResult = Range<UInt_T>::TranslateResult;
+	/* Interval translation modes */
+	using Trans = Range<UInt_T>::Translate;
+
 	Interval(UInt_T cmax, UInt_T cstart, UInt_T pos) noexcept
 		: m_range{ cstart, cmax, pos },
 		m_preceding_ptr{ nullptr },
@@ -251,7 +252,7 @@ public:
 	}
 
 	/* Set interval position */
-	bool setPosition(UInt_T pos) noexcept
+	virtual bool setPosition(UInt_T pos) noexcept
 	{
 		return this->m_range.setPosition(pos);
 	}
@@ -346,7 +347,7 @@ public:
 	}
 
 	/* Increase position provided number of units */
-	void increment(UInt_T units = (UInt_T)1) noexcept
+	virtual void increment(UInt_T units = (UInt_T)1) noexcept
 	{
 		this->displace(Trans::POSITIVE, units);
 	}
@@ -370,7 +371,7 @@ public:
 	}
 
 	/* Decrease position provided number of units */
-	void decrement(UInt_T units = (UInt_T)1) noexcept
+	virtual void decrement(UInt_T units = (UInt_T)1) noexcept
 	{
 		this->displace(Trans::NEGATIVE, units);
 	}
@@ -394,7 +395,7 @@ public:
 	}
 
 	/* Reset interval position to starting position */
-	void reset() noexcept
+	virtual void reset() noexcept
 	{
 		this->m_range.reset();
 	}
