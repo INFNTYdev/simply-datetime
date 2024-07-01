@@ -37,9 +37,11 @@ simply-datetime/
 │       │   │
 │       │   └── range/
 │       │
-│       ├── date/
-│       │
-│       └── time/
+│       └── datetime/
+│           │
+│           ├── date/
+│           │
+│           └── time/
 │
 ├── src/
 │

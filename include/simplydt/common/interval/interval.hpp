@@ -275,19 +275,19 @@ public:
 	}
 
 	/* Returns linked preceding interval position */
-	size_t precedingPosition() const noexcept
+	UInt_T precedingPosition() const noexcept
 	{
 		if (!this->hasPrecedingInterval())
-			return (size_t)0;
+			return (UInt_T)0;
 
 		return this->m_preceding_ptr->position();
 	}
 
 	/* Returns linked subsequent interval position */
-	size_t subsequentPosition() const noexcept
+	UInt_T subsequentPosition() const noexcept
 	{
 		if (!this->hasSubsequentInterval())
-			return (size_t)0;
+			return (UInt_T)0;
 
 		return this->m_subsequent_ptr->position();
 	}
