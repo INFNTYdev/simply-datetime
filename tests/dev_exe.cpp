@@ -16,6 +16,15 @@
 int main(size_t argc, char* argv[])
 {
 	//
+	DateInterval demo{ DateInterval::DAY, (uint16_t)0 };
+
+	while (!demo.isAtThreshold()) {
+
+		std::cout << demo.toDoubleDigitStr() << std::endl;
+
+		demo.increment();
+
+	}
 
 	return NULL;
 }
