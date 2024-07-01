@@ -18,10 +18,47 @@
 
 
 
+void datetimeOut(Year& year, Month& month, Day& day, Hour& hr, Minute& min, Second& sec)
+{
+	std::cout << "\nDatetime: "
+		<< month.toDoubleDigitStr() << '/'
+		<< day.toDoubleDigitStr() << '/'
+		<< year << ' '
+		<< hr.toDoubleDigitStr() << ':'
+		<< min.toDoubleDigitStr() << ':'
+		<< sec.toDoubleDigitStr()
+		<< '\n';
+}
+
+
 int main(size_t argc, char* argv[])
 {
 	//
+	Year year{ 2024 };
+	Month month{ 7 };
+	Day day{ 1 };
+
 	Hour hour{ 10 };
+	Minute minute{ 15 };
+	Second second{ 23 };
+	Millisecond ms{ NULL };
+
+	ms.linkPrecedingInterval(second);
+	second.linkPrecedingInterval(minute);
+	minute.linkPrecedingInterval(hour);
+	hour.linkPrecedingInterval(day);
+	day.linkPrecedingInterval(month);
+	month.linkPrecedingInterval(year);
+
+	//
+
+	while (hour.position() != 15) {
+
+		datetimeOut(year, month, day, hour, minute, second);
+
+		minute.increment(5);
+
+	}
 
 	return NULL;
 }
