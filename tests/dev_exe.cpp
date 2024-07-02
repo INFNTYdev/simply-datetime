@@ -33,6 +33,16 @@ void datetimeOut(Year& year, Month& month, Day& day, Hour& hr, Minute& min, Seco
 		<< ' ' << hr.getPhaseStr();
 }
 
+using Date = LinkedSequence<uint16_t, Year, Month, Day>;
+
+void dateOut(Date& date)
+{
+	std::cout << "\nDate: "
+		<< date.getInterval(1)->position() << '/'
+		<< date.getInterval(2)->position() << '/'
+		<< date.getInterval(0)->position();
+}
+
 
 int main(size_t argc, char* argv[])
 {
@@ -63,10 +73,20 @@ int main(size_t argc, char* argv[])
 
 	}
 
-	//
-	using Date = LinkedSequence<uint16_t, Year, Month, Day>;
+	std::cout << "\n\n\n" << std::endl;
 
+	//
 	Date please{ Year(2024), Month(7), Day(2) };
+
+	while (please.getInterval(0)->position() != 2025) {
+
+		dateOut(please);
+
+		please.getInterval(2)->increment(2);
+
+	}
+
+	dateOut(please);
 
 	return NULL;
 }

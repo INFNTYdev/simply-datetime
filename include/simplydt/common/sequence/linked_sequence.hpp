@@ -59,6 +59,26 @@ private:
             ),
             ...
         );
+
+        if (this->m_intervals.size() < 2)
+            return;
+
+        bool linkSuccess{ false };
+
+        // Link intervals
+        for (size_t r{ (this->linkSize() - (size_t)1ULL) }; r > 0; --r) {
+
+            size_t precedingIndex{ (r - (size_t)1ULL) };
+
+            linkSuccess = this->m_intervals[r]->linkPrecedingInterval(
+                *(this->m_intervals[precedingIndex])
+            );
+
+            // This shouldn't happen
+            if (!linkSuccess)
+                break;
+
+        }
     }
 
 };
