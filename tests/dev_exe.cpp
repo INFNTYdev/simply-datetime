@@ -100,7 +100,16 @@ int main(size_t argc, char* argv[])
 		Second(23)
 	};
 
-	std::cout << omg.getInterval(0)->position();
+	DevDate omg2{
+		DtType::TIME_DATETIME,
+		Hour(3),
+		Minute(54),
+		Second(10)
+	};
+
+	DevDate delta{ omg };
+
+	delta.decrementInterval(1, 6);
 
 	return NULL;
 }
