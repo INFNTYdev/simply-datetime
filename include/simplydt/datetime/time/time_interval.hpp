@@ -84,9 +84,9 @@ public:
         if (this->position() < (uint16_t)10U)
             return std::string{ ('0' + this->toStr()) };
 
-        std::string pos{ this->toStr() };
+        std::string posStr{ this->toStr() };
 
-        return pos.substr((pos.size() - (size_t)2));
+        return posStr.substr((posStr.size() - (size_t)2));
     }
 
 

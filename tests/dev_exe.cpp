@@ -11,6 +11,8 @@
 #include"simplydt/datetime/time/unit/dt_second.hpp"
 #include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
+#include"simplydt/common/sequence/linked_sequence.hpp"
+
 
 
 // Go back through all code and make sure boundless logic is accounted for
@@ -60,6 +62,11 @@ int main(size_t argc, char* argv[])
 		minute.increment(5);
 
 	}
+
+	//
+	using Date = LinkedSequence<uint16_t, Year, Month, Day>;
+
+	Date please{ Year(2024), Month(7), Day(2) };
 
 	return NULL;
 }
