@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-07-02T05:08:06.007Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="yrmm-aPbbw4hVteLA8U0" version="24.6.1" type="device" pages="2">
+<mxfile host="Electron" modified="2024-07-02T05:59:04.472Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="PPKr5UOIeyM964RCEvsC" version="24.6.1" type="device" pages="2">
   <diagram id="ry-10qStgprq8L2oOEOW" name="Datetime">
     <mxGraphModel dx="4662" dy="1425" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="850" background="#000000" math="0" shadow="0">
       <root>
@@ -621,7 +621,7 @@
           <mxGeometry y="60" width="305" height="30" as="geometry" />
         </mxCell>
         <mxCell id="gyCQ705f7vQ7l09a-fRC-8" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;i style=&quot;&quot;&gt;&lt;font color=&quot;#c792ea&quot;&gt;class&lt;/font&gt;&lt;/i&gt; &lt;font color=&quot;#ffcb6b&quot;&gt;LinkedSequence&amp;lt;&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;UInt_T&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;,&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt; Interval_T...&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;&amp;gt;&lt;/font&gt;&lt;/font&gt;&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneLine=1;rounded=1;shadow=0;glass=0;fillColor=#000000;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="1">
-          <mxGeometry x="-590" y="4540" width="540" height="340" as="geometry">
+          <mxGeometry x="-590" y="4540" width="540" height="370" as="geometry">
             <mxRectangle x="140" y="110" width="120" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -642,7 +642,7 @@
           <mxGeometry y="30" width="540" height="30" as="geometry" />
         </mxCell>
         <mxCell id="gyCQ705f7vQ7l09a-fRC-12" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b style=&quot;&quot;&gt;&lt;i style=&quot;&quot;&gt;[ Methods ]&lt;/i&gt;&lt;/b&gt;&lt;/span&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;swimlaneLine=1;rounded=1;shadow=0;glass=0;fillColor=#000000;" vertex="1" parent="gyCQ705f7vQ7l09a-fRC-8">
-          <mxGeometry y="160" width="540" height="180" as="geometry">
+          <mxGeometry y="160" width="540" height="210" as="geometry">
             <mxRectangle x="140" y="110" width="120" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -660,6 +660,9 @@
         </mxCell>
         <mxCell id="gyCQ705f7vQ7l09a-fRC-16" value="&lt;b&gt;&lt;font color=&quot;#ffffff&quot;&gt;(&lt;/font&gt;&lt;/b&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;b&gt;Public&lt;/b&gt;&lt;/font&gt;&lt;b&gt;&lt;font color=&quot;#ffffff&quot;&gt;)&lt;/font&gt;&lt;/b&gt; &lt;font color=&quot;#ffffff&quot;&gt;getInterval&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;(&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;index&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;:&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;&amp;nbsp;size_t&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;)&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;:&lt;/font&gt; &lt;font color=&quot;#c792ea&quot;&gt;return&lt;/font&gt; &lt;b&gt;&lt;font color=&quot;#ffffff&quot;&gt;--&amp;gt;&lt;/font&gt;&lt;/b&gt;&amp;nbsp;&lt;i style=&quot;&quot;&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;Interval&amp;lt;&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;UInt_T&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;&amp;gt;&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;*&lt;/font&gt;&lt;font color=&quot;#c792ea&quot;&gt;&amp;nbsp;&lt;/font&gt;&lt;/i&gt;" style="text;strokeColor=#FFFFFF;fillColor=#1A1A1A;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#333333;" vertex="1" parent="gyCQ705f7vQ7l09a-fRC-12">
           <mxGeometry y="150" width="540" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gyCQ705f7vQ7l09a-fRC-131" value="&lt;b&gt;&lt;font color=&quot;#ffffff&quot;&gt;(&lt;/font&gt;&lt;/b&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;b&gt;Private&lt;/b&gt;&lt;/font&gt;&lt;b&gt;&lt;font color=&quot;#ffffff&quot;&gt;)&lt;/font&gt;&lt;/b&gt; &lt;font color=&quot;#ffffff&quot;&gt;constructNodeVector&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;(nodes&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;:&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt; Interval_T...&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;&amp;amp;&amp;amp;&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;)&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;:&lt;/font&gt; &lt;font color=&quot;#c792ea&quot;&gt;return&lt;/font&gt; &lt;b&gt;&lt;font color=&quot;#ffffff&quot;&gt;--&amp;gt;&lt;/font&gt;&lt;/b&gt;&amp;nbsp;&lt;i style=&quot;&quot;&gt;&lt;font color=&quot;#c792ea&quot;&gt;void&lt;/font&gt;&lt;font color=&quot;#ffcb6b&quot;&gt;&amp;nbsp;&lt;/font&gt;&lt;/i&gt;" style="text;strokeColor=#FFFFFF;fillColor=#1A1A1A;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#333333;" vertex="1" parent="gyCQ705f7vQ7l09a-fRC-12">
+          <mxGeometry y="180" width="540" height="30" as="geometry" />
         </mxCell>
         <mxCell id="gyCQ705f7vQ7l09a-fRC-27" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=4;strokeColor=#FFCB6B;endArrow=block;endFill=1;endSize=14;" edge="1" parent="1" source="gyCQ705f7vQ7l09a-fRC-19" target="gyCQ705f7vQ7l09a-fRC-12">
           <mxGeometry relative="1" as="geometry" />
