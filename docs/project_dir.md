@@ -33,17 +33,23 @@ simply-datetime/
 │       │   │
 │       │   ├── interval/
 │       │   │
-│       │   ├── linked_sequence/
+│       │   ├── range/
 │       │   │
-│       │   └── range/
+│       │   └── sequence/
 │       │
-│       └── datetime/
-│           │
-│           ├── date/
-│           │
-│           └── time/
+│       ├── datetime/
+│       │   │
+│       │   ├── date/
+│       │   │
+│       │   ├── sequence/
+│       │   │
+│       │   └── time/
+│       │
+│       └── duration/
 │
 ├── src/
 │
 └── tests/
+    │
+    └── unit/
 ```

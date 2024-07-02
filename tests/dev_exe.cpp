@@ -12,6 +12,7 @@
 #include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
 #include"simplydt/common/sequence/linked_sequence.hpp"
+#include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 
 
@@ -87,6 +88,16 @@ int main(size_t argc, char* argv[])
 	}
 
 	dateOut(please);
+
+	//
+	using DtType = DatetimeSequence<Hour, Minute, Second>::DatetimeType;
+
+	DatetimeSequence<Hour, Minute, Second> omg{
+		DtType::TIME_DATETIME,
+		Hour(3),
+		Minute(54),
+		Second(23)
+	};
 
 	return NULL;
 }
