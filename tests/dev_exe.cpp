@@ -91,13 +91,16 @@ int main(size_t argc, char* argv[])
 
 	//
 	using DtType = DatetimeSequence<Hour, Minute, Second>::DatetimeType;
+	using DevDate = DatetimeSequence<Hour, Minute, Second>;
 
-	DatetimeSequence<Hour, Minute, Second> omg{
+	DevDate omg{
 		DtType::TIME_DATETIME,
 		Hour(3),
 		Minute(54),
 		Second(23)
 	};
+
+	std::cout << omg.getInterval(0)->position();
 
 	return NULL;
 }
