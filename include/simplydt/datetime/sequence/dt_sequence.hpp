@@ -8,8 +8,8 @@
 
 
 /* Sequence of linked datetime intervals */
-template <typename... Interval_T>
-class DatetimeSequence : public LinkedSequence<uint16_t, Interval_T...> {
+template <typename... Dt_Interval_T>
+class DatetimeSequence : public LinkedSequence<uint16_t, Dt_Interval_T...> {
 
 public:
     /* Datetime time unit */
@@ -34,9 +34,9 @@ public:
         DURATION_DATETIME,// Duration datetime type
     };
 
-    DatetimeSequence(DatetimeType dt_type, Interval_T&&... dt_intervals)
-        : LinkedSequence<uint16_t, Interval_T...>{
-            std::forward<Interval_T&&>(dt_intervals)...
+    DatetimeSequence(DatetimeType dt_type, Dt_Interval_T&&... dt_intervals)
+        : LinkedSequence<uint16_t, Dt_Interval_T...>{
+            std::forward<Dt_Interval_T&&>(dt_intervals)...
         },
         m_datetimeType{ dt_type }
     {
