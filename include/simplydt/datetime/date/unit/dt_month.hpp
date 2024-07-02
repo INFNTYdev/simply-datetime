@@ -29,6 +29,18 @@ public:
         return simplydt::getMonth(this->position());
     }
 
+    /* Returns total number of days in month */
+    uint16_t getTotalDays() const noexcept
+    {
+        if (!this->hasPrecedingInterval())
+            return (uint16_t)0U;
+        
+        return simplydt::getTotalDaysInMonth(
+            this->precedingPosition(),// Year value
+            this->position()// Month value
+        );
+    }
+
     /* Displace month in provided direction with provided units */
     void displace(Trans trans, uint16_t units) noexcept
     {
