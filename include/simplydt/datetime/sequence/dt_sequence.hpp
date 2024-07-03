@@ -63,7 +63,7 @@ public:
         //
     }
 
-    ~DatetimeSequence() noexcept = default;
+    virtual ~DatetimeSequence() noexcept = default;
 
     DatetimeSequence<Dt_Interval_T...>& operator=(const DatetimeSequence<Dt_Interval_T...>& dt_sequence) noexcept
     {

@@ -45,7 +45,7 @@ public:
 		//
 	}
 
-    ~TimeInterval() = default;
+    virtual ~TimeInterval() = default;
 
     /* Returns provided time unit max value */
     uint16_t getUnitMax(Unit unit) noexcept
