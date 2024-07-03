@@ -64,16 +64,48 @@ public:
         }
     }
 
-    TimeInterval& operator=(const TimeInterval& time_interval) noexcept;
-    TimeInterval& operator=(TimeInterval&& time_interval) noexcept;
+    TimeInterval& operator=(const TimeInterval& time_interval) noexcept
+	{
+        if (this == &time_interval)
+            return *this;
+
+        this->m_unitOfMeasure = time_interval.m_unitOfMeasure;
+        Interval<uint16_t>::operator=(time_interval);
+
+        return *this;
+	}
+
+    TimeInterval& operator=(TimeInterval&& time_interval) noexcept
+    {
+        if (this == &time_interval)
+            return *this;
+
+        this->m_unitOfMeasure = std::move(time_interval.m_unitOfMeasure);
+        Interval<uint16_t>::operator=(static_cast<Interval<uint16_t>&&>(time_interval));
+
+        return *this;
+    }
 
     /* Returns true if both time intervals have same unit of measure and position attributes */
-    bool operator==(const TimeInterval& time_interval) noexcept;
+    bool operator==(const TimeInterval& time_interval) noexcept
+    {
+        if (!this->isSameUnitOfTime(time_interval))
+            return false;
+
+        return Interval<uint16_t>::operator==(time_interval);
+    }
 
     /* Returns time interval unit of measure */
-    Unit unitOfTime() const noexcept;
+    Unit unitOfTime() const noexcept
+    {
+        return this->m_unitOfMeasure;
+    }
+
     /* Returns true if provided time interval uses same unit of measure */
-    bool isSameUnitOfTime(const TimeInterval& time_interval) const noexcept;
+    bool isSameUnitOfTime(const TimeInterval& time_interval) const noexcept
+    {
+        return (this->m_unitOfMeasure == time_interval.m_unitOfMeasure);
+    }
 
     /* Returns date interval value in double digit format */
     std::string toDoubleDigitStr() const noexcept

@@ -3,8 +3,6 @@
 
 
 # Library Build
-add_library(
-	simplydtlib
-	"datetime/date/date_interval.cpp"
-	"datetime/time/time_interval.cpp"
-)
+#add_library(
+#	simplydtlib
+#)

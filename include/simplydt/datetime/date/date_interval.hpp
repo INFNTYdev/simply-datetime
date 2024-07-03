@@ -41,7 +41,7 @@ public:
         : Interval<uint16_t>{ static_cast<Interval&&>(date_interval) },
         m_unitOfMeasure{ std::move(date_interval.m_unitOfMeasure) }
     {
-        // This constructor keeps me up at night
+        //
     }
 
     virtual ~DateInterval() = default;
@@ -59,16 +59,48 @@ public:
         }
     }
 
-    DateInterval& operator=(const DateInterval& date_interval) noexcept;
-    DateInterval& operator=(DateInterval&& date_interval) noexcept;
+    DateInterval& operator=(const DateInterval& date_interval) noexcept
+    {
+        if (this == &date_interval)
+            return *this;
+
+        this->m_unitOfMeasure = date_interval.m_unitOfMeasure;
+        Interval<uint16_t>::operator=(date_interval);
+
+        return *this;
+    }
+
+    DateInterval& operator=(DateInterval&& date_interval) noexcept
+    {
+        if (this == &date_interval)
+            return *this;
+
+        this->m_unitOfMeasure = std::move(date_interval.m_unitOfMeasure);
+        Interval<uint16_t>::operator=(static_cast<Interval<uint16_t>&&>(date_interval));
+
+        return *this;
+    }
 
     /* Returns true if both date intervals have same unit of measure and position attributes */
-    bool operator==(const DateInterval& date_interval) noexcept;
+    bool operator==(const DateInterval& date_interval) noexcept
+    {
+        if (!this->isSameUnitOfTime(date_interval))
+            return false;
+
+        return Interval<uint16_t>::operator==(date_interval);
+    }
 
     /* Returns date interval unit of measure */
-    Unit unitOfTime() const noexcept;
+    Unit unitOfTime() const noexcept
+    {
+        return this->m_unitOfMeasure;
+    }
+
     /* Returns true if provided date interval uses same unit of measure */
-    bool isSameUnitOfTime(const DateInterval& date_interval) const noexcept;
+    bool isSameUnitOfTime(const DateInterval& date_interval) const noexcept
+    {
+        return (this->m_unitOfMeasure == date_interval.m_unitOfMeasure);
+    }
 
     /* Returns date interval value in double digit format */
     std::string toDoubleDigitStr() const noexcept
