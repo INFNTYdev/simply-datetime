@@ -25,7 +25,7 @@ public:
 
     ~Year() = default;
 
-	static const uint16_t YEAR_MIN{ 1700 };
+	static const uint16_t YEAR_MIN{ 1900 };
 
     /* Returns true if year is a leap year */
     bool isLeapYear() const noexcept

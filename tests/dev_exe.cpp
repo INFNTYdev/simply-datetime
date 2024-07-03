@@ -14,6 +14,10 @@
 #include"simplydt/common/sequence/linked_sequence.hpp"
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
+#include"simplydt/datetime/date/comp/dt_date.hpp"
+#include"simplydt/datetime/time/comp/dt_time.hpp"
+#include"simplydt/datetime/time/comp/dt_stime.hpp"
+
 
 
 // Go back through all code and make sure boundless logic is accounted for
@@ -34,9 +38,9 @@ void datetimeOut(Year& year, Month& month, Day& day, Hour& hr, Minute& min, Seco
 		<< ' ' << hr.getPhaseStr();
 }
 
-using Date = LinkedSequence<uint16_t, Year, Month, Day>;
+using FDate = LinkedSequence<uint16_t, Year, Month, Day>;
 
-void dateOut(Date& date)
+void dateOut(FDate& date)
 {
 	std::cout << "\nDate: "
 		<< date.getInterval(1)->position() << '/'
@@ -77,7 +81,7 @@ int main(size_t argc, char* argv[])
 	std::cout << "\n\n\n" << std::endl;
 
 	//
-	Date please{ Year(2024), Month(7), Day(2) };
+	FDate please{ Year(2024), Month(7), Day(2) };
 
 	while (please.getInterval(0)->position() != 2025) {
 
@@ -110,6 +114,9 @@ int main(size_t argc, char* argv[])
 	DevDate delta{ omg };
 
 	delta.decrementInterval(1, 6);
+
+
+	//
 
 	return NULL;
 }
