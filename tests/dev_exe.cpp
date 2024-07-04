@@ -29,10 +29,12 @@
 int main(size_t argc, char* argv[])
 {
 	//
-	Date date_1{ 2001, 2, 23 };
-	Date date_2{ 2024, 1, 9 };
+	Date date_1{ 2024, 2, 9 };
+	Date date_2{ 2024, 10, 9 };
 
 	date_1 < date_2;
+
+	size_t teee = date_2.daysUntil();
 
 	std::cout
 		<< std::boolalpha

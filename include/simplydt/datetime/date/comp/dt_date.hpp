@@ -283,6 +283,64 @@ public:
     //    //
     //}
 
+    /* Returns absolute total number of days from this date until provided date */
+    size_t daysUntil(const Date& date) const noexcept
+    {
+        size_t totalDays{ 0 };
+
+        if (this == &date || *this == date)
+            return totalDays;
+
+        std::pair<const Date*, const Date*> dateRef{ nullptr, nullptr };// (high, low)
+
+        if (this->isAfter(date)) {
+            dateRef.first = this;
+            dateRef.second = &date;
+        }
+        else {
+            dateRef.first = &date;
+            dateRef.second = this;
+        }
+
+        // Dates in same month time frame
+        if (this->year() == date.year() && this->month() == date.month())
+            return (dateRef.first->day() - dateRef.second->day());
+
+        // Lambda: Returns true if simulated year-month frame matches dates
+        auto monthFrameMatch = [](const Date* date, uint16_t year, uint16_t month)-> bool {
+            return (year == date->year() && month == date->month());
+        };
+
+        // Lambda: Increment simulated year-month time frame
+        auto incrementMonthFrame = [](uint16_t& year, uint16_t& month)-> void {
+            if (month < (uint16_t)12U)
+                ++month;
+            else if (month == (uint16_t)12U) {
+                month = (uint16_t)1U;
+                ++year;
+            }
+        };
+
+        // Dates in different month time frames
+        uint16_t yearSim{ dateRef.second->year() };
+        uint16_t monthSim{ dateRef.second->month() };
+
+        totalDays += dateRef.second->getDay().untilThreshold();
+        incrementMonthFrame(yearSim, monthSim);
+
+        while (!monthFrameMatch(dateRef.first, yearSim, monthSim)) {
+
+            totalDays += simplydt::getTotalDaysInMonth(yearSim, monthSim);
+
+            incrementMonthFrame(yearSim, monthSim);
+
+        }
+
+        totalDays += dateRef.first->day();
+
+        return totalDays;
+    }
+
 
 private:
     static const uint8_t YEAR_INDEX{ 0 };
