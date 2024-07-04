@@ -20,9 +20,30 @@
 
 
 
-// Range Class:
-// Go back through all code and make sure boundless logic is accounted for
-// Need safety checks when adding numbers to make sure they don't hit the ceiling
+/* /// \\\ /// \\\ /// | TO-DO | \\\ /// \\\ /// \\\ *\
+* 
+* 6/31/2024
+* 
+* -> Make sure all boundless logic is accounted for in Range class
+* -> Safety checks when adding numbers in Range class to ensure no overflows?
+* 
+* 
+* 7/4/2024
+* 
+* -> Implement .linkDate() method in Time/STime class
+* -> Just fix STime classes .secondsUntil() method
+* -> Start DurationInterval class (create preset type names)
+* -> Plan and implement Duration class interface
+* -> Implement DatetimeStub class
+* -> Implement .until() methods in Date, Time, and STime classes
+* -> Implement .toStub() methods in Date, Time, and STime classes
+* -> Implement Time constructor/operators that accepts STime
+* -> Implement Date/Time/STime constructor that accepts DatetimeStub
+* -> Implement .toSTime() method in Time class
+* -> Plan and implement Datetime/SDatetime class interfaces
+* -> Plan and implement library main header
+* 
+\* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
 
 
