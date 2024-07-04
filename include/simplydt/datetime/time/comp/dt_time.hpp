@@ -297,30 +297,28 @@ public:
         if (this == &time || *this == time)
             return totalSeconds;
 
-        // Perhaps there are better ways?
-        // -> (Try using .untilPosition() in Interval class and mult. by unit multiplier?)
         Time temp{ *this };
 
-        while (temp.second() != time.second()) {
+        // Accum. seconds
+        totalSeconds += (
+            temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX))
+        );
+        temp.getInterval(SECOND_INDEX)->increment(
+            temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX))
+        );
 
-            ++totalSeconds;
-            temp.getSecond().increment();
+        // Accum. minutes
+        totalSeconds += (
+            ((size_t)temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX)) * (size_t)60ULL)
+        );
+        temp.getInterval(MINUTE_INDEX)->increment(
+            temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX))
+        );
 
-        }
-
-        while (temp.minute() != time.minute()) {
-
-            totalSeconds += (size_t)60ULL;
-            temp.getMinute().increment();
-
-        }
-
-        while (temp.hour() != time.hour()) {
-
-            totalSeconds += (size_t)3'600ULL;
-            temp.getHour().increment();
-
-        }
+        // Accum. hours
+        totalSeconds += (
+            ((size_t)temp.getInterval(HOUR_INDEX)->untilPosition(*time.getInterval(HOUR_INDEX)) * (size_t)3'600ULL)
+        );
 
         return totalSeconds;
     }
