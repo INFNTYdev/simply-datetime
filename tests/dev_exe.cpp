@@ -14,102 +14,43 @@
 #include"simplydt/common/sequence/linked_sequence.hpp"
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
+#include"simplydt/datetime/date/comp/dt_date.hpp"
+#include"simplydt/datetime/time/comp/dt_time.hpp"
+#include"simplydt/datetime/time/comp/dt_stime.hpp"
 
 
+
+// Range Class:
 // Go back through all code and make sure boundless logic is accounted for
 // Need safety checks when adding numbers to make sure they don't hit the ceiling
 
 
 
-void datetimeOut(Year& year, Month& month, Day& day, Hour& hr, Minute& min, Second& sec)
-{
-	std::cout << "\nDatetime: "
-		<< day.getDayOfWeek() << ", "
-		<< month.toDoubleDigitStr() << '/'
-		<< day.toDoubleDigitStr() << '/'
-		<< year << ' '
-		<< hr.toDoubleDigitStr() << ':'
-		<< min.toDoubleDigitStr() << ':'
-		<< sec.toDoubleDigitStr()
-		<< ' ' << hr.getPhaseStr();
-}
-
-using Date = LinkedSequence<uint16_t, Year, Month, Day>;
-
-void dateOut(Date& date)
-{
-	std::cout << "\nDate: "
-		<< date.getInterval(1)->position() << '/'
-		<< date.getInterval(2)->position() << '/'
-		<< date.getInterval(0)->position();
-}
-
-
 int main(size_t argc, char* argv[])
 {
 	//
-	Year year{ 2024 };
-	Month month{ 7 };
-	Day day{ 1 };
+	Date date_1{ 2001, 2, 23 };
+	Date date_2{ 2024, 1, 9 };
 
-	Hour hour{ 10 };
-	Minute minute{ 15 };
-	Second second{ 23 };
-	Millisecond ms{ NULL };
+	date_1 < date_2;
 
-	ms.linkPrecedingInterval(second);
-	second.linkPrecedingInterval(minute);
-	minute.linkPrecedingInterval(hour);
-	hour.linkPrecedingInterval(day);
-	day.linkPrecedingInterval(month);
-	month.linkPrecedingInterval(year);
+	std::cout
+		<< std::boolalpha
+		<< "\nD1: " << date_1
+		<< "\nD2: " << date_2
+		<< "\n\nLogic Tests:"
+		<< "\nD1 > D2: " << (date_1 > date_2)
+		<< "\nD1 < D2: " << (date_1 < date_2)
+		<< "\nD1 == D2: " << (date_1 == date_2)
+		<< std::endl;
 
-	//
-
-	while (hour.position() != 15) {
-
-		datetimeOut(year, month, day, hour, minute, second);
-
-		minute.increment(5);
-
-	}
-
-	std::cout << "\n\n\n" << std::endl;
 
 	//
-	Date please{ Year(2024), Month(7), Day(2) };
+	Time time_1{ std::chrono::system_clock::now() };
+	STime stime_1{ std::chrono::system_clock::now() };
+	Time time_2{ 23, 55, 23, 0 };
 
-	while (please.getInterval(0)->position() != 2025) {
-
-		dateOut(please);
-
-		please.getInterval(2)->increment(2);
-
-	}
-
-	dateOut(please);
-
-	//
-	using DtType = DatetimeSequence<Hour, Minute, Second>::DatetimeType;
-	using DevDate = DatetimeSequence<Hour, Minute, Second>;
-
-	DevDate omg{
-		DtType::TIME_DATETIME,
-		Hour(3),
-		Minute(54),
-		Second(23)
-	};
-
-	DevDate omg2{
-		DtType::TIME_DATETIME,
-		Hour(3),
-		Minute(54),
-		Second(10)
-	};
-
-	DevDate delta{ omg };
-
-	delta.decrementInterval(1, 6);
+	std::cout << "\n\nOUT: " << time_1.timeStr(Time::H_M_S_P);
 
 	return NULL;
 }

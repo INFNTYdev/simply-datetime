@@ -40,10 +40,18 @@ simply-datetime/
 │       ├── datetime/
 │       │   │
 │       │   ├── date/
+│       │   │   │
+│       │   │   ├── comp/
+│       │   │   │
+│       │   │   └── unit/
 │       │   │
 │       │   ├── sequence/
 │       │   │
 │       │   └── time/
+│       │       │
+│       │       ├── comp/
+│       │       │
+│       │       └── unit/
 │       │
 │       └── duration/
 │

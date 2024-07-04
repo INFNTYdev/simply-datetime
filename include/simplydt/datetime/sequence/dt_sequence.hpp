@@ -162,9 +162,12 @@ public:
             if (this->getInterval(index)->isAfter(*(dt_sequence.getInterval(index))))
                 return false;
 
+            if (this->getInterval(index)->isBefore(*(dt_sequence.getInterval(index))))
+                return true;
+
         }
 
-        return true;
+        return false;
     }
 
     /* Returns true if provided datetime sequence occurs before this one */
@@ -178,9 +181,12 @@ public:
             if (this->getInterval(index)->isBefore(*(dt_sequence.getInterval(index))))
                 return false;
 
+            if (this->getInterval(index)->isAfter(*(dt_sequence.getInterval(index))))
+                return true;
+
         }
 
-        return true;
+        return false;
     }
 
     // This needs more thought
