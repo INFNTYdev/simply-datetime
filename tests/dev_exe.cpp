@@ -44,5 +44,13 @@ int main(size_t argc, char* argv[])
 		<< "\nD1 == D2: " << (date_1 == date_2)
 		<< std::endl;
 
+
+	//
+	Time time_1{ std::chrono::system_clock::now() };
+	STime stime_1{ std::chrono::system_clock::now() };
+	Time time_2{ 23, 55, 23, 0 };
+
+	std::cout << "\n\nOUT: " << time_1.timeStr(Time::H_M_S_P);
+
 	return NULL;
 }

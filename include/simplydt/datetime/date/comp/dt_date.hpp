@@ -20,24 +20,26 @@ public:
     /* Standard library chronological time point (system clock) */
     using Chrono = std::chrono::time_point<std::chrono::system_clock>;
 
+    /* Date format */
     enum Format {
         RECORD,// Record date format (00-00-0000)
         STANDARD,// Standard date format (00/00/0000)
     };
 
+    /* Date layout */
     enum Layout {
-        M_D_YYYY,// (mm/dd/YYYY) [Example: 01-13-2024]
-        M_D_YY,// (mm/dd/YY) [Example: 01-13-24]
-        M_YYYY,// (mm/YYYY) [Example: 01-2024]
-        M_YY,// (mm/YY) [Example: 01-24]
-        M_D,// (mm/dd) [Example: 01-13]
-        YYYY_M_D,// (YYYY/mm/dd) [Example: 2024-01-13]
-        YY_M_D,// (YY/mm/dd) [Example: 24-01-13]
-        YYYY_D_M,// (YYYY/dd/mm) [Example: 2024-13-01]
-        YY_D_M,// (YY/dd/mm) [Example: 24-13-01]
-        YYYY_M,// (YYYY/mm) [Example: 2024-01]
-        YY_M,// (YY/mm) [Example: 24-01]
-        D_M,// (dd/mm) [Example: 13-01]
+        M_D_YYYY,// (mm/dd/YYYY) [ Example: 01-13-2024 ]
+        M_D_YY,// (mm/dd/YY) [ Example: 01-13-24 ]
+        M_YYYY,// (mm/YYYY) [ Example: 01-2024 ]
+        M_YY,// (mm/YY) [ Example: 01-24 ]
+        M_D,// (mm/dd) [ Example: 01-13 ]
+        YYYY_M_D,// (YYYY/mm/dd) [ Example: 2024-01-13 ]
+        YY_M_D,// (YY/mm/dd) [ Example: 24-01-13 ]
+        YYYY_D_M,// (YYYY/dd/mm) [ Example: 2024-13-01 ]
+        YY_D_M,// (YY/dd/mm) [ Example: 24-13-01 ]
+        YYYY_M,// (YYYY/mm) [ Example: 2024-01 ]
+        YY_M,// (YY/mm) [ Example: 24-01 ]
+        D_M,// (dd/mm) [ Example: 13-01 ]
     };
 
     Date(Chrono chrono) noexcept
@@ -112,7 +114,7 @@ public:
         this->adjustDayThreshold();
     }
 
-    ~Date() noexcept = default;
+    virtual ~Date() noexcept = default;
 
     friend std::ostream& operator<<(std::ostream& os, const Date& date) noexcept
     {
@@ -298,6 +300,20 @@ private:
             return DAY_INDEX;
         default:
             return this->linkSize();// Results in nullptr interval
+        }
+    }
+
+    TimeUnit indexToTimeUnitEnum(size_t index) noexcept
+    {
+        switch (index) {
+        case YEAR_INDEX:
+            return TimeUnit::YEAR;
+        case MONTH_INDEX:
+            return TimeUnit::MONTH;
+        case DAY_INDEX:
+            return TimeUnit::DAY;
+        default:
+            return TimeUnit::ARB;
         }
     }
 
