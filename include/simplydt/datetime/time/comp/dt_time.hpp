@@ -264,6 +264,67 @@ public:
     ///* Link time to date instance */
     //bool linkDate(Date& date) noexcept;
 
+    /* Returns total number of seconds since day start */
+    size_t secondsSinceDay() const noexcept
+    {
+        size_t totalSeconds{ 0 };
+
+        totalSeconds += ((size_t)this->hour() * (size_t)3'600ULL);
+        totalSeconds += ((size_t)this->minute() * (size_t)60ULL);
+        totalSeconds += (size_t)this->second();
+
+        return totalSeconds;
+    }
+
+    /* Returns total number of milliseconds since day start */
+    size_t millisecondsSinceDay() const noexcept
+    {
+        size_t totalMilliseconds{ 0 };
+
+        totalMilliseconds += ((size_t)this->hour() * (size_t)3'600'000ULL);
+        totalMilliseconds += ((size_t)this->minute() * (size_t)60'000ULL);
+        totalMilliseconds += ((size_t)this->second() * (size_t)1'000ULL);
+        totalMilliseconds += (size_t)this->millisecond();
+
+        return totalMilliseconds;
+    }
+
+    /* Returns total number of seconds from this time until provided time */
+    size_t secondsUntil(const Time& time) const noexcept
+    {
+        size_t totalSeconds{ 0 };
+
+        if (this == &time || *this == time)
+            return totalSeconds;
+
+        // Perhaps there are better ways?
+        // -> (Try using .untilPosition() in Interval class and mult. by unit multiplier?)
+        Time temp{ *this };
+
+        while (temp.second() != time.second()) {
+
+            ++totalSeconds;
+            temp.getSecond().increment();
+
+        }
+
+        while (temp.minute() != time.minute()) {
+
+            totalSeconds += (size_t)60ULL;
+            temp.getMinute().increment();
+
+        }
+
+        while (temp.hour() != time.hour()) {
+
+            totalSeconds += (size_t)3'600ULL;
+            temp.getHour().increment();
+
+        }
+
+        return totalSeconds;
+    }
+
 
 private:
     static const uint8_t HOUR_INDEX{ 0 };

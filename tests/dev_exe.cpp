@@ -34,7 +34,7 @@ int main(size_t argc, char* argv[])
 
 	date_1 < date_2;
 
-	size_t teee = date_2.daysUntil();
+	size_t teee = date_2.daysUntil(date_1);
 
 	std::cout
 		<< std::boolalpha
@@ -48,11 +48,11 @@ int main(size_t argc, char* argv[])
 
 
 	//
-	Time time_1{ std::chrono::system_clock::now() };
+	Time time_2{ 5, 35, 10, 0 };
+	Time time_1{ 4, 30, 00, 0 };
 	STime stime_1{ std::chrono::system_clock::now() };
-	Time time_2{ 23, 55, 23, 0 };
 
-	std::cout << "\n\nOUT: " << time_1.timeStr(Time::H_M_S_P);
+	std::cout << "\n\nOUT: " << time_1.secondsUntil(time_2);
 
 	return NULL;
 }

@@ -222,6 +222,54 @@ public:
     ///* Link time to date instance */
     //bool linkDate(Date& date) noexcept;
 
+    /* Returns total number of seconds since day start */
+    size_t secondsSinceDay() const noexcept
+    {
+        size_t totalSeconds{ 0 };
+
+        totalSeconds += ((size_t)this->hour() * (size_t)3'600ULL);
+        totalSeconds += ((size_t)this->minute() * (size_t)60ULL);
+        totalSeconds += (size_t)this->second();
+
+        return totalSeconds;
+    }
+
+    /* Returns total number of seconds from this time until provided time */
+    size_t secondsUntil(const STime& s_time) const noexcept
+    {
+        size_t totalSeconds{ 0 };
+
+        if (this == &s_time || *this == s_time)
+            return totalSeconds;
+
+        // Perhaps there are better ways?
+        // -> (Try using .untilPosition() in Interval class and mult. by unit multiplier?)
+        STime temp{ *this };
+
+        while (temp.second() != s_time.second()) {
+
+            ++totalSeconds;
+            temp.getSecond().increment();
+
+        }
+
+        while (temp.minute() != s_time.minute()) {
+
+            totalSeconds += (size_t)60ULL;
+            temp.getMinute().increment();
+
+        }
+
+        while (temp.hour() != s_time.hour()) {
+
+            totalSeconds += (size_t)3'600ULL;
+            temp.getHour().increment();
+
+        }
+
+        return totalSeconds;
+    }
+
 
 private:
     static const uint8_t HOUR_INDEX{ 0 };
