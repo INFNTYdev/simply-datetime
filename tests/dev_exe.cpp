@@ -20,6 +20,8 @@
 #include"simplydt/datetime/time/comp/dt_time.hpp"
 #include"simplydt/datetime/time/comp/dt_stime.hpp"
 
+#include"simplydt/duration/comp/dt_duration.hpp"
+
 
 
 /* /// \\\ /// \\\ /// | TO-DO | \\\ /// \\\ /// \\\ *\
@@ -82,6 +84,10 @@ int main(size_t argc, char* argv[])
 	DurationInterval test{ 10, 1 };
 
 	ArbMonth ggg{ 0, 0 };
+
+
+	//
+	Duration;
 
 	return NULL;
 }

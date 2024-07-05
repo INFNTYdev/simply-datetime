@@ -9,7 +9,7 @@
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 
-/* Full date (YYYY-mm-dd) */
+/* Full date ( YYYY-mm-dd ) */
 class Date : public DatetimeSequence<Year, Month, Day> {
 
 public:
@@ -270,16 +270,6 @@ public:
     ///* Returns date as standard chronological time point */   <--- This is going to take lots of work...
     //Chrono toChrono() const noexcept
     //{
-    //    /*****************************************************************************\
-    //    *             vvv           AI GENERATED CODE BELOW           vvv             *
-    //    \*****************************************************************************/
-    //
-    //    //
-    //
-    //    /*****************************************************************************\
-    //    *             ^^^           AI GENERATED CODE ABOVE           ^^^             *
-    //    \*****************************************************************************/
-    //
     //    //
     //}
 

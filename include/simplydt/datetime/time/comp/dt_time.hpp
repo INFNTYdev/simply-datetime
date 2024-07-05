@@ -9,7 +9,7 @@
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 
-/* Full time (HH:MM:SS:MS) */
+/* Full time ( HH:MM:SS:MS ) */
 class Time : public DatetimeSequence<Hour, Minute, Second, Millisecond> {
 
 public:
