@@ -219,8 +219,11 @@ public:
     ///* Returns time as standard chronological time point */
     //Chrono toChrono() const noexcept;
 
-    ///* Link time to date instance */
-    //bool linkDate(Date& date) noexcept;
+    /* Link time to date instance */
+    bool linkDate(Date& date) noexcept
+    {
+        return this->retrieveHour()->linkPrecedingInterval(date.getDay());
+    }
 
     /* Returns total number of seconds since day start */
     size_t secondsSinceDay() const noexcept
@@ -242,30 +245,28 @@ public:
         if (this == &s_time || *this == s_time)
             return totalSeconds;
 
-        // Perhaps there are better ways?
-        // -> (Try using .untilPosition() in Interval class and mult. by unit multiplier?)
         STime temp{ *this };
 
-        while (temp.second() != s_time.second()) {
+        // Accum. seconds
+        totalSeconds += (
+            temp.getInterval(SECOND_INDEX)->untilPosition(*s_time.getInterval(SECOND_INDEX))
+        );
+        temp.getInterval(SECOND_INDEX)->increment(
+            temp.getInterval(SECOND_INDEX)->untilPosition(*s_time.getInterval(SECOND_INDEX))
+        );
 
-            ++totalSeconds;
-            temp.getSecond().increment();
+        // Accum. minutes
+        totalSeconds += (
+            ((size_t)temp.getInterval(MINUTE_INDEX)->untilPosition(*s_time.getInterval(MINUTE_INDEX)) * (size_t)60ULL)
+        );
+        temp.getInterval(MINUTE_INDEX)->increment(
+            temp.getInterval(MINUTE_INDEX)->untilPosition(*s_time.getInterval(MINUTE_INDEX))
+        );
 
-        }
-
-        while (temp.minute() != s_time.minute()) {
-
-            totalSeconds += (size_t)60ULL;
-            temp.getMinute().increment();
-
-        }
-
-        while (temp.hour() != s_time.hour()) {
-
-            totalSeconds += (size_t)3'600ULL;
-            temp.getHour().increment();
-
-        }
+        // Accum. hours
+        totalSeconds += (
+            ((size_t)temp.getInterval(HOUR_INDEX)->untilPosition(*s_time.getInterval(HOUR_INDEX)) * (size_t)3'600ULL)
+        );
 
         return totalSeconds;
     }

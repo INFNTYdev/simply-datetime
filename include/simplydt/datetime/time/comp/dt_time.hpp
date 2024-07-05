@@ -261,8 +261,11 @@ public:
     ///* Returns time as standard chronological time point */
     //Chrono toChrono() const noexcept;
 
-    ///* Link time to date instance */
-    //bool linkDate(Date& date) noexcept;
+    /* Link time to date instance */
+    bool linkDate(Date& date) noexcept
+    {
+        return this->retrieveHour()->linkPrecedingInterval(date.getDay());
+    }
 
     /* Returns total number of seconds since day start */
     size_t secondsSinceDay() const noexcept

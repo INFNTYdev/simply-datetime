@@ -30,18 +30,18 @@
 * 
 * 7/4/2024
 * 
-* -> Implement .linkDate() method in Time/STime class
-* -> Just fix STime classes .secondsUntil() method
-* -> Start DurationInterval class (create preset type names)
-* -> Plan and implement Duration class interface
-* -> Implement DatetimeStub class
-* -> Implement .until() methods in Date, Time, and STime classes
-* -> Implement .toStub() methods in Date, Time, and STime classes
-* -> Implement Time constructor/operators that accepts STime
-* -> Implement Date/Time/STime constructor that accepts DatetimeStub
-* -> Implement .toSTime() method in Time class
-* -> Plan and implement Datetime/SDatetime class interfaces
-* -> Plan and implement library main header
+* -> [X] Implement .linkDate() method in Time/STime class
+* -> [X] Just fix STime classes .secondsUntil() method
+* -> [] Start DurationInterval class (create preset type names)
+* -> [] Plan and implement Duration class interface
+* -> [] Implement DatetimeStub class
+* -> [] Implement .until() methods in Date, Time, and STime classes
+* -> [] Implement .toStub() methods in Date, Time, and STime classes
+* -> [] Implement Time constructor/operators that accepts STime
+* -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
+* -> [] Implement .toSTime() method in Time class
+* -> [] Plan and implement Datetime/SDatetime class interfaces
+* -> [] Plan and implement library main header
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
@@ -50,30 +50,29 @@
 int main(size_t argc, char* argv[])
 {
 	//
-	Date date_1{ 2024, 2, 9 };
-	Date date_2{ 2024, 10, 9 };
+	uint16_t hour{ 17 };
+	uint16_t minute{ 43 };
+	uint16_t second{ 0 };
 
-	date_1 < date_2;
+	Time t1{ hour };
+	Time t2{ hour, minute, second };
 
-	size_t teee = date_2.daysUntil(date_1);
+	STime st1{ hour };
+	STime st2{ hour, minute, second };
 
 	std::cout
-		<< std::boolalpha
-		<< "\nD1: " << date_1
-		<< "\nD2: " << date_2
-		<< "\n\nLogic Tests:"
-		<< "\nD1 > D2: " << (date_1 > date_2)
-		<< "\nD1 < D2: " << (date_1 < date_2)
-		<< "\nD1 == D2: " << (date_1 == date_2)
+		<< "\nTime 1: " << t1.timeStr(Time::Format::STANDARD)
+		<< "\nTime 2: " << t2.timeStr(Time::Format::STANDARD)
+		<< "\n\nSeconds until T1 -> T2: "
+		<< t1.secondsUntil(t2) << " seconds"
 		<< std::endl;
 
-
-	//
-	Time time_2{ 5, 35, 10, 0 };
-	Time time_1{ 4, 30, 00, 0 };
-	STime stime_1{ std::chrono::system_clock::now() };
-
-	std::cout << "\n\nOUT: " << time_1.secondsUntil(time_2);
+	std::cout
+		<< "\nSTime 1: " << st1.timeStr(STime::Format::STANDARD)
+		<< "\nSTime 2: " << st2.timeStr(STime::Format::STANDARD)
+		<< "\n\nSeconds until ST1 -> ST2: "
+		<< st1.secondsUntil(st2) << " seconds"
+		<< std::endl;
 
 	return NULL;
 }
