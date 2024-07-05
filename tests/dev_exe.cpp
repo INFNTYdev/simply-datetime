@@ -30,6 +30,7 @@
 * 
 * -> Make sure all boundless logic is accounted for in Range class
 * -> Safety checks when adding numbers in Range class to ensure no overflows?
+* -> [] Determine what the highest possible numbber is that can be passed to Range class
 * 
 * 
 * 7/4/2024
@@ -44,9 +45,10 @@
 * -> [] Implement .toStub() methods in Date, Time, and STime classes
 * -> [] Implement Time constructor/operators that accepts STime
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
-* -> [] Implement .toSTime() method in Time class
+* -> []* Implement .toSTime() method in Time class
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
+* -> [] Test main library header
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
@@ -77,6 +79,7 @@ int main(size_t argc, char* argv[])
 		<< "\nSTime 2: " << st2.timeStr(STime::Format::STANDARD)
 		<< "\n\nSeconds until ST1 -> ST2: "
 		<< st1.secondsUntil(st2) << " seconds"
+		<< "\n\nConversion: " << st1.convertedTo(STime::TimeUnit::SECOND) << " sec"
 		<< std::endl;
 
 

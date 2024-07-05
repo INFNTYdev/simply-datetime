@@ -225,16 +225,38 @@ public:
         return this->retrieveHour()->linkPrecedingInterval(date.getDay());
     }
 
-    /* Returns total number of seconds since day start */
-    size_t secondsSinceDay() const noexcept
+    /* Returns time since day start compressed into provided unit  */
+    size_t convertedTo(TimeUnit unit) const noexcept
     {
-        size_t totalSeconds{ 0 };
+        size_t total{ 0 };
 
-        totalSeconds += ((size_t)this->hour() * (size_t)3'600ULL);
-        totalSeconds += ((size_t)this->minute() * (size_t)60ULL);
-        totalSeconds += (size_t)this->second();
+        switch (unit) {
+        // Hour conversion
+        case TimeUnit::HOUR:
+            total += (size_t)this->hour();
+            break;
 
-        return totalSeconds;
+        // Minute conversion
+        case TimeUnit::MINUTE:
+            total += ((size_t)this->hour() * (size_t)60ULL);
+            total += (size_t)this->minute();
+            break;
+
+        // Second conversion
+        case TimeUnit::SECOND:
+            total += ((size_t)this->hour() * (size_t)3'600ULL);
+            total += ((size_t)this->minute() * (size_t)60ULL);
+            total += (size_t)this->second();
+            break;
+
+        // Millisecond conversion
+        case TimeUnit::MILLISECOND:
+            total += ((size_t)this->hour() * (size_t)3'600'000ULL);
+            total += ((size_t)this->minute() * (size_t)60'000ULL);
+            total += ((size_t)this->second() * (size_t)1'000ULL);
+        }
+
+        return total;
     }
 
     /* Returns total number of seconds from this time until provided time */
