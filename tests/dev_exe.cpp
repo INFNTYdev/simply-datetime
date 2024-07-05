@@ -2,6 +2,7 @@
 #include<iostream>
 
 // Developer Includes:
+#include"simplydt/duration/duration_interval.hpp"
 #include"simplydt/datetime/date/unit/dt_year.hpp"
 #include"simplydt/datetime/date/unit/dt_month.hpp"
 #include"simplydt/datetime/date/unit/dt_day.hpp"
@@ -35,6 +36,7 @@
 * -> [] Start DurationInterval class (create preset type names)
 * -> [] Plan and implement Duration class interface
 * -> [] Implement DatetimeStub class
+* -> [] Implement .millisecondsUntil() method in Time class
 * -> [] Implement .until() methods in Date, Time, and STime classes
 * -> [] Implement .toStub() methods in Date, Time, and STime classes
 * -> [] Implement Time constructor/operators that accepts STime
@@ -73,6 +75,10 @@ int main(size_t argc, char* argv[])
 		<< "\n\nSeconds until ST1 -> ST2: "
 		<< st1.secondsUntil(st2) << " seconds"
 		<< std::endl;
+
+
+	//
+	DurationInterval test{ 10, 1 };
 
 	return NULL;
 }
