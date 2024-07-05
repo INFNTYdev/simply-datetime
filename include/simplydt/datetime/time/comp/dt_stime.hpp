@@ -226,34 +226,34 @@ public:
     }
 
     /* Returns time since day start compressed into provided unit  */
-    size_t convertedTo(TimeUnit unit) const noexcept
+    uint32_t convertedTo(TimeUnit unit) const noexcept
     {
-        size_t total{ 0 };
+        uint32_t total{ 0 };
 
         switch (unit) {
         // Hour conversion
         case TimeUnit::HOUR:
-            total += (size_t)this->hour();
+            total += (uint32_t)this->hour();
             break;
 
         // Minute conversion
         case TimeUnit::MINUTE:
-            total += ((size_t)this->hour() * (size_t)60ULL);
-            total += (size_t)this->minute();
+            total += ((uint32_t)this->hour() * (uint32_t)60U);
+            total += (uint32_t)this->minute();
             break;
 
         // Second conversion
         case TimeUnit::SECOND:
-            total += ((size_t)this->hour() * (size_t)3'600ULL);
-            total += ((size_t)this->minute() * (size_t)60ULL);
-            total += (size_t)this->second();
+            total += ((uint32_t)this->hour() * (uint32_t)3'600U);
+            total += ((uint32_t)this->minute() * (uint32_t)60U);
+            total += (uint32_t)this->second();
             break;
 
         // Millisecond conversion
         case TimeUnit::MILLISECOND:
-            total += ((size_t)this->hour() * (size_t)3'600'000ULL);
-            total += ((size_t)this->minute() * (size_t)60'000ULL);
-            total += ((size_t)this->second() * (size_t)1'000ULL);
+            total += ((uint32_t)this->hour() * (uint32_t)3'600'000U);
+            total += ((uint32_t)this->minute() * (uint32_t)60'000U);
+            total += ((uint32_t)this->second() * (uint32_t)1'000U);
         }
 
         return total;
