@@ -108,9 +108,8 @@ public:
         if (this->position() > (uint16_t)9U && this->position() <= (uint16_t)99U)
             return this->toStr();
 
-        if (this->position() < (uint16_t)10U) {
+        if (this->position() < (uint16_t)10U)
             return std::string{ ('0' + this->toStr()) };
-        }
 
         std::string pos{ this->toStr() };
 

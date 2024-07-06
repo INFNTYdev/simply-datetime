@@ -189,11 +189,11 @@ public:
         switch (layout) {
         case Layout::H_M_S_MS:
             time += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
-            time += (delimiter + this->retrieveMillisecond()->toDoubleDigitStr());
+            time += (delimiter + this->retrieveMillisecond()->toTripleDigitStr());
             break;
         case Layout::H_M_S_MS_P:
             time += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
-            time += (delimiter + this->retrieveMillisecond()->toDoubleDigitStr());
+            time += (delimiter + this->retrieveMillisecond()->toTripleDigitStr());
             time += (' ' + this->phaseStr());
             break;
         case Layout::H_M_S:

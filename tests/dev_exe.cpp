@@ -42,8 +42,10 @@
 * -> [] Implement DatetimeStub class
 * -> [] Implement .millisecondsUntil() method in Time class
 * -> [] Implement .until() methods in Date, Time, and STime classes
-* -> [] Implement .toStub() methods in Date, Time, and STime classes
-* -> [] Implement Time constructor/operators that accepts STime
+* -> []* Implement .toStub() methods in Date, Time, and STime classes
+* -> [] Implement Time constructor/=operators that accept STime
+* -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
+* -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> []* Implement .toSTime() method in Time class
 * -> [] Plan and implement Datetime/SDatetime class interfaces
@@ -90,7 +92,10 @@ int main(size_t argc, char* argv[])
 
 
 	//
-	Duration;
+	Duration aggy{ Duration::Sign::POSITIVE, 0, 0, 2, 0, 0 };
+	Duration ughh{ 104, 0, 3, 25 };
+
+	std::cout << ughh.until(aggy);
 
 	return NULL;
 }

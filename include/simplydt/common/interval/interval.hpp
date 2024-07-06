@@ -343,6 +343,29 @@ public:
 			this->lap(trans, destination.first);
 	}
 
+	/* Translate position in provided direction with large amount of units */
+	virtual void largeDisplace(Trans trans, size_t units) noexcept
+	{
+		if (units <= this->m_range.integerTypeMax())
+			return this->displace(trans, static_cast<UInt_T>(units));
+		
+		float maxCalc{ (this->m_range.integerTypeMax() * (float).7) };
+		UInt_T displaceMax{ static_cast<UInt_T>(maxCalc) };
+
+		while (units != (size_t)0ULL) {
+
+			if (units >= displaceMax) {
+				this->displace(trans, displaceMax);
+				units -= displaceMax;
+			}
+			else {
+				this->displace(trans, (UInt_T)units);
+				units = (size_t)0ULL;
+			}
+			
+		}
+	}
+
 	/* Translate linked preceding interval position in provided direction with provided units */
 	void doPrecedingDisplace(Trans trans, UInt_T units) noexcept
 	{

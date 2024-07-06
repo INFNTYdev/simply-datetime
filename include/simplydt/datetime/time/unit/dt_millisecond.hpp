@@ -22,6 +22,17 @@ public:
 
     ~Millisecond() = default;
 
+    std::string toTripleDigitStr() const noexcept
+    {
+        if (this->position() > (uint16_t)99U)
+            return this->toStr();
+
+        if (this->position() < (uint16_t)10U)
+            return std::string{ ("00" + this->toStr()) };
+
+        return std::string{ ('0' + this->toStr()) };
+    }
+
 };
 
 
