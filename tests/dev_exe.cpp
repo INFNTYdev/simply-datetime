@@ -39,18 +39,23 @@
 * -> [X] Just fix STime classes .secondsUntil() method
 * -> [X] Start DurationInterval class (create preset type names)
 * -> [X] Plan and implement Duration class interface
-* -> [/] Implement DatetimeStub class
 * -> [] Implement .millisecondsUntil() method in Time class
 * -> [] Implement .until() methods in Date, Time, and STime classes
-* -> [/]* Implement .toStub() methods in Date, Time, and STime classes
 * -> [] Implement Time constructor/=operators that accept STime
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
-* -> [/] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> []* Implement .toSTime() method in Time class
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
+* 
+* 
+* (Some future point...)
+* 
+* -> [] Plan and implement DatetimeStub class
+* -> [] Implement Date/Time/STime class .toStub() method
+* -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
+* -> [] Provide all datetime sequence classes with pointers to intervals
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
