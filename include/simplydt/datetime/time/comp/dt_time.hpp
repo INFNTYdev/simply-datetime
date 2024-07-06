@@ -336,6 +336,48 @@ public:
         return totalSeconds;
     }
 
+    /* Returns total number of milliseconds from this time until provided time */
+    size_t millisecondsUntil(const Time& time) const noexcept
+    {
+        size_t totalMs{ 0 };
+
+        if (this == &time || *this == time)
+            return totalMs;
+
+        Time temp{ *this };
+
+        // Accum. milliseconds
+        totalMs += (
+            temp.getInterval(MILLIS_INDEX)->untilPosition(*time.getInterval(MILLIS_INDEX))
+        );
+        temp.getInterval(MILLIS_INDEX)->increment(
+            temp.getInterval(MILLIS_INDEX)->untilPosition(*time.getInterval(MILLIS_INDEX))
+        );
+
+        // Accum. seconds
+        totalMs += (
+            ((size_t)temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX)) * (size_t)1'000ULL)
+        );
+        temp.getInterval(SECOND_INDEX)->increment(
+            temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX))
+        );
+
+        // Accum. minutes
+        totalMs += (
+            ((size_t)temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX)) * (size_t)60'000ULL)
+        );
+        temp.getInterval(MINUTE_INDEX)->increment(
+            temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX))
+        );
+
+        // Accum. hours
+        totalMs += (
+            ((size_t)temp.getInterval(HOUR_INDEX)->untilPosition(*time.getInterval(HOUR_INDEX)) * (size_t)3'600'000ULL)
+        );
+
+        return totalMs;
+    }
+
 
 private:
     static const uint8_t HOUR_INDEX{ 0 };

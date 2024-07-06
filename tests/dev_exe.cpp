@@ -38,7 +38,7 @@
 * -> [X] Just fix STime classes .secondsUntil() method
 * -> [X] Start DurationInterval class (create preset type names)
 * -> [X] Plan and implement Duration class interface
-* -> [] Implement .millisecondsUntil() method in Time class
+* -> [X] Implement .millisecondsUntil() method in Time class
 * -> [] Implement .until() methods in Date, Time, and STime classes
 * -> [] Implement Time constructor/=operators that accept STime
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
@@ -72,6 +72,8 @@ int main(size_t argc, char* argv[])
 
 	Time t1{ hour };
 	Time t2{ hour, minute, second };
+
+	std::cout << "\n\n" << t1.millisecondsUntil(t2) << " ms" << std::endl;
 
 	STime st1{ hour };
 	STime st2{ hour, minute, second };
