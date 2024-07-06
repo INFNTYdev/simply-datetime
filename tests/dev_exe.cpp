@@ -38,15 +38,15 @@
 * -> [X] Implement .linkDate() method in Time/STime class
 * -> [X] Just fix STime classes .secondsUntil() method
 * -> [X] Start DurationInterval class (create preset type names)
-* -> [] Plan and implement Duration class interface
-* -> [] Implement DatetimeStub class
+* -> [X] Plan and implement Duration class interface
+* -> [/] Implement DatetimeStub class
 * -> [] Implement .millisecondsUntil() method in Time class
 * -> [] Implement .until() methods in Date, Time, and STime classes
-* -> []* Implement .toStub() methods in Date, Time, and STime classes
+* -> [/]* Implement .toStub() methods in Date, Time, and STime classes
 * -> [] Implement Time constructor/=operators that accept STime
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
-* -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
+* -> [/] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> []* Implement .toSTime() method in Time class
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
