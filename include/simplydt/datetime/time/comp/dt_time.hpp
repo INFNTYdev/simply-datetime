@@ -7,6 +7,7 @@
 #include<chrono>
 
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
+#include"simplydt/duration/comp/dt_duration.hpp"
 
 
 /* Full time ( HH:MM:SS:MS ) */
@@ -376,6 +377,22 @@ public:
         );
 
         return totalMs;
+    }
+
+    /* Returns duration between this time and provided time */
+    Duration until(const Time& time) const noexcept
+    {
+        if (this == &time || *this == time)
+            return Duration{};
+
+        Duration newDur{ Duration::Sign::POSITIVE };
+
+        newDur.getMillisecond().largeDisplace(
+            Duration::Sign::POSITIVE,
+            this->millisecondsUntil(time)
+        );
+
+        return newDur;
     }
 
 

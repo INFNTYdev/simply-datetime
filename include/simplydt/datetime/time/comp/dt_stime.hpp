@@ -5,6 +5,7 @@
 
 
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
+#include"simplydt/duration/comp/dt_duration.hpp"
 
 
 /* Standard time (HH:MM:SS) */
@@ -291,6 +292,22 @@ public:
         );
 
         return totalSeconds;
+    }
+
+    /* Returns duration between this time and provided time */
+    Duration until(const STime& s_time) const noexcept
+    {
+        if (this == &s_time || *this == s_time)
+            return Duration{};
+
+        Duration newDur{ Duration::Sign::POSITIVE };
+
+        newDur.getSecond().largeDisplace(
+            Duration::Sign::POSITIVE,
+            this->secondsUntil(s_time)
+        );
+
+        return newDur;
     }
 
 

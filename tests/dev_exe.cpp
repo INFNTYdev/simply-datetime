@@ -39,7 +39,7 @@
 * -> [X] Start DurationInterval class (create preset type names)
 * -> [X] Plan and implement Duration class interface
 * -> [X] Implement .millisecondsUntil() method in Time class
-* -> [] Implement .until() methods in Date, Time, and STime classes
+* -> [X] Implement .until() methods in Date, Time, and STime classes
 * -> [] Implement Time constructor/=operators that accept STime
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
@@ -58,6 +58,7 @@
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> [] Provide all datetime sequence classes with pointers to intervals
+* -> [] Investigate why illegals are thrown in sequence classes
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
@@ -105,6 +106,15 @@ int main(size_t argc, char* argv[])
 	Duration ughh{ 104, 0, 3, 25 };
 
 	std::cout << ughh.until(aggy);
+
+
+	//
+	Date bday{ 2001, 2, 23 };
+	Date other{ 2005, 6, 17 };
+
+	std::cout << "\n\nFrom " << bday << " -> " << other << " = " << bday.until(other);
+	std::cout << "\nFrom " << t1 << " -> " << t2 << " = " << t1.until(t2) << std::endl;
+	std::cout << "\nFrom* " << st1 << " -> " << st2 << " = " << st1.until(st2) << std::endl;
 
 	return NULL;
 }

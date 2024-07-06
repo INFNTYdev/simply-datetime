@@ -7,6 +7,7 @@
 #include<chrono>
 
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
+#include"simplydt/duration/comp/dt_duration.hpp"
 
 
 /* Full date ( YYYY-mm-dd ) */
@@ -329,6 +330,34 @@ public:
         totalDays += dateRef.first->day();
 
         return totalDays;
+    }
+
+    /* Returns duration between this date and provided date */
+    Duration until(const Date& date) const noexcept
+    {
+        if (this == &date || *this == date)
+            return Duration{};
+
+        if (this->isAfter(date)) {
+            Duration newDur{ Duration::Sign::NEGATIVE };
+
+            newDur.getDays().largeDisplace(
+                Duration::Sign::POSITIVE,
+                this->daysUntil(date)
+            );
+
+            return newDur;
+        }
+        else {
+            Duration newDur{ Duration::Sign::POSITIVE };
+
+            newDur.getDays().largeDisplace(
+                Duration::Sign::POSITIVE,
+                this->daysUntil(date)
+            );
+
+            return newDur;
+        }
     }
 
 
