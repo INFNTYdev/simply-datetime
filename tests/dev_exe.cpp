@@ -44,6 +44,8 @@
 * -> [] Implement Time constructor/=operators that accept STime
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
+* -> [] Implement Date/Time/STime/Duration .increment()/.decrement() method
+*	    that accepts Duration
 * -> []* Implement .toSTime() method in Time class
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
