@@ -30,7 +30,6 @@
 * 
 * -> Make sure all boundless logic is accounted for in Range class
 * -> Safety checks when adding numbers in Range class to ensure no overflows?
-* -> [] Determine what the highest possible numbber is that can be passed to Range class
 * 
 * 
 * 7/4/2024
@@ -47,6 +46,7 @@
 * -> [] Implement Date/Time/STime/Duration .increment()/.decrement() method
 *	    that accepts Duration
 * -> []* Implement .toSTime() method in Time class
+* -> [] Determine highest possible number Range class can handle with an int type
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
