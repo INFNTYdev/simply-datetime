@@ -64,64 +64,34 @@
 
 
 
+void dateCompare(const Date& date1, const Date& date2) noexcept
+{
+	std::cout
+		<< "\nFrom " << date1.dateStr(Date::Format::STANDARD)
+		<< " -> " << date2.dateStr(Date::Format::STANDARD)
+		<< " = " << date1.until(date2) << std::endl;
+}
+
+void timeCompare(const Time& time1, const Time& time2) noexcept
+{
+	std::cout
+		<< "\nFrom " << time1.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
+		<< " -> " << time2.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
+		<< " = " << time1.until(time2) << std::endl;
+}
+
+
 int main(size_t argc, char* argv[])
 {
 	//
-	uint16_t hour{ 17 };
-	uint16_t minute{ 43 };
-	uint16_t second{ 0 };
+	Date todayDate{ std::chrono::system_clock::now() };
+	Date futureDate{ 2025, 2, 23 };
 
-	Time t1{ hour };
-	Time t2{ hour, minute, second };
+	Time nowTime{ std::chrono::system_clock::now() };
+	Time futureTime{ 16, 45 };// 4:45 PM
 
-	std::cout << "\n\n" << t1.millisecondsUntil(t2) << " ms" << std::endl;
-
-	STime st1{ hour };
-	STime st2{ hour, minute, second };
-
-	std::cout
-		<< "\nTime 1: " << t1.timeStr(Time::Format::STANDARD)
-		<< "\nTime 2: " << t2.timeStr(Time::Format::STANDARD)
-		<< "\n\nSeconds until T1 -> T2: "
-		<< t1.secondsUntil(t2) << " seconds"
-		<< std::endl;
-
-	std::cout
-		<< "\nSTime 1: " << st1.timeStr(STime::Format::STANDARD)
-		<< "\nSTime 2: " << st2.timeStr(STime::Format::STANDARD)
-		<< "\n\nSeconds until ST1 -> ST2: "
-		<< st1.secondsUntil(st2) << " seconds"
-		<< "\n\nConversion: " << st1.convertedTo(STime::TimeUnit::SECOND) << " sec"
-		<< std::endl;
-
-
-	//
-	DurationInterval test{ 10, 1 };
-
-	ArbMonth ggg{ 0, 0 };
-
-
-	//
-	Duration aggy{ Duration::Sign::POSITIVE, 0, 0, 2, 0, 0 };
-	Duration ughh{ 104, 0, 3, 25 };
-
-	std::cout << ughh.until(aggy);
-
-
-	//
-	Date bday{ 2001, 2, 23 };
-	Date other{ 2005, 6, 17 };
-
-	std::cout << "\n\nFrom " << bday << " -> " << other << " = " << bday.until(other);
-	std::cout << "\nFrom " << t1 << " -> " << t2 << " = " << t1.until(t2) << std::endl;
-	std::cout << "\nFrom* " << st1 << " -> " << st2 << " = " << st1.until(st2) << std::endl;
-	std::cout << "\nTo STIME: " << t1.toSTime() << std::endl;
-
-
-	//
-	Time gorilla{};
-
-	gorilla = std::move(st1);
+	dateCompare(todayDate, futureDate);
+	timeCompare(nowTime, futureTime);
 
 	return NULL;
 }
