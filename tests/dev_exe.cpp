@@ -45,7 +45,7 @@
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [] Implement Date/Time/STime/Duration .increment()/.decrement() method
 *	    that accepts Duration
-* -> []* Implement .toSTime() method in Time class
+* -> [X]* Implement .toSTime() method in Time class
 * -> [] Determine highest possible number Range class can handle with an int type
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
@@ -115,6 +115,7 @@ int main(size_t argc, char* argv[])
 	std::cout << "\n\nFrom " << bday << " -> " << other << " = " << bday.until(other);
 	std::cout << "\nFrom " << t1 << " -> " << t2 << " = " << t1.until(t2) << std::endl;
 	std::cout << "\nFrom* " << st1 << " -> " << st2 << " = " << st1.until(st2) << std::endl;
+	std::cout << "\nTo STIME: " << t1.toSTime() << std::endl;
 
 
 	//

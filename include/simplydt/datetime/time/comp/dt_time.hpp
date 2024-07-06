@@ -307,6 +307,12 @@ public:
     ///* Returns time as standard chronological time point */
     //Chrono toChrono() const noexcept;
 
+    /* Returns copy of full time as standard time */
+    STime toSTime() const noexcept
+    {
+        return STime{ this->hour(), this->minute(), this->second() };
+    }
+
     /* Link time to date instance */
     bool linkDate(Date& date) noexcept
     {
