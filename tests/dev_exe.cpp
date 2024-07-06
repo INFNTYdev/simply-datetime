@@ -40,7 +40,7 @@
 * -> [X] Plan and implement Duration class interface
 * -> [X] Implement .millisecondsUntil() method in Time class
 * -> [X] Implement .until() methods in Date, Time, and STime classes
-* -> [] Implement Time constructor/=operators that accept STime
+* -> [X] Implement Time constructor/=operators that accept STime
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [] Implement Date/Time/STime/Duration .increment()/.decrement() method
@@ -115,6 +115,12 @@ int main(size_t argc, char* argv[])
 	std::cout << "\n\nFrom " << bday << " -> " << other << " = " << bday.until(other);
 	std::cout << "\nFrom " << t1 << " -> " << t2 << " = " << t1.until(t2) << std::endl;
 	std::cout << "\nFrom* " << st1 << " -> " << st2 << " = " << st1.until(st2) << std::endl;
+
+
+	//
+	Time gorilla{};
+
+	gorilla = std::move(st1);
 
 	return NULL;
 }

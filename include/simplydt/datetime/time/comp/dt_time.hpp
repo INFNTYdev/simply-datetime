@@ -8,6 +8,7 @@
 
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 #include"simplydt/duration/comp/dt_duration.hpp"
+#include"simplydt/datetime/time/comp/dt_stime.hpp"
 
 
 /* Full time ( HH:MM:SS:MS ) */
@@ -122,6 +123,30 @@ public:
         //
     }
 
+    Time(const STime& s_time) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            DatetimeType::TIME_DATETIME,
+            Hour(s_time.getHour()),
+            Minute(s_time.getMinute()),
+            Second(s_time.getSecond()),
+            Millisecond((uint16_t)0U)
+        }
+    {
+        //
+    }
+
+    Time(STime&& s_time) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            DatetimeType::TIME_DATETIME,
+            Hour(std::move(s_time.getHour())),
+            Minute(std::move(s_time.getMinute())),
+            Second(std::move(s_time.getSecond())),
+            Millisecond((uint16_t)0U)
+        }
+    {
+        //
+    }
+
     virtual ~Time() noexcept = default;
 
     friend std::ostream& operator<<(std::ostream& os, const Time& time) noexcept
@@ -129,6 +154,26 @@ public:
         os << time.timeStr();
 
         return os;
+    }
+
+    Time& operator=(const STime& s_time) noexcept
+    {
+        this->getInterval(HOUR_INDEX)->setPosition(s_time.hour());
+        this->getInterval(MINUTE_INDEX)->setPosition(s_time.minute());
+        this->getInterval(SECOND_INDEX)->setPosition(s_time.second());
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0U);
+
+        return *this;
+    }
+
+    Time& operator=(STime&& s_time) noexcept
+    {
+        this->getHour() = std::move(s_time.getHour());
+        this->getMinute() = std::move(s_time.getMinute());
+        this->getSecond() = std::move(s_time.getSecond());
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0U);
+
+        return *this;
     }
 
     /* Returns hour of time */
