@@ -124,6 +124,8 @@ public:
         return os;
     }
 
+    // ---> DURATION OPERATORS HERE <---
+
     /* Returns year of date */
     uint16_t year() const noexcept
     {

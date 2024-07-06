@@ -287,6 +287,8 @@ public:
         return (this->isLongerThan(duration) || this->operator==(duration));
     }
 
+    // ---> DURATION OPERATORS HERE <---
+
     /* Returns duration elapsed days */
     uint16_t days() const noexcept
     {

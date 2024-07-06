@@ -110,6 +110,8 @@ public:
         return os;
     }
 
+    // ---> DURATION OPERATORS HERE <---
+
     /* Returns hour of time */
     uint16_t hour() const noexcept
     {
