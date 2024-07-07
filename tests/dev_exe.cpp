@@ -41,7 +41,7 @@
 * -> [X] Implement .millisecondsUntil() method in Time class
 * -> [X] Implement .until() methods in Date, Time, and STime classes
 * -> [X] Implement Time constructor/=operators that accept STime
-* -> [X] Implement Date/Time/STime/Duration .displace() method
+* -> [] Implement Date/Time/STime/Duration .displace() method
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
