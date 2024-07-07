@@ -113,9 +113,6 @@ int main(size_t argc, char* argv[])
 
 	timeCompare(nowTime, futureTime);
 	
-	// This isn't working; excess by 1 minute and 1 second (61,000 ms)
-	// (This might be a logic error on my part)
-	// (Maybe this should just be all subtracting ms rather than using behavior)
 	durationDisplace(longDuration, shortDuration);
 
 	return NULL;
