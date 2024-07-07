@@ -314,10 +314,6 @@ public:
 		}
 
 
-		/*****************************************************************************\
-		*             vvv           AI GENERATED CODE BELOW           vvv             *
-		\*****************************************************************************/
-
 		switch (direction) {
 		// Positive translation
 		case POSITIVE:
@@ -327,35 +323,46 @@ public:
 				(position - this->m_rangeStart) / this->rangeSize()
 			);
 
+			/***************************************************************************\
+			*            vvv           AI GENERATED CODE BELOW           vvv            *
+			\***************************************************************************/
+
 			position = (
 				this->m_rangeStart + (position - this->m_rangeStart) % this->rangeSize()
 			);
+
+			/***************************************************************************\
+			*            ^^^           AI GENERATED CODE ABOVE           ^^^            *
+			\***************************************************************************/
 
 			return TranslateResult{ laps, position };
 
 
 		// Negative translation
 		case NEGATIVE:
+			/***************************************************************************\
+			*            vvv           AI GENERATED CODE BELOW           vvv            *
+			\***************************************************************************/
+
 			if (position < this->m_rangeStart + add_units) {
-				laps = (
-					1 + (this->m_rangeStart + add_units - position) / this->rangeSize()
+				laps = (UInt_T)(
+					(position + add_units) / this->rangeSize()
 				);
 
 				position = (
-					this->rangeEnd() - (this->m_rangeStart + add_units - position)
+					this->rangeEnd() - (this->m_rangeStart - position + add_units - 1)
 					% this->rangeSize()
 				);
 			}
 			else
 				position -= add_units;
 
+			/***************************************************************************\
+			*            ^^^           AI GENERATED CODE ABOVE           ^^^            *
+			\***************************************************************************/
+
 			return TranslateResult{ laps, position };
 		}
-
-		/*****************************************************************************\
-		*             ^^^           AI GENERATED CODE ABOVE           ^^^             *
-		\*****************************************************************************/
-
 		
 		return TranslateResult{ laps, position };
 	}

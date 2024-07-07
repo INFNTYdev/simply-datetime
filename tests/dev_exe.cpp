@@ -41,7 +41,7 @@
 * -> [X] Implement .millisecondsUntil() method in Time class
 * -> [X] Implement .until() methods in Date, Time, and STime classes
 * -> [X] Implement Time constructor/=operators that accept STime
-* -> [X] Implement Date/Time/STime/Duration .displace() method
+* -> [] Implement Date/Time/STime/Duration .displace() method
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
@@ -119,11 +119,11 @@ int main(size_t argc, char* argv[])
 	// (Culprit is .calculateTranslation() with negative translations)
 	//durationDisplace(longDuration, shortDuration);
 
-	Range<uint16_t> dummy{ 1, 10 };
+	Range<uint16_t> dummy{ 1, 23 };
 
 	std::cout << "\nSTART: " << dummy.position() << std::endl;
 
-	dummy.translate(Range<uint16_t>::Translate::NEGATIVE, 20);
+	dummy.translate(Range<uint16_t>::Translate::NEGATIVE, 10);
 
 	std::cout << "\nSTOP: " << dummy.position() << std::endl;
 
