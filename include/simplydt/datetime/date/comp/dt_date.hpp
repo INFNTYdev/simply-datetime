@@ -362,6 +362,28 @@ public:
         }
     }
 
+    /* Displace date using provided duration */
+    void displace(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            this->getInterval(DAY_INDEX)->largeDisplace(
+                Duration::Sign::NEGATIVE,
+                duration.convertedTo(Duration::TimeUnit::DAY)
+            );
+
+            return;
+        
+        default:
+            this->getInterval(DAY_INDEX)->largeDisplace(
+                Duration::Sign::POSITIVE,
+                duration.convertedTo(Duration::TimeUnit::DAY)
+            );
+
+            return;
+        }
+    }
+
 
 private:
     static const uint8_t YEAR_INDEX{ 0 };
