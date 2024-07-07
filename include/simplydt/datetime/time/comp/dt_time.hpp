@@ -448,6 +448,24 @@ public:
         return newDur;
     }
 
+    /* Displace time using provided duration */
+    void displace(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                Duration::Sign::NEGATIVE,
+                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+            );
+        
+        default:
+            return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                Duration::Sign::POSITIVE,
+                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+            );
+        }
+    }
+
 
 private:
     static const uint8_t HOUR_INDEX{ 0 };

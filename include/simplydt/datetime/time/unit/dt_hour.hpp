@@ -66,6 +66,9 @@ public:
     /* Returns 12-hour string representation of hour in double digit format */
     std::string toDoubleDigitStandardStr() const noexcept
     {
+        if (this->position() == (uint16_t)0U)
+            return toStandardStr();
+
         if (this->position() < (uint16_t)10U)
             return std::string{ ('0' + this->toStr()) };
         else

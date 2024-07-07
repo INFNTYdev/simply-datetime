@@ -312,6 +312,24 @@ public:
         return newDur;
     }
 
+    /* Displace time using provided duration */
+    void displace(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            return this->getInterval(SECOND_INDEX)->largeDisplace(
+                Duration::Sign::NEGATIVE,
+                duration.convertedTo(Duration::TimeUnit::SECOND)
+            );
+        
+        default:
+            return this->getInterval(SECOND_INDEX)->largeDisplace(
+                Duration::Sign::POSITIVE,
+                duration.convertedTo(Duration::TimeUnit::SECOND)
+            );
+        }
+    }
+
 
 private:
     static const uint8_t HOUR_INDEX{ 0 };

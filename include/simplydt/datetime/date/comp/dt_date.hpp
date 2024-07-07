@@ -367,20 +367,16 @@ public:
     {
         switch (duration.sign()) {
         case Duration::Sign::NEGATIVE:
-            this->getInterval(DAY_INDEX)->largeDisplace(
+            return this->getInterval(DAY_INDEX)->displace(
                 Duration::Sign::NEGATIVE,
                 duration.convertedTo(Duration::TimeUnit::DAY)
             );
-
-            return;
         
         default:
-            this->getInterval(DAY_INDEX)->largeDisplace(
+            return this->getInterval(DAY_INDEX)->displace(
                 Duration::Sign::POSITIVE,
                 duration.convertedTo(Duration::TimeUnit::DAY)
             );
-
-            return;
         }
     }
 

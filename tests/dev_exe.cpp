@@ -41,7 +41,7 @@
 * -> [X] Implement .millisecondsUntil() method in Time class
 * -> [X] Implement .until() methods in Date, Time, and STime classes
 * -> [X] Implement Time constructor/=operators that accept STime
-* -> [] Implement Date/Time/STime/Duration .increment()/.decrement() methods
+* -> [X] Implement Date/Time/STime/Duration .displace() method
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
@@ -57,6 +57,7 @@
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> [] Provide all datetime sequence classes with pointers to intervals
+* -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
@@ -86,21 +87,19 @@ int main(size_t argc, char* argv[])
 	Date pastDate{ 2024, 7, 6 };
 	Date futureDate{ 2025, 2, 23 };
 
-	//Time nowTime{ std::chrono::system_clock::now() };
-	//Time futureTime{ 22, 45 };
+	Time nowTime{ std::chrono::system_clock::now() };
+	Time futureTime{ 0, 45 };
 
 	dateCompare(pastDate, futureDate);
-	//timeCompare(nowTime, futureTime);
+	timeCompare(nowTime, futureTime);
 
-	// This is not working properly, missing 2 days from result!!!
-	// (The duration is correct, the displace seems to be the issue)
-	// (This has to do with day threshold when calculating transitions)
-	//	 - (The same max is used on wrapping calculations which offsets results)
-	//	 - (Day class needs its own .calculateTranslation() method to account for
-	//		changing day maximums after wrap around)
 	pastDate.displace(pastDate.until(futureDate));
 
 	dateCompare(pastDate, futureDate);
+
+	nowTime.displace(nowTime.until(futureTime));
+
+	timeCompare(nowTime, futureTime);
 
 	return NULL;
 }

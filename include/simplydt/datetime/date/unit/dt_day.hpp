@@ -50,6 +50,7 @@ public:
 
         uint16_t translate{ 0 };
 
+        // This is here to allow new day maximums to be accounted in calcs
         while (units != (uint16_t)0U) {
 
             translate = (this->untilThreshold() + (uint16_t)1U);
