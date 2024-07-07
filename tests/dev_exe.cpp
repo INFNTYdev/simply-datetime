@@ -119,11 +119,11 @@ int main(size_t argc, char* argv[])
 	// (Culprit is .calculateTranslation() with negative translations)
 	//durationDisplace(longDuration, shortDuration);
 
-	Range<uint16_t> dummy{ 1, 10 };
+	Range<uint16_t> dummy{ 1, 23 };
 
 	std::cout << "\nSTART: " << dummy.position() << std::endl;
 
-	dummy.translate(Range<uint16_t>::Translate::NEGATIVE, 20);
+	dummy.translate(Range<uint16_t>::Translate::NEGATIVE, 10);
 
 	std::cout << "\nSTOP: " << dummy.position() << std::endl;
 
