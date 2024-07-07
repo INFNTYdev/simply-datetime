@@ -39,6 +39,31 @@ public:
         );
     }
 
+    /* Translate day in provided direction with provided units */
+	void displace(Trans trans, uint16_t units) noexcept
+    {
+        // I am not proud of this but I have to for now
+        // There has to be a better way to do this...
+
+        if (units <= this->untilThreshold())
+            return Interval<uint16_t>::displace(trans, units);
+
+        uint16_t translate{ 0 };
+
+        while (units != (uint16_t)0U) {
+
+            translate = (this->untilThreshold() + (uint16_t)1U);
+
+            if (translate > units)
+                return Interval<uint16_t>::displace(trans, units);
+
+            Interval<uint16_t>::displace(trans, translate);
+
+            units -= translate;
+
+        }
+    }
+
 };
 
 
