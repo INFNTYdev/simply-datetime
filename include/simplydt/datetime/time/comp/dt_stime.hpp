@@ -110,7 +110,53 @@ public:
         return os;
     }
 
-    // ---> DURATION OPERATORS HERE <---
+    STime operator+(const Duration& duration) const noexcept
+    {
+        STime result{ *this };
+
+        result.displace(duration);
+
+        return result;
+    }
+
+    STime operator-(const Duration& duration) const noexcept
+    {
+        STime result{ *this };
+
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            result.positiveDisplace(duration);
+            break;
+
+        default:
+            result.displace(duration);
+        }
+
+        return result;
+    }
+
+    STime& operator+=(const Duration& duration) noexcept
+    {
+        this->displace(duration);
+
+        return *this;
+    }
+
+    STime& operator-=(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            this->positiveDisplace(duration);
+            break;
+
+        default:
+            this->displace(duration);
+        }
+
+        return *this;
+    }
 
     /* Returns hour of time */
     uint16_t hour() const noexcept
@@ -219,9 +265,6 @@ public:
         return *(this->retrieveSecond());
     }
 
-    ///* Returns time as standard chronological time point */
-    //Chrono toChrono() const noexcept;
-
     /* Link time to date instance */
     bool linkDate(Date& date) noexcept
     {
@@ -312,21 +355,17 @@ public:
         return newDur;
     }
 
+    ///* Returns time as standard chronological system time point */
+    //Chrono toChrono() const noexcept;
+
     /* Displace time using provided duration */
     void displace(const Duration& duration) noexcept
     {
         switch (duration.sign()) {
         case Duration::Sign::NEGATIVE:
-            return this->getInterval(SECOND_INDEX)->largeDisplace(
-                Duration::Sign::NEGATIVE,
-                duration.convertedTo(Duration::TimeUnit::SECOND)
-            );
-        
+            return this->negativeDisplace(duration);
         default:
-            return this->getInterval(SECOND_INDEX)->largeDisplace(
-                Duration::Sign::POSITIVE,
-                duration.convertedTo(Duration::TimeUnit::SECOND)
-            );
+            return this->positiveDisplace(duration);
         }
     }
 
@@ -383,6 +422,22 @@ private:
         Interval<uint16_t>* rawInterval{ this->getInterval(SECOND_INDEX) };
 
         return static_cast<Second*>(rawInterval);
+    }
+
+    void positiveDisplace(const Duration& duration) noexcept
+    {
+        return this->getInterval(SECOND_INDEX)->largeDisplace(
+            Duration::Sign::POSITIVE,
+            duration.convertedTo(Duration::TimeUnit::SECOND)
+        );
+    }
+
+    void negativeDisplace(const Duration& duration) noexcept
+    {
+        return this->getInterval(SECOND_INDEX)->largeDisplace(
+            Duration::Sign::NEGATIVE,
+            duration.convertedTo(Duration::TimeUnit::SECOND)
+        );
     }
 
 };

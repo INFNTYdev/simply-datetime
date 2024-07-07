@@ -124,7 +124,53 @@ public:
         return os;
     }
 
-    // ---> DURATION OPERATORS HERE <---
+    Date operator+(const Duration& duration) const noexcept
+    {
+        Date result{ *this };
+
+        result.displace(duration);
+
+        return result;
+    }
+
+    Date operator-(const Duration& duration) const noexcept
+    {
+        Date result{ *this };
+
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            result.positiveDisplace(duration);
+            break;
+
+        default:
+            result.displace(duration);
+        }
+
+        return result;
+    }
+
+    Date& operator+=(const Duration& duration) noexcept
+    {
+        this->displace(duration);
+
+        return *this;
+    }
+
+    Date& operator-=(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            this->positiveDisplace(duration);
+            break;
+
+        default:
+            this->displace(duration);
+        }
+
+        return *this;
+    }
 
     /* Returns year of date */
     uint16_t year() const noexcept
@@ -270,12 +316,6 @@ public:
         return *(this->retrieveDay());
     }
 
-    ///* Returns date as standard chronological time point */   <--- This is going to take lots of work...
-    //Chrono toChrono() const noexcept
-    //{
-    //    //
-    //}
-
     /* Returns absolute total number of days from this date until provided date */
     size_t daysUntil(const Date& date) const noexcept
     {
@@ -362,21 +402,20 @@ public:
         }
     }
 
+    ///* Returns date as standard chronological system time point */   <--- This is going to take lots of work...
+    //Chrono toChrono() const noexcept
+    //{
+    //    //
+    //}
+
     /* Displace date using provided duration */
     void displace(const Duration& duration) noexcept
     {
         switch (duration.sign()) {
         case Duration::Sign::NEGATIVE:
-            return this->getInterval(DAY_INDEX)->displace(
-                Duration::Sign::NEGATIVE,
-                duration.convertedTo(Duration::TimeUnit::DAY)
-            );
-        
+            return this->negativeDisplace(duration);
         default:
-            return this->getInterval(DAY_INDEX)->displace(
-                Duration::Sign::POSITIVE,
-                duration.convertedTo(Duration::TimeUnit::DAY)
-            );
+            return this->positiveDisplace(duration);
         }
     }
 
@@ -441,6 +480,22 @@ private:
         Interval<uint16_t>* rawInterval{ this->getInterval(DAY_INDEX) };
 
         return static_cast<Day*>(rawInterval);
+    }
+
+    void positiveDisplace(const Duration& duration) noexcept
+    {
+        return this->getInterval(DAY_INDEX)->displace(
+            Duration::Sign::POSITIVE,
+            duration.convertedTo(Duration::TimeUnit::DAY)
+        );
+    }
+
+    void negativeDisplace(const Duration& duration) noexcept
+    {
+        return this->getInterval(DAY_INDEX)->displace(
+            Duration::Sign::NEGATIVE,
+            duration.convertedTo(Duration::TimeUnit::DAY)
+        );
     }
 
 };

@@ -42,10 +42,11 @@
 * -> [X] Implement .until() methods in Date, Time, and STime classes
 * -> [X] Implement Time constructor/=operators that accept STime
 * -> [X] Implement Date/Time/STime/Duration .displace() method
-* -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
-* -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
+* -> [X] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
+* -> [X] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
 * -> [] Determine highest possible number Range class can handle with an int type
+* -> [] Implement Date/Time/STime .toChrono() method
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
@@ -119,7 +120,11 @@ int main(size_t argc, char* argv[])
 	durationDisplace(longDuration, shortDuration);// 5 mins
 
 	Duration rando{ Duration::Sign::NEGATIVE, 0, 0, 3 };
-	durationDisplace(shortDuration, rando);// 
+	durationDisplace(shortDuration, rando);
+
+	Duration newbie{ Duration::Sign::NEGATIVE, 0, 2 };
+
+	std::cout << "\nNEW TIME: " << (nowTime - newbie) << "\nOLD: " << nowTime << std::endl;
 
 	return NULL;
 }

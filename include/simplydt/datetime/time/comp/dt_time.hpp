@@ -176,7 +176,53 @@ public:
         return *this;
     }
 
-    // ---> DURATION OPERATORS HERE <---
+    Time operator+(const Duration& duration) const noexcept
+    {
+        Time result{ *this };
+
+        result.displace(duration);
+
+        return result;
+    }
+
+    Time operator-(const Duration& duration) const noexcept
+    {
+        Time result{ *this };
+
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            result.positiveDisplace(duration);
+            break;
+
+        default:
+            result.displace(duration);
+        }
+
+        return result;
+    }
+
+    Time& operator+=(const Duration& duration) noexcept
+    {
+        this->displace(duration);
+
+        return *this;
+    }
+
+    Time& operator-=(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            this->positiveDisplace(duration);
+            break;
+
+        default:
+            this->displace(duration);
+        }
+
+        return *this;
+    }
 
     /* Returns hour of time */
     uint16_t hour() const noexcept
@@ -305,9 +351,6 @@ public:
     {
         return *(this->retrieveMillisecond());
     }
-
-    ///* Returns time as standard chronological time point */
-    //Chrono toChrono() const noexcept;
 
     /* Returns copy of full time as standard time */
     STime toSTime() const noexcept
@@ -448,21 +491,18 @@ public:
         return newDur;
     }
 
+    ///* Returns time as standard chronological system time point */
+    //Chrono toChrono() const noexcept;
+
     /* Displace time using provided duration */
     void displace(const Duration& duration) noexcept
     {
         switch (duration.sign()) {
         case Duration::Sign::NEGATIVE:
-            return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                Duration::Sign::NEGATIVE,
-                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-            );
+            return this->negativeDisplace(duration);
         
         default:
-            return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                Duration::Sign::POSITIVE,
-                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-            );
+            return this->positiveDisplace(duration);
         }
     }
 
@@ -531,6 +571,22 @@ private:
         Interval<uint16_t>* rawInterval{ this->getInterval(MILLIS_INDEX) };
 
         return static_cast<Millisecond*>(rawInterval);
+    }
+
+    void positiveDisplace(const Duration& duration) noexcept
+    {
+        return this->getInterval(MILLIS_INDEX)->largeDisplace(
+            Duration::Sign::POSITIVE,
+            duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+        );
+    }
+
+    void negativeDisplace(const Duration& duration) noexcept
+    {
+        return this->getInterval(MILLIS_INDEX)->largeDisplace(
+            Duration::Sign::NEGATIVE,
+            duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+        );
     }
 
 };

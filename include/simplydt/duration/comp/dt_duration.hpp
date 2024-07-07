@@ -289,6 +289,54 @@ public:
 
     // ---> DURATION OPERATORS HERE <---
 
+    Duration operator+(const Duration& duration) const noexcept
+    {
+        Duration result{ *this };
+
+        result.displace(duration);
+
+        return result;
+    }
+
+    Duration operator-(const Duration& duration) const noexcept
+    {
+        Duration result{ *this };
+
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            result.positiveDisplace(duration);
+            break;
+
+        default:
+            result.displace(duration);
+        }
+
+        return result;
+    }
+
+    Duration& operator+=(const Duration& duration) noexcept
+    {
+        this->displace(duration);
+
+        return *this;
+    }
+
+    Duration& operator-=(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        case Duration::Sign::NEGATIVE:
+            // Double negative = positive
+            this->positiveDisplace(duration);
+            break;
+
+        default:
+            this->displace(duration);
+        }
+
+        return *this;
+    }
+
     /* Returns duration elapsed days */
     uint16_t days() const noexcept
     {
@@ -578,6 +626,19 @@ public:
             return this->negativeDisplace(duration);
         default:
             return this->positiveDisplace(duration);
+        }
+    }
+
+    /* Invert duration direction sign */
+    void invert() noexcept
+    {
+        switch (this->m_directionSign) {
+        case Sign::POSITIVE:
+            this->m_directionSign = Sign::NEGATIVE;
+            return;
+        default:
+            this->m_directionSign = Sign::POSITIVE;
+            return;
         }
     }
 
