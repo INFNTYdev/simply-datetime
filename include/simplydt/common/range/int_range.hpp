@@ -220,19 +220,17 @@ public:
 	/* Returns total number of units until range position is at provided position */
 	UInt_T untilPosition(UInt_T pos) const noexcept
 	{
-		if (!this->isWithinRange(pos))
-			return (UInt_T)0;
-
-		if (pos == this->m_position)
+		if (!this->isWithinRange(pos) || pos == this->m_position)
 			return (UInt_T)0;
 		
 		if (pos < this->m_position) {
 			UInt_T remain{ (UInt_T)((this->rangeEnd() - this->m_position) + 1) };// +1 for wrap around
 			UInt_T gap{ (UInt_T)(pos - this->m_rangeStart) };
 
+			// OVFW: <--- Can cause overflow!
 			return (UInt_T)(remain + gap);
 		}
-		else
+		else// OVFW: <--- Can cause overflow!
 			return (UInt_T)(pos - this->m_position);
 	}
 
@@ -317,6 +315,7 @@ public:
 		switch (direction) {
 		// Positive translation
 		case POSITIVE:
+			// OVFW: <--- Can cause overflow!
 			position += add_units;
 
 			laps = (UInt_T)(
@@ -327,6 +326,7 @@ public:
 			*            vvv           AI GENERATED CODE BELOW           vvv            *
 			\***************************************************************************/
 
+			// OVFW: <--- Can cause overflow!
 			position = (
 				this->m_rangeStart + (position - this->m_rangeStart) % this->rangeSize()
 			);
@@ -344,6 +344,7 @@ public:
 			*            vvv           AI GENERATED CODE BELOW           vvv            *
 			\***************************************************************************/
 
+			// OVFW: <--- Can cause overflow!
 			if (position < this->m_rangeStart + add_units) {
 				laps = (
 					1 + (this->m_rangeStart - position + add_units - 1)
@@ -499,6 +500,13 @@ private:
 		// Start position is less than start
 		if (this->m_position < this->m_rangeStart)
 			this->reset();
+
+		// Boundless range is invalid (and quite frankly, not boundless)
+		if (this->m_rangeStart == this->integerTypeMax()
+			&& this->m_rangeEnd == this->integerTypeMax()) {
+			this->m_rangeStart = (this->integerTypeMax() - (UInt_T)1);
+			this->m_rangeEnd = this->m_rangeStart;
+		}
 	}
 
 };

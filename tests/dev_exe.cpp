@@ -58,6 +58,7 @@
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> [] Provide all datetime sequence classes with pointers to intervals
+* -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
 * 
@@ -94,37 +95,52 @@ void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
 int main(size_t argc, char* argv[])
 {
 	//
-	Date pastDate{ 2024, 7, 6 };
-	Date futureDate{ 2025, 2, 23 };
+	//Date pastDate{ 2024, 7, 6 };
+	//Date futureDate{ 2025, 2, 23 };
 
-	Time nowTime{ std::chrono::system_clock::now() };
-	Time futureTime{ 12, 45 };
+	//Time nowTime{ std::chrono::system_clock::now() };
+	//Time futureTime{ 12, 45 };
 
-	Duration shortDuration{ 0, 0, 2 };
-	Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
+	//Duration shortDuration{ 0, 0, 2 };
+	//Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
 
-	dateCompare(pastDate, futureDate);
-	timeCompare(nowTime, futureTime);
+	//dateCompare(pastDate, futureDate);
+	//timeCompare(nowTime, futureTime);
 
-	pastDate.displace(pastDate.until(futureDate));
+	//pastDate.displace(pastDate.until(futureDate));
 
-	dateCompare(pastDate, futureDate);
+	//dateCompare(pastDate, futureDate);
 
-	nowTime.displace(nowTime.until(futureTime));
+	//nowTime.displace(nowTime.until(futureTime));
 
-	timeCompare(nowTime, futureTime);
+	//timeCompare(nowTime, futureTime);
 	
-	durationDisplace(longDuration, shortDuration);// -1 min
-	durationDisplace(longDuration, shortDuration);// 1 min
-	durationDisplace(longDuration, shortDuration);// 3 mins
-	durationDisplace(longDuration, shortDuration);// 5 mins
+	//durationDisplace(longDuration, shortDuration);// -1 min
+	//durationDisplace(longDuration, shortDuration);// 1 min
+	//durationDisplace(longDuration, shortDuration);// 3 mins
+	//durationDisplace(longDuration, shortDuration);// 5 mins
 
-	Duration rando{ Duration::Sign::NEGATIVE, 0, 0, 3 };
-	durationDisplace(shortDuration, rando);
+	//Duration rando{ Duration::Sign::NEGATIVE, 0, 0, 3 };
+	//durationDisplace(shortDuration, rando);
 
-	Duration newbie{ Duration::Sign::NEGATIVE, 0, 2 };
+	//Duration newbie{ Duration::Sign::NEGATIVE, 0, 2 };
 
-	std::cout << "\nNEW TIME: " << (nowTime - newbie) << "\nOLD: " << nowTime << std::endl;
+	//std::cout << "\nNEW TIME: " << (nowTime - newbie) << "\nOLD: " << nowTime << std::endl;
+
+
+	//
+	Range<uint16_t> dummy{ 0, 65'535 };
+
+	std::pair<Duration::Sign, uint16_t> displace{ Duration::Sign::POSITIVE, 16'390 };
+
+	std::cout << "\nRange: " << dummy << std::endl;
+
+	std::cout << "POS. START: " << dummy.position() << std::endl;
+
+	std::cout << "Displacing " << displace.second << " units..." << std::endl;
+	dummy.translate(displace.first, displace.second);
+
+	std::cout << "\nPOS. STOP: " << dummy.position() << std::endl;
 
 	return NULL;
 }
