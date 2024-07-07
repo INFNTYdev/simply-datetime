@@ -93,39 +93,30 @@ void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
 int main(size_t argc, char* argv[])
 {
 	//
-	//Date pastDate{ 2024, 7, 6 };
-	//Date futureDate{ 2025, 2, 23 };
+	Date pastDate{ 2024, 7, 6 };
+	Date futureDate{ 2025, 2, 23 };
 
-	//Time nowTime{ std::chrono::system_clock::now() };
-	//Time futureTime{ 0, 45 };
+	Time nowTime{ std::chrono::system_clock::now() };
+	Time futureTime{ 0, 45 };
 
-	//Duration shortDuration{ 0, 0, 2 };
-	//Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
+	Duration shortDuration{ 0, 0, 2 };
+	Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
 
-	//dateCompare(pastDate, futureDate);
-	//timeCompare(nowTime, futureTime);
+	dateCompare(pastDate, futureDate);
+	timeCompare(nowTime, futureTime);
 
-	//pastDate.displace(pastDate.until(futureDate));
+	pastDate.displace(pastDate.until(futureDate));
 
-	//dateCompare(pastDate, futureDate);
+	dateCompare(pastDate, futureDate);
 
-	//nowTime.displace(nowTime.until(futureTime));
+	nowTime.displace(nowTime.until(futureTime));
 
-	//timeCompare(nowTime, futureTime);
-
-	// This is not working; off by (3 secs + 3 ms = 3,003 ms total)!!!
-	// (Did you forget to account for negative displacing properly in Range class?)
-	// (Seems to always be off by same amount even when using different values)
-	// (Culprit is .calculateTranslation() with negative translations)
-	//durationDisplace(longDuration, shortDuration);
-
-	Range<uint16_t> dummy{ 1, 23 };
-
-	std::cout << "\nSTART: " << dummy.position() << std::endl;
-
-	dummy.translate(Range<uint16_t>::Translate::NEGATIVE, 10);
-
-	std::cout << "\nSTOP: " << dummy.position() << std::endl;
+	timeCompare(nowTime, futureTime);
+	
+	// This isn't working; excess by 1 minute and 1 second (61,000 ms)
+	// (This might be a logic error on my part)
+	// (Maybe this should just be all subtracting ms rather than using behavior)
+	durationDisplace(longDuration, shortDuration);
 
 	return NULL;
 }

@@ -345,8 +345,9 @@ public:
 			\***************************************************************************/
 
 			if (position < this->m_rangeStart + add_units) {
-				laps = (UInt_T)(
-					(position + add_units) / this->rangeSize()
+				laps = (
+					1 + (this->m_rangeStart - position + add_units - 1)
+					/ this->rangeSize()
 				);
 
 				position = (
