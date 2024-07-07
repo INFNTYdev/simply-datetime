@@ -80,26 +80,52 @@ void timeCompare(const Time& time1, const Time& time2) noexcept
 		<< " = " << time1.until(time2) << std::endl;
 }
 
+void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
+{
+	std::cout << "\n( " << dur1 << " ) + ( " << dur2 << " ) = ";
+
+	dur1.displace(dur2);
+
+	std::cout << dur1 << std::endl;
+}
+
 
 int main(size_t argc, char* argv[])
 {
 	//
-	Date pastDate{ 2024, 7, 6 };
-	Date futureDate{ 2025, 2, 23 };
+	//Date pastDate{ 2024, 7, 6 };
+	//Date futureDate{ 2025, 2, 23 };
 
-	Time nowTime{ std::chrono::system_clock::now() };
-	Time futureTime{ 0, 45 };
+	//Time nowTime{ std::chrono::system_clock::now() };
+	//Time futureTime{ 0, 45 };
 
-	dateCompare(pastDate, futureDate);
-	timeCompare(nowTime, futureTime);
+	//Duration shortDuration{ 0, 0, 2 };
+	//Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
 
-	pastDate.displace(pastDate.until(futureDate));
+	//dateCompare(pastDate, futureDate);
+	//timeCompare(nowTime, futureTime);
 
-	dateCompare(pastDate, futureDate);
+	//pastDate.displace(pastDate.until(futureDate));
 
-	nowTime.displace(nowTime.until(futureTime));
+	//dateCompare(pastDate, futureDate);
 
-	timeCompare(nowTime, futureTime);
+	//nowTime.displace(nowTime.until(futureTime));
+
+	//timeCompare(nowTime, futureTime);
+
+	// This is not working; off by (3 secs + 3 ms = 3,003 ms total)!!!
+	// (Did you forget to account for negative displacing properly in Range class?)
+	// (Seems to always be off by same amount even when using different values)
+	// (Culprit is .calculateTranslation() with negative translations)
+	//durationDisplace(longDuration, shortDuration);
+
+	Range<uint16_t> dummy{ 1, 10 };
+
+	std::cout << "\nSTART: " << dummy.position() << std::endl;
+
+	dummy.translate(Range<uint16_t>::Translate::NEGATIVE, 20);
+
+	std::cout << "\nSTOP: " << dummy.position() << std::endl;
 
 	return NULL;
 }

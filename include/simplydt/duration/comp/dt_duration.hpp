@@ -570,6 +570,71 @@ public:
         }
     }
 
+    /* Displace duration using provided duration */
+    void displace(const Duration& duration) noexcept
+    {
+        switch (duration.sign()) {
+        // Negative displace
+        case Duration::Sign::NEGATIVE:
+            if (this->sign() == Sign::POSITIVE) {
+                if (this->isAfter(duration)) {
+                    // Short negative duration being added to this longer positive duration
+                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                        Duration::Sign::NEGATIVE,
+                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                    );
+                }
+
+                if (this->isBefore(duration)) {
+                    // Long negative duration being added to this shorter positive duration
+                }
+
+                if (*this == duration) {// <--- Use base operator==()
+                    // Equal negative duration being added to this positive duration
+                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                        Duration::Sign::NEGATIVE,
+                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                    );
+                }
+            }
+
+            return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                Duration::Sign::POSITIVE,
+                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+            );
+        
+        // Positive displace
+        default:
+            if (this->sign() == Sign::NEGATIVE) {
+                if (this->isAfter(duration)) {
+                    // Short positive duration being added to this longer negative duration
+                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                        Duration::Sign::NEGATIVE,
+                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                    );
+                }
+
+                if (this->isBefore(duration)) {
+                    // Long positive duration being added to this shorter negative duration
+                    // (Subtract both duration ms and flip sign?)
+                }
+
+                if (*this == duration) {// <--- Use base operator==()
+                    // Equal positive duration being added to this negative duration
+                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                        Duration::Sign::NEGATIVE,
+                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                    );
+                }
+            }
+
+            return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                Duration::Sign::POSITIVE,
+                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+            );
+        }
+    }
+
 
 private:
     static const uint8_t ARBDAY_INDEX{ 0 };
