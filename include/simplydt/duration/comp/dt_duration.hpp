@@ -574,64 +574,10 @@ public:
     void displace(const Duration& duration) noexcept
     {
         switch (duration.sign()) {
-        // Negative displace
         case Duration::Sign::NEGATIVE:
-            if (this->sign() == Sign::POSITIVE) {
-                if (this->isAfter(duration)) {
-                    // Short negative duration being added to this longer positive duration
-                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                        Duration::Sign::NEGATIVE,
-                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-                    );
-                }
-
-                if (this->isBefore(duration)) {
-                    // Long negative duration being added to this shorter positive duration
-                }
-
-                if (*this == duration) {// <--- Use base operator==()
-                    // Equal negative duration being added to this positive duration
-                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                        Duration::Sign::NEGATIVE,
-                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-                    );
-                }
-            }
-
-            return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                Duration::Sign::POSITIVE,
-                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-            );
-        
-        // Positive displace
+            return this->negativeDisplace(duration);
         default:
-            if (this->sign() == Sign::NEGATIVE) {
-                if (this->isAfter(duration)) {
-                    // Short positive duration being added to this longer negative duration
-                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                        Duration::Sign::NEGATIVE,
-                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-                    );
-                }
-
-                if (this->isBefore(duration)) {
-                    // Long positive duration being added to this shorter negative duration
-                    // (Subtract both duration ms and flip sign?)
-                }
-
-                if (*this == duration) {// <--- Use base operator==()
-                    // Equal positive duration being added to this negative duration
-                    return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                        Duration::Sign::NEGATIVE,
-                        duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-                    );
-                }
-            }
-
-            return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                Duration::Sign::POSITIVE,
-                duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-            );
+            return this->positiveDisplace(duration);
         }
     }
 
@@ -714,6 +660,102 @@ private:
         Interval<uint16_t>* rawInterval{ this->getInterval(MILLIS_INDEX) };
 
         return static_cast<Millisecond*>(rawInterval);
+    }
+
+    void positiveDisplace(const Duration& duration) noexcept
+    {
+        // Handle opposing duration signs
+        if (this->sign() == Sign::NEGATIVE) {
+            if (this->isAfter(duration)) {
+                // Short positive duration being added to this longer negative duration
+                return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::NEGATIVE,
+                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                );
+            }
+
+            if (this->isBefore(duration)) {
+                // Long positive duration being added to this shorter negative duration
+                size_t difference{
+                    (duration.convertedTo(Duration::TimeUnit::MILLISECOND) - this->convertedTo(Duration::TimeUnit::MILLISECOND))
+                };
+
+                // NOTE: Instead, we should be finding our way from current position
+                this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::NEGATIVE,
+                    this->convertedTo(Duration::TimeUnit::MILLISECOND)
+                );
+
+                this->m_directionSign = Sign::POSITIVE;
+
+                return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::POSITIVE,
+                    difference
+                );
+            }
+
+            if (DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::operator==(duration)) {
+                // Equal positive duration being added to this negative duration
+                return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::NEGATIVE,
+                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                );
+            }
+        }
+
+        // Normal displace
+        return this->getInterval(MILLIS_INDEX)->largeDisplace(
+            Duration::Sign::POSITIVE,
+            duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+        );
+    }
+
+    void negativeDisplace(const Duration& duration) noexcept
+    {
+        // Handle opposing duration signs
+        if (this->sign() == Sign::POSITIVE) {
+            if (this->isAfter(duration)) {
+                // Short negative duration being added to this longer positive duration
+                return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::NEGATIVE,
+                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                );
+            }
+
+            if (this->isBefore(duration)) {
+                // Long negative duration being added to this shorter positive duration
+                size_t difference{
+                    (duration.convertedTo(Duration::TimeUnit::MILLISECOND) - this->convertedTo(Duration::TimeUnit::MILLISECOND))
+                };
+
+                // NOTE: Instead, we should be finding our way from current position
+                this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::NEGATIVE,
+                    this->convertedTo(Duration::TimeUnit::MILLISECOND)
+                );
+
+                this->m_directionSign = Sign::NEGATIVE;
+
+                return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::POSITIVE,
+                    difference
+                );
+            }
+
+            if (DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::operator==(duration)) {
+                // Equal negative duration being added to this positive duration
+                return this->getInterval(MILLIS_INDEX)->largeDisplace(
+                    Duration::Sign::NEGATIVE,
+                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                );
+            }
+        }
+
+        // Normal displace
+        return this->getInterval(MILLIS_INDEX)->largeDisplace(
+            Duration::Sign::POSITIVE,
+            duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+        );
     }
 
 };

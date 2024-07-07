@@ -41,7 +41,7 @@
 * -> [X] Implement .millisecondsUntil() method in Time class
 * -> [X] Implement .until() methods in Date, Time, and STime classes
 * -> [X] Implement Time constructor/=operators that accept STime
-* -> [] Implement Date/Time/STime/Duration .displace() method
+* -> [X] Implement Date/Time/STime/Duration .displace() method
 * -> [] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
@@ -97,7 +97,7 @@ int main(size_t argc, char* argv[])
 	Date futureDate{ 2025, 2, 23 };
 
 	Time nowTime{ std::chrono::system_clock::now() };
-	Time futureTime{ 0, 45 };
+	Time futureTime{ 12, 45 };
 
 	Duration shortDuration{ 0, 0, 2 };
 	Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
@@ -113,7 +113,13 @@ int main(size_t argc, char* argv[])
 
 	timeCompare(nowTime, futureTime);
 	
-	durationDisplace(longDuration, shortDuration);
+	durationDisplace(longDuration, shortDuration);// -1 min
+	durationDisplace(longDuration, shortDuration);// 1 min
+	durationDisplace(longDuration, shortDuration);// 3 mins
+	durationDisplace(longDuration, shortDuration);// 5 mins
+
+	Duration rando{ Duration::Sign::NEGATIVE, 0, 0, 3 };
+	durationDisplace(shortDuration, rando);// 
 
 	return NULL;
 }
