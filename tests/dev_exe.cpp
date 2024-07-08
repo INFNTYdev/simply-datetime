@@ -58,7 +58,6 @@
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
-* -> [] Implement Duration .toChronoDuration() method
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
