@@ -3,9 +3,10 @@
 
 <br/>
 
-***about***
-<br/>
+### ***About***
 Datetime is one of the most commonly used features in software development projects. Whether it's for logging events, scheduling tasks, or tracking user activity, the ability to work with date and time can be crucial. The standard C++ library offers the *\<chrono>* header to handle datetime, but it often becomes a pain considering the style of the standard library and its complex design. Simply Datetime aims to step in and provide a more intuitive and consistent API that makes it easier to perform datetime related operations. Less time and resources can be spent around abstracting and implementing datetime into projects, and more spent on whats important - the product.
+
+<br/>
 
 ### **Key Features**:
 - **Efficient** - The library is designed to be lightweight and efficient, minimizing its impact on your project's performance.
@@ -15,8 +16,7 @@ Datetime is one of the most commonly used features in software development proje
 
 <br/>
 
-***updates***
-<br/>
+### ***Updates***
 ( *This project is still under early development, check back later!* )
 
 <br/>
