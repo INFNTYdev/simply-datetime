@@ -58,6 +58,7 @@
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
+* -> [] Implement Date/Time/STime/Duration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
@@ -140,6 +141,15 @@ int main(size_t argc, char* argv[])
 		<< "\n\nChrono: " << rnChrono
 		<< "\nDate Obj: " << chronoDemo
 		<< "\nTo chrono: " << chronoDemo.toChrono()
+		<< std::endl;
+
+	Date simplyDtCreation{ 2024, 6, 28 };
+	Date simplyDtOriginCreation{ 2023, 4 };
+	std::cout
+		<< "\nCreation until now: " << simplyDtCreation.until(rnChrono).days()
+		<< " days"
+		<< "\nSince original project: " << simplyDtOriginCreation.until(rnChrono).days()
+		<< " days"
 		<< std::endl;
 
 	return NULL;
