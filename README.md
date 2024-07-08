@@ -24,7 +24,7 @@ Datetime is one of the most commonly used features in software development proje
 ## ***Acknowledgements***
 
 > ### Tomohiko Sakamoto
-> "Your day of week algorithm saved my life, thank you very much Mr. Sakamoto!"
+> *"Your day of week algorithm saved my life, thank you very much Mr. Sakamoto!"*
 
 <br/>
 
