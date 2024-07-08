@@ -355,9 +355,6 @@ public:
         return newDur;
     }
 
-    ///* Returns time as standard chronological system time point */
-    //Chrono toChrono() const noexcept;
-
     /* Displace time using provided duration */
     void displace(const Duration& duration) noexcept
     {

@@ -536,6 +536,16 @@ public:
         return total;
     }
 
+    /* Returns durations as standard chronological duration */
+    std::chrono::duration<size_t> toChronoDuration() const noexcept
+    {
+        std::chrono::duration<size_t> duration{
+            this->convertedTo(Duration::TimeUnit::SECOND)
+        };
+
+        return duration;
+    }
+
     /* Returns absolute total number of seconds from this duration until provided duration */
     size_t secondsUntil(const Duration& duration) const noexcept
     {

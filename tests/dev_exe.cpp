@@ -46,7 +46,7 @@
 * -> [X] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
 * -> [X] Determine highest possible number Range class can handle with an int type
-* -> [] Implement Date/Time/STime .toChrono() method
+* -> [X] Implement Date .toChrono() method
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
@@ -57,7 +57,8 @@
 * -> [] Plan and implement DatetimeStub class
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
-* -> [] Provide all datetime sequence classes with pointers to intervals
+* -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
+* -> [] Implement Duration .toChronoDuration() method
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
@@ -126,6 +127,21 @@ int main(size_t argc, char* argv[])
 	Duration newbie{ Duration::Sign::NEGATIVE, 0, 2 };
 
 	std::cout << "\nNEW TIME: " << (nowTime - newbie) << "\nOLD: " << nowTime << std::endl;
+
+	
+	//
+	std::chrono::time_point<std::chrono::system_clock> rnChrono{
+		std::chrono::system_clock::now()
+	};
+
+	Date chronoDemo{ rnChrono };
+	Time chronoDemo2{ rnChrono };
+
+	std::cout
+		<< "\n\nChrono: " << rnChrono
+		<< "\nDate Obj: " << chronoDemo
+		<< "\nTo chrono: " << chronoDemo.toChrono()
+		<< std::endl;
 
 	return NULL;
 }

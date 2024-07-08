@@ -402,11 +402,18 @@ public:
         }
     }
 
-    ///* Returns date as standard chronological system time point */   <--- This is going to take lots of work...
-    //Chrono toChrono() const noexcept
-    //{
-    //    //
-    //}
+    /* Returns date as standard chronological system time point */
+    Chrono toChrono() const noexcept
+    {
+        Chrono timePoint{};
+
+        Date epoch{ Chrono{} };
+        Duration sinceEpoch{ epoch.until(*this) };
+
+        timePoint = (timePoint + sinceEpoch.toChronoDuration());
+
+        return timePoint;
+    }
 
     /* Displace date using provided duration */
     void displace(const Duration& duration) noexcept
