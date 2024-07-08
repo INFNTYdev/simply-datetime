@@ -303,10 +303,11 @@ public:
 	TranslateResult calculateTranslation(Translate direction, UInt_T add_units) const noexcept
 	{
 		UInt_T laps{ 0 };
-		UInt_T position{ this->m_position };
+		size_t position{ this->m_position };
+		UInt_T posResult{ this->m_position };
 
 		if (add_units == (UInt_T)0 || direction == NEUTRAL)
-			return TranslateResult{ laps, position };
+			return TranslateResult{ laps, this->m_position };
 
 		if (this->isBoundless()) {
 			// Not calculating laps here because this is boundless
@@ -318,9 +319,9 @@ public:
 		switch (direction) {
 		// Positive translation
 		case POSITIVE:
-			// OVFW: <--- Can cause overflow!
 			position += add_units;
 
+			// OVFW: <--- Can possibly cause overflow
 			laps = (UInt_T)(
 				(position - this->m_rangeStart) / this->rangeSize()
 			);
@@ -329,7 +330,6 @@ public:
 			*            vvv           AI GENERATED CODE BELOW           vvv            *
 			\***************************************************************************/
 
-			// OVFW: <--- Can cause overflow!
 			position = (
 				this->m_rangeStart + (position - this->m_rangeStart) % this->rangeSize()
 			);
@@ -338,7 +338,10 @@ public:
 			*            ^^^           AI GENERATED CODE ABOVE           ^^^            *
 			\***************************************************************************/
 
-			return TranslateResult{ laps, position };
+			// Cast results
+			posResult = static_cast<UInt_T>(position);
+
+			return TranslateResult{ laps, posResult };
 
 
 		// Negative translation
@@ -347,8 +350,10 @@ public:
 			*            vvv           AI GENERATED CODE BELOW           vvv            *
 			\***************************************************************************/
 
-			// OVFW: <--- Can cause overflow!
-			if (position < this->m_rangeStart + add_units) {
+			// NOTE: Edits made
+
+			if (position < (size_t)(this->m_rangeStart + add_units)) {
+				// OVFW: <--- Can possibly cause overflow?
 				laps = (
 					1 + (this->m_rangeStart - position + add_units - 1)
 					/ this->rangeSize()
@@ -366,10 +371,13 @@ public:
 			*            ^^^           AI GENERATED CODE ABOVE           ^^^            *
 			\***************************************************************************/
 
-			return TranslateResult{ laps, position };
+			// Cast results
+			posResult = static_cast<UInt_T>(position);
+
+			return TranslateResult{ laps, posResult };
 		}
 		
-		return TranslateResult{ laps, position };
+		return TranslateResult{ laps, posResult };
 	}
 
 	/* Returns calculated positive range position translation */
