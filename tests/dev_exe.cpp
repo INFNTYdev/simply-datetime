@@ -45,7 +45,7 @@
 * -> [X] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
 * -> [X] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
-* -> [] Determine highest possible number Range class can handle with an int type
+* -> [X] Determine highest possible number Range class can handle with an int type
 * -> [] Implement Date/Time/STime .toChrono() method
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
