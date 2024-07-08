@@ -141,6 +141,7 @@ int main(size_t argc, char* argv[])
 		<< "\n\nChrono: " << rnChrono
 		<< "\nDate Obj: " << chronoDemo
 		<< "\nTo chrono: " << chronoDemo.toChrono()
+		<< "\nF chrono: " << Date{ chronoDemo.toChrono() }
 		<< std::endl;
 
 	Date simplyDtCreation{ 2024, 6, 28 };
