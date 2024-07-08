@@ -12,34 +12,40 @@
 
 /* /// \\\ /// \\\ /// \\\ /// | DEV NOTES | \\\ /// \\\ /// \\\ /// \\\ *\
 * 
-* > RULES GOVERNED IN THIS CLASS:
+*					> RULES GOVERNED IN THIS CLASS <
+*					================================
+* 
 *	-> A range consist of a starting, ending, and position
 *	   integer.
-*	-> A range may only consist of positive integers.
-*	-> All member methods assume attributes to be valid.
 *	-> A ranges starting integer can never be greater than
 *	   its ending integer.
 *	-> A ranges ending integer can never be less than
 *	   its starting integer.
-*	-> A range is inclusive of its edges.
+*	-> A range must cover at least two integers.
+*	-> A range only consist of positive integers.
+*	-> A range with an equal starting and ending integer
+*	   constitutes a boundless range starting from the
+*	   given equal value.
 *	-> A ranges position can never be outside the bounds
 *	   of the ranges starting and ending integers.
 *		> (Except in case of boundless ranges)
 *		> (If a non-boundless range position seeks to exceed
 *		  its ending integer, it will wrap back around to the
-*		  starting integer, the same vice versa)
-*	-> In the absence of a range constructor parameter, its
-*	   value will be defaulted to 0.
-*	-> An incorrectly constructed range will result in
-*	   normalization.
-*	-> A range with an equal starting and ending integer
-*	   constitutes a boundless range starting from the
-*	   given equal value.
-*	-> A boundless range can only account for integers that
-*	   can be represented with the amount of bytes available
-*	   to a given integer type.
+*		  starting integer, the same in reverse)
+*	-> A range is inclusive of its edges.
+*	-> A range can only cover integers that can be represented
+*	   with the bits available to the underlying integer type
+*	   used.
 *		> (If a boundless range seeks to exceed an integer
 *		  types maximum, it will overflow!)
+*	-> A ranges size cannot exceed a quantity that is not
+*	   representable with the bits available to the underlying
+*	   integer type used.
+*	-> In the absence of a range constructor parameter, its
+*	   value will be defaulted to 0.
+*	-> All member methods assume attributes to be valid.
+*	-> An incorrectly constructed range will result in
+*	   normalization.
 * 
 \* /// \\\ /// \\\ /// \\\ ///    | END |    \\\ /// \\\ /// \\\ /// \\\ */
 
@@ -227,10 +233,9 @@ public:
 			UInt_T remain{ (UInt_T)((this->rangeEnd() - this->m_position) + 1) };// +1 for wrap around
 			UInt_T gap{ (UInt_T)(pos - this->m_rangeStart) };
 
-			// OVFW: <--- Can cause overflow!
 			return (UInt_T)(remain + gap);
 		}
-		else// OVFW: <--- Can cause overflow!
+		else
 			return (UInt_T)(pos - this->m_position);
 	}
 
@@ -306,9 +311,7 @@ public:
 		if (this->isBoundless()) {
 			// Not calculating laps here because this is boundless
 			// Boundless range overflows occur here
-			position += add_units;
-
-			return TranslateResult{ laps, position };
+			return TranslateResult{ laps, (this->m_position + add_units) };
 		}
 
 
@@ -490,23 +493,37 @@ private:
 
 	void normalizeAttributes() noexcept
 	{
+		// Invalid range start
+		// -2 because a range must contain at least two integers
+		if (this->m_rangeStart == this->integerTypeMax()) {
+			if (this->m_position == this->m_rangeStart)
+				this->m_position -= (UInt_T)2;
+
+			this->m_rangeStart -= (UInt_T)2;
+		}
+
+		// Invalid range end
+		// -1 because range size has to be representable with UInt_T type
+		if (this->m_rangeEnd == this->integerTypeMax()) {
+			this->m_rangeEnd -= (UInt_T)1;
+
+			if (this->m_rangeStart == this->m_rangeEnd) {
+				--this->m_rangeStart;
+				this->reset();
+			}
+		}
+
+		// Invalid range start/end
 		if (this->m_rangeStart > this->m_rangeEnd)
 			this->m_rangeStart = (UInt_T)0;
-		
+
 		// Start position is greater than end but range is NOT boundless
 		if (this->m_position > this->m_rangeEnd && !this->isBoundless())
 			this->reset();
-		
+
 		// Start position is less than start
 		if (this->m_position < this->m_rangeStart)
 			this->reset();
-
-		// Boundless range is invalid (and quite frankly, not boundless)
-		if (this->m_rangeStart == this->integerTypeMax()
-			&& this->m_rangeEnd == this->integerTypeMax()) {
-			this->m_rangeStart = (this->integerTypeMax() - (UInt_T)1);
-			this->m_rangeEnd = this->m_rangeStart;
-		}
 	}
 
 };

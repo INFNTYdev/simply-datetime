@@ -129,7 +129,7 @@ int main(size_t argc, char* argv[])
 
 
 	//
-	Range<uint16_t> dummy{ 0, 65'535 };
+	Range<uint16_t> dummy{ 65'534, 65'535 };
 
 	std::pair<Duration::Sign, uint16_t> displace{ Duration::Sign::POSITIVE, 16'390 };
 
@@ -138,7 +138,7 @@ int main(size_t argc, char* argv[])
 	std::cout << "POS. START: " << dummy.position() << std::endl;
 
 	std::cout << "Displacing " << displace.second << " units..." << std::endl;
-	dummy.translate(displace.first, displace.second);
+	//dummy.translate(displace.first, displace.second);
 
 	std::cout << "\nPOS. STOP: " << dummy.position() << std::endl;
 
