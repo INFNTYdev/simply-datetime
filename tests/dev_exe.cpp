@@ -100,69 +100,6 @@ void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
 int main(size_t argc, char* argv[])
 {
 	//
-	Date pastDate{ 2024, 7, 6 };
-	Date futureDate{ 2025, 2, 23 };
-
-	Time nowTime{ std::chrono::system_clock::now() };
-	Time futureTime{ 23, 45 };
-
-	Duration shortDuration{ 0, 0, 2 };
-	Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
-
-	dateCompare(pastDate, futureDate);
-	timeCompare(nowTime, futureTime);
-
-	pastDate.displace(pastDate.until(futureDate));
-
-	dateCompare(pastDate, futureDate);
-
-	nowTime.displace(nowTime.until(futureTime));
-
-	timeCompare(nowTime, futureTime);
-	
-	durationDisplace(longDuration, shortDuration);// -1 min
-	durationDisplace(longDuration, shortDuration);// 1 min
-	durationDisplace(longDuration, shortDuration);// 3 mins
-	durationDisplace(longDuration, shortDuration);// 5 mins
-
-	Duration rando{ Duration::Sign::NEGATIVE, 0, 0, 3 };
-	durationDisplace(shortDuration, rando);
-
-	Duration newbie{ Duration::Sign::NEGATIVE, 0, 2 };
-
-	std::cout << "\nNEW TIME: " << (nowTime - newbie) << "\nOLD: " << nowTime << std::endl;
-
-	
-	//
-	std::chrono::time_point<std::chrono::system_clock> rnChrono{
-		std::chrono::system_clock::now()
-	};
-
-	Date chronoDemo{ rnChrono };
-	Time chronoDemo2{ rnChrono };
-
-	std::cout
-		<< "\n\nChrono: " << rnChrono
-		<< "\nDate Obj: " << chronoDemo
-		<< "\nTo chrono: " << chronoDemo.toChrono()
-		<< "\nF chrono: " << Date{ chronoDemo.toChrono() }
-		<< std::endl;
-
-	Date simplyDtCreation{ 2024, 6, 28 };
-	Date simplyDtOriginCreation{ 2023, 4 };
-	std::cout
-		<< "\nCreation until now: " << simplyDtCreation.until(rnChrono).days()
-		<< " days"
-		<< "\nSince original project: " << simplyDtOriginCreation.until(rnChrono).days()
-		<< " days"
-		<< std::endl;
-
-	std::cout << std::endl;
-
-
-	//
-	Datetime;
-	SDatetime;
 
 	return NULL;
 }
