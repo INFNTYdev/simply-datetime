@@ -60,6 +60,7 @@
 * -> [] Plan and implement DatetimeStub class
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
+* -> [] *Implement Date/Time/STime .operator=() for std::chrono <- IMPORTANT
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
 * -> [] Implement Date/Time/STime/Duration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
@@ -160,6 +161,8 @@ int main(size_t argc, char* argv[])
 
 
 	//
+	Datetime;
+	SDatetime;
 
 	return NULL;
 }
