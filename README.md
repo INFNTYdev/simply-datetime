@@ -4,7 +4,7 @@
 <br/>
 
 ### ***About***
-Datetime is one of the most commonly used features in software development projects. Whether it's for logging events, scheduling tasks, or tracking user activity, the ability to work with date and time can be powerful. The standard C++ library offers the *\<chrono>* header to handle datetime, but it often becomes a pain considering the style of the standard library and its complex design. Simply Datetime aims to step in and provide a more intuitive and consistent API that makes it easier to perform datetime related operations. Less time and resources can be spent on abstracting and implementing datetime into projects, and more spent on whats important - the product.
+Datetime is one of the most commonly used features in software development projects. Whether it's for logging events, scheduling tasks, or tracking user activity, the ability to work with date and time can be powerful. The standard C++ library offers the *\<chrono>* header to handle datetime, but it often becomes a pain considering the style of the standard library and its complex design. Simply Datetime aims to step in and provide a more intuitive and consistent API that makes it easier to perform datetime related operations. Less time and resources can be spent on abstracting and implementing datetime in projects, and more spent on whats important - the product.
 
 <br/>
 
@@ -22,7 +22,7 @@ Datetime is one of the most commonly used features in software development proje
 > 
 > <br/>
 >
-> The first addition to the Simply Datetime library is a family of virtualized datetime classes, they are designed to emulate real-world date and time with the use of simple arithmetic algebra. These objects provide powerful interfaces to perform detailed simulation and calculations while maintaining a high degree of compatibility with the standard libraries *\<chrono>* header. Each type in this family can be driven manually easily without the need to worry about small details - virtual dates follow the real-world calendar and time objects conduct themselves as expected.
+> The first addition to the Simply Datetime library is a family of virtualized datetime classes, which are designed to emulate real-world date and time with the use of simple arithmetic algebra. These objects provide powerful interfaces to perform detailed simulation and calculations while maintaining compatibility with the standard libraries *\<chrono>* header. Each type in this family can be driven manually easily without the need to worry about small details - virtual dates follow the real-world calendar and time objects conduct themselves as expected.
 > ### **Virtual Datetime Family**
 > - ***`VirtualDate`***
 > - ***`VirtualTime`***
