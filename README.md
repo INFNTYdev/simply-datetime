@@ -12,7 +12,7 @@ Datetime is one of the most commonly used features in software development proje
 - **Efficient** - The library is designed to be lightweight and efficient, minimizing its impact on your project's performance.
 - **Portable** - Simply Datetime is built strictly with standard C++ and no dependancies. It is meant to work across different platforms and compilers, making it a reliable choice for cross-platform development.
 - **Powerful** - This library is **NOT** to be mistaken for a simple datetime library. While the API is designed to be intuitive (*and we take pride in our name*), Simply Datetime offers all the features you would expect a datetime library to have. One of the most notable features of Simply Datetime is its ability to accurately emulate real-world date and time.
-- **Compatibility** - The primary objective of this library is to streamline and simplify the usage of the chronological header. However, it also maintains a high degree of compatibility with the standard library. You can seamlessly convert between standard chronological time points and Simply Datetime Date/Datetime objects.
+- **Compatibility** - The primary objective of this library is to streamline and simplify the usage of the chronological header. However, it also maintains a high degree of compatibility with the standard library. You can easily construct Simply Datetime Date/Datetime objects using standard chronological time points and convert back when necessary.
 
 <br/>
 
