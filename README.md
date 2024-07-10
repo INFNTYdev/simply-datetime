@@ -34,11 +34,11 @@ Datetime is one of the most commonly used features in software development proje
 <br/>
 
 > ## Coming soon...
-> Updated - July 9, 2024
+> Updated - July 10, 2024
 > 
 > <br/>
 >
-> n/a
+> ( *This project is still under early development, check back later!* )
 
 <br/>
 
