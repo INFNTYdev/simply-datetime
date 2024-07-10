@@ -17,7 +17,18 @@ Datetime is one of the most commonly used features in software development proje
 <br/>
 
 ### ***Updates***
-( *This project is still under early development, check back later!* )
+> ## Virtualized Datetime (Emulation)
+> [ July 9, 2024 ]
+> 
+> <br/>
+>
+> The first addition to Simply Datetime is a family of virtualized datetime classes that are designed to emulate real-world date and time. These classes include:
+> - ***`VirtualDate`***
+> - ***`VirtualTime`***
+> - ***`SVirtualTime`***
+> - ***`VirtualDuration`***
+> - ***`VirtualDatetime`***
+> - ***`VirtualSDatetime`***
 
 <br/>
 
