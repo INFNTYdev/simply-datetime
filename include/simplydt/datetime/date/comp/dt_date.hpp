@@ -124,6 +124,30 @@ public:
         return os;
     }
 
+    Date& operator=(const Chrono& chrono) noexcept
+    {
+        std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
+        std::tm* tm_ptr{ std::localtime(&timeT) };
+
+        // Retrieve date from time point
+        uint16_t tmYear{ static_cast<uint16_t>(tm_ptr->tm_year) };// tm_year only measures years since 1900
+        uint16_t tmMonth{ static_cast<uint16_t>(tm_ptr->tm_mon) };
+        uint16_t tmDay{ static_cast<uint16_t>(tm_ptr->tm_mday) };
+
+        Month* monthRef{ this->retrieveMonth() };
+        Interval<uint16_t>* dayRef{ this->getInterval(DAY_INDEX) };
+
+        // Set datetime interval valeus
+        this->getInterval(YEAR_INDEX)->setPosition((tmYear + (uint16_t)1900U));
+        monthRef->setPosition((tmMonth + (uint16_t)1U));
+        dayRef->setPosition(tmDay);
+
+        // Set day maximum
+        dayRef->setThreshold(monthRef->getTotalDays());
+
+        return *this;
+    }
+
     Date operator+(const Duration& duration) const noexcept
     {
         Date result{ *this };
