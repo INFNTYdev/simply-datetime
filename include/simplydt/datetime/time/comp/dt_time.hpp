@@ -49,13 +49,21 @@ public:
             Millisecond((uint16_t)0U)
         }
     {
-        std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
-        std::tm* tm_ptr{ std::localtime(&timeT) };
+        uint16_t tmHour{ 23 };
+        uint16_t tmMinute{ 59 };
+        uint16_t tmSecond{ 59 };
 
-        // Retrieve time from time point
-        uint16_t tmHour{ static_cast<uint16_t>(tm_ptr->tm_hour) };
-        uint16_t tmMinute{ static_cast<uint16_t>(tm_ptr->tm_min) };
-        uint16_t tmSecond{ static_cast<uint16_t>(tm_ptr->tm_sec) };
+        // DEBUG: Somehow tm_hour is returning 19 on epoch hour?
+        // If-statement below acknowledges
+        if (chrono != Chrono{}) {// If this is not equal to the epoch
+            std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
+            std::tm* tm_ptr{ std::localtime(&timeT) };
+
+            // Retrieve time from time point
+            tmHour = static_cast<uint16_t>(tm_ptr->tm_hour);
+            tmMinute = static_cast<uint16_t>(tm_ptr->tm_min);
+            tmSecond = static_cast<uint16_t>(tm_ptr->tm_sec);
+        }
 
         // Set time interval values
         this->getInterval(HOUR_INDEX)->setPosition(tmHour);
@@ -176,6 +184,32 @@ public:
         return *this;
     }
 
+    Time& operator=(const Chrono& chrono) noexcept
+    {
+        uint16_t tmHour{ 23 };
+        uint16_t tmMinute{ 59 };
+        uint16_t tmSecond{ 59 };
+
+        // DEBUG: Somehow tm_hour is returning 19 on epoch hour?
+        // If-statement below acknowledges
+        if (chrono != Chrono{}) {// If this is not equal to the epoch
+            std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
+            std::tm* tm_ptr{ std::localtime(&timeT) };
+
+            // Retrieve time from time point
+            tmHour = static_cast<uint16_t>(tm_ptr->tm_hour);
+            tmMinute = static_cast<uint16_t>(tm_ptr->tm_min);
+            tmSecond = static_cast<uint16_t>(tm_ptr->tm_sec);
+        }
+
+        // Set time interval values
+        this->getInterval(HOUR_INDEX)->setPosition(tmHour);
+        this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
+        this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+
+        return *this;
+    }
+
     Time operator+(const Duration& duration) const noexcept
     {
         Time result{ *this };
@@ -196,7 +230,7 @@ public:
             break;
 
         default:
-            result.displace(duration);
+            result.negativeDisplace(duration);
         }
 
         return result;
@@ -218,7 +252,7 @@ public:
             break;
 
         default:
-            this->displace(duration);
+            this->negativeDisplace(duration);
         }
 
         return *this;
@@ -433,6 +467,15 @@ public:
         return totalSeconds;
     }
 
+    /* Returns absolute total number of seconds from this time until provided time */
+    size_t absSecondsUntil(const Time& time) const noexcept
+    {
+        if (this->isBefore(time))
+            return this->secondsUntil(time);
+        else
+            return time.secondsUntil(*this);
+    }
+
     /* Returns total number of milliseconds from this time until provided time */
     size_t millisecondsUntil(const Time& time) const noexcept
     {
@@ -473,6 +516,15 @@ public:
         );
 
         return totalMs;
+    }
+
+    /* Returns absolute total number of milliseconds from this time until provided time */
+    size_t absMillisecondsUntil(const Time& time) const noexcept
+    {
+        if (this->isBefore(time))
+            return this->millisecondsUntil(time);
+        else
+            return time.millisecondsUntil(*this);
     }
 
     /* Returns duration between this time and provided time */

@@ -287,8 +287,6 @@ public:
         return (this->isLongerThan(duration) || this->operator==(duration));
     }
 
-    // ---> DURATION OPERATORS HERE <---
-
     Duration operator+(const Duration& duration) const noexcept
     {
         Duration result{ *this };
@@ -333,6 +331,145 @@ public:
         default:
             this->displace(duration);
         }
+
+        return *this;
+    }
+
+    /* Returns product of this duration and integer */
+    Duration operator*(const long long int& integer) const noexcept
+    {
+        // Determine multiplicand effect
+        bool negativeMultiplicand{ (integer < 0LL) };
+
+        size_t product{ 0 };
+
+        // Obtain product
+        if (negativeMultiplicand)
+            product = (this->convertedTo(Duration::TimeUnit::MILLISECOND) * (size_t)(integer * -1LL));
+        else
+            product = (this->convertedTo(Duration::TimeUnit::MILLISECOND) * integer);
+
+        // Provide product to duration
+        Duration result{};
+        result.getInterval(MILLIS_INDEX)->largeDisplace(Duration::Sign::POSITIVE, product);
+
+        // Negative duration multiplied by positive number
+        if (this->m_directionSign == Sign::NEGATIVE && !negativeMultiplicand)
+            result.invert();
+        
+        // Positive duration multiplied by negative number
+        if (this->m_directionSign == Sign::POSITIVE && negativeMultiplicand)
+            result.invert();
+
+        return result;
+    }
+
+    /* Multiply duration by provided integer */
+    Duration& operator*=(const long long int& integer) noexcept
+    {
+        // Determine multiplicand effect
+        bool negativeMultiplicand{ (integer < 0LL) };
+
+        size_t product{ 0 };
+
+        size_t millisecs{ this->convertedTo(Duration::TimeUnit::MILLISECOND) };
+
+        // Obtain product
+        if (negativeMultiplicand)
+            product = (millisecs * (size_t)(integer * -1LL));
+        else
+            product = (millisecs * integer);
+        
+        // Handle zero product
+        if (product == (size_t)0ULL) {
+            this->getInterval(MILLIS_INDEX)->largeDisplace(
+                Duration::Sign::NEGATIVE,
+                millisecs
+            );
+
+            if (this->m_directionSign == Sign::NEGATIVE)
+                this->invert();
+            
+            return *this;
+        }
+
+        // Deduct this pre-existing milliseconds
+        product -= millisecs;
+
+        // Provide product to this
+        this->getInterval(MILLIS_INDEX)->largeDisplace(
+            Duration::Sign::POSITIVE,
+            product
+        );
+
+        // Handle this duration sign
+        if (this->m_directionSign == Sign::NEGATIVE && negativeMultiplicand)
+            this->invert();
+        else if (this->m_directionSign == Sign::POSITIVE && negativeMultiplicand)
+            this->invert();
+
+        return *this;
+    }
+
+    /* Returns quotient of this duration and provided duration as quantity */
+    long long int operator/(const Duration& duration) const noexcept
+    {
+        // Determine division effect
+        bool negativeQuotient{
+            ((this->sign() == Sign::NEGATIVE && duration.sign() == Sign::POSITIVE)
+            || (this->sign() == Sign::POSITIVE && duration.sign() == Sign::NEGATIVE))
+        };
+
+        size_t dividend{ this->convertedTo(Duration::TimeUnit::MILLISECOND) };
+        size_t divisor{ duration.convertedTo(Duration::TimeUnit::MILLISECOND) };
+
+        // Divide by zero error
+        if (divisor == (size_t)0ULL)
+            return (long long int)0LL;
+
+        // Overflow will never occur with 16-bit based duration intervals
+        long long int quotient{ (long long)(dividend / divisor) };
+
+        if (negativeQuotient)
+            quotient *= -1LL;
+
+        return quotient;
+    }
+
+    /* Returns modulus of this duration and provided duration as duration */
+    Duration operator%(const Duration& duration) const noexcept
+    {
+        long long int multiplicand{ *this / duration };
+
+        // NOTE: <--- This is temporary until more thought
+        if (multiplicand == (long long)0LL)
+            return Duration{};
+        
+        // No remainder
+        if ((duration * multiplicand) == *this)
+            return Duration{};
+
+        return (duration * multiplicand).until(*this);
+    }
+
+    Duration& operator%=(const Duration& duration) noexcept
+    {
+        long long int multiplicand{ *this / duration };
+
+        // NOTE: <--- This is temporary until more thought (zero multiplicand)
+        if (multiplicand == (long long)0LL || (duration * multiplicand) == *this) {
+            this->getInterval(MILLIS_INDEX)->largeDisplace(
+                Duration::Sign::NEGATIVE,
+                this->convertedTo(Duration::TimeUnit::MILLISECOND)
+            );
+
+            if (this->m_directionSign == Sign::NEGATIVE)
+                this->invert();
+            
+            return *this;
+        }
+
+        this->operator=((duration * multiplicand).until(*this));
 
         return *this;
     }

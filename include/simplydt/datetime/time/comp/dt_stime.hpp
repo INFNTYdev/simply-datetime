@@ -110,6 +110,24 @@ public:
         return os;
     }
 
+    STime& operator=(const Chrono& chrono) noexcept
+    {
+        std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
+        std::tm* tm_ptr{ std::localtime(&timeT) };
+
+        // Retrieve time from time point
+        uint16_t tmHour{ static_cast<uint16_t>(tm_ptr->tm_hour) };
+        uint16_t tmMinute{ static_cast<uint16_t>(tm_ptr->tm_min) };
+        uint16_t tmSecond{ static_cast<uint16_t>(tm_ptr->tm_sec) };
+
+        // Set time interval values
+        this->getInterval(HOUR_INDEX)->setPosition(tmHour);
+        this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
+        this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+
+        return *this;
+    }
+
     STime operator+(const Duration& duration) const noexcept
     {
         STime result{ *this };
@@ -337,6 +355,15 @@ public:
         );
 
         return totalSeconds;
+    }
+
+    /* Returns absolute total number of seconds from this time until provided time */
+    size_t absSecondsUntil(const STime& s_time) const noexcept
+    {
+        if (this->isBefore(s_time))
+            return this->secondsUntil(s_time);
+        else
+            return s_time.secondsUntil(*this);
     }
 
     /* Returns duration between this time and provided time */

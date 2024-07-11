@@ -22,6 +22,9 @@
 
 #include"simplydt/duration/comp/dt_duration.hpp"
 
+#include"simplydt/datetime/comp/sdt_datetime.hpp"
+#include"simplydt/datetime/comp/sdt_sdatetime.hpp"
+
 
 
 /* /// \\\ /// \\\ /// | TO-DO | \\\ /// \\\ /// \\\ *\
@@ -57,6 +60,7 @@
 * -> [] Plan and implement DatetimeStub class
 * -> [] Implement Date/Time/STime class .toStub() method
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
+* -> [] *Implement Date/Time/STime .operator=() for std::chrono <- IMPORTANT
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
 * -> [] Implement Date/Time/STime/Duration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
@@ -92,66 +96,89 @@ void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
 	std::cout << dur1 << std::endl;
 }
 
+void datetimeOut(const Datetime& datetime) noexcept
+{
+	std::cout
+		<< '\n'
+		<< datetime.datetimeStr(
+			Date::Format::STANDARD,
+			Date::Layout::M_D_YYYY,
+			Time::Format::STANDARD,
+			Time::Layout::H_M_S_P
+		)
+		<< std::endl;
+}
+
+void dateOut(const Date& date) noexcept
+{
+	std::cout
+		<< '\n'
+		<< date.dateStr(
+			Date::Format::STANDARD,
+			Date::Layout::M_D_YYYY
+		)
+		<< std::endl;
+}
+
+void timeOut(const Time& time) noexcept
+{
+	std::cout
+		<< '\n'
+		<< time.timeStr(
+			Time::Format::STANDARD,
+			Time::Layout::H_M_S_P
+		)
+		<< std::endl;
+}
+
 
 int main(size_t argc, char* argv[])
 {
 	//
-	Date pastDate{ 2024, 7, 6 };
-	Date futureDate{ 2025, 2, 23 };
+	Datetime date_1{ Datetime{ Date(2024, 7, 10), Time(1, 6) } };
+	Datetime date_2{ Datetime{ Date(2023, 7, 10), Time(1, 5) } };
+	Duration fiveMin{ Duration::Sign::POSITIVE, 0, 0, 5 };
 
-	Time nowTime{ std::chrono::system_clock::now() };
-	Time futureTime{ 23, 45 };
+	//datetimeOut(date_1);
 
-	Duration shortDuration{ 0, 0, 2 };
-	Duration longDuration{ Duration::Sign::NEGATIVE, 0, 0, 3 };
+	//datetimeOut(date_2);
 
-	dateCompare(pastDate, futureDate);
-	timeCompare(nowTime, futureTime);
-
-	pastDate.displace(pastDate.until(futureDate));
-
-	dateCompare(pastDate, futureDate);
-
-	nowTime.displace(nowTime.until(futureTime));
-
-	timeCompare(nowTime, futureTime);
-	
-	durationDisplace(longDuration, shortDuration);// -1 min
-	durationDisplace(longDuration, shortDuration);// 1 min
-	durationDisplace(longDuration, shortDuration);// 3 mins
-	durationDisplace(longDuration, shortDuration);// 5 mins
-
-	Duration rando{ Duration::Sign::NEGATIVE, 0, 0, 3 };
-	durationDisplace(shortDuration, rando);
-
-	Duration newbie{ Duration::Sign::NEGATIVE, 0, 2 };
-
-	std::cout << "\nNEW TIME: " << (nowTime - newbie) << "\nOLD: " << nowTime << std::endl;
+	// Information loss ocurring here
+	// I think Time Chrono constructor is wrong
+	//datetimeOut(Datetime{ date_1.toChrono() });
 
 	
-	//
-	std::chrono::time_point<std::chrono::system_clock> rnChrono{
-		std::chrono::system_clock::now()
-	};
 
-	Date chronoDemo{ rnChrono };
-	Time chronoDemo2{ rnChrono };
+	// ISOLATE THE PROBLEM:
 
-	std::cout
-		<< "\n\nChrono: " << rnChrono
-		<< "\nDate Obj: " << chronoDemo
-		<< "\nTo chrono: " << chronoDemo.toChrono()
-		<< "\nF chrono: " << Date{ chronoDemo.toChrono() }
+	Time dummyT{ std::chrono::system_clock::now() };
+	Datetime dummyDT{ std::chrono::system_clock::now() };
+
+	// Constructor works with non-epoch time point
+	//std::cout << "Constructor works with non-epoch time point" << std::endl;
+	//timeOut(dummyT);
+	//datetimeOut(dummyDT);
+
+	//Time problemT{ Time::Chrono{} };
+	Datetime problemDT{ Datetime::Chrono{} };
+
+	// Constructor doesn't work with epoch time point
+	//std::cout << "\n\nConstructor doesn't work with epoch time point" << std::endl;
+	//timeOut(problemT);
+	datetimeOut(problemDT);
+
+	std::cout << '\n'
+		<< problemDT.until(dummyDT)
 		<< std::endl;
 
-	Date simplyDtCreation{ 2024, 6, 28 };
-	Date simplyDtOriginCreation{ 2023, 4 };
-	std::cout
-		<< "\nCreation until now: " << simplyDtCreation.until(rnChrono).days()
-		<< " days"
-		<< "\nSince original project: " << simplyDtOriginCreation.until(rnChrono).days()
-		<< " days"
-		<< std::endl;
+	datetimeOut(dummyDT);
+	datetimeOut((problemDT + problemDT.until(dummyDT)));
+
+	// ISOLATE THE PROBLEM
+
+
+
+	//std::cout << '\n' << NULL << std::endl;
 
 	return NULL;
 }
