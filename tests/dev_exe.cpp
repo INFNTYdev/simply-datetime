@@ -134,51 +134,23 @@ void timeOut(const Time& time) noexcept
 
 int main(size_t argc, char* argv[])
 {
-	//
-	Datetime date_1{ Datetime{ Date(2024, 7, 10), Time(1, 6) } };
-	Datetime date_2{ Datetime{ Date(2023, 7, 10), Time(1, 5) } };
-	Duration fiveMin{ Duration::Sign::POSITIVE, 0, 0, 5 };
+	Date epochDate{ 1969, 12, 31 };
+	Date todayDate{ std::chrono::system_clock::now() };
 
-	//datetimeOut(date_1);
 
-	//datetimeOut(date_2);
+	// 19,916 days ago was epoch
+	// Updated (7/11/2024)
 
-	// Information loss ocurring here
-	// I think Time Chrono constructor is wrong
-	//datetimeOut(Datetime{ date_1.toChrono() });
 
-	
-
-	// ISOLATE THE PROBLEM:
-
-	Time dummyT{ std::chrono::system_clock::now() };
-	Datetime dummyDT{ std::chrono::system_clock::now() };
-
-	// Constructor works with non-epoch time point
-	//std::cout << "Constructor works with non-epoch time point" << std::endl;
-	//timeOut(dummyT);
-	//datetimeOut(dummyDT);
-
-	//Time problemT{ Time::Chrono{} };
-	Datetime problemDT{ Datetime::Chrono{} };
-
-	// Constructor doesn't work with epoch time point
-	//std::cout << "\n\nConstructor doesn't work with epoch time point" << std::endl;
-	//timeOut(problemT);
-	datetimeOut(problemDT);
-
-	std::cout << '\n'
-		<< problemDT.until(dummyDT)
+	// This stuff is correct
+	std::cout
+		<< "\n\nEpoch Date  --->  Today Date\n\n"
+		<< std::setw(30) << "daysUntil(today): " << epochDate.daysUntil(todayDate) << '\n'
+		<< std::setw(30) << "until(today): " << epochDate.until(todayDate) << '\n'
 		<< std::endl;
 
-	datetimeOut(dummyDT);
-	datetimeOut((problemDT + problemDT.until(dummyDT)));
 
-	// ISOLATE THE PROBLEM
-
-
-
-	//std::cout << '\n' << NULL << std::endl;
+	//
 
 	return NULL;
 }
