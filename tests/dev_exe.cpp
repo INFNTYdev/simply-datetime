@@ -96,10 +96,89 @@ void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
 	std::cout << dur1 << std::endl;
 }
 
+void datetimeOut(const Datetime& datetime) noexcept
+{
+	std::cout
+		<< '\n'
+		<< datetime.datetimeStr(
+			Date::Format::STANDARD,
+			Date::Layout::M_D_YYYY,
+			Time::Format::STANDARD,
+			Time::Layout::H_M_S_P
+		)
+		<< std::endl;
+}
+
+void dateOut(const Date& date) noexcept
+{
+	std::cout
+		<< '\n'
+		<< date.dateStr(
+			Date::Format::STANDARD,
+			Date::Layout::M_D_YYYY
+		)
+		<< std::endl;
+}
+
+void timeOut(const Time& time) noexcept
+{
+	std::cout
+		<< '\n'
+		<< time.timeStr(
+			Time::Format::STANDARD,
+			Time::Layout::H_M_S_P
+		)
+		<< std::endl;
+}
+
 
 int main(size_t argc, char* argv[])
 {
 	//
+	Datetime date_1{ Datetime{ Date(2024, 7, 10), Time(1, 6) } };
+	Datetime date_2{ Datetime{ Date(2023, 7, 10), Time(1, 5) } };
+	Duration fiveMin{ Duration::Sign::POSITIVE, 0, 0, 5 };
+
+	//datetimeOut(date_1);
+
+	//datetimeOut(date_2);
+
+	// Information loss ocurring here
+	// I think Time Chrono constructor is wrong
+	//datetimeOut(Datetime{ date_1.toChrono() });
+
+	
+
+	// ISOLATE THE PROBLEM:
+
+	Time dummyT{ std::chrono::system_clock::now() };
+	Datetime dummyDT{ std::chrono::system_clock::now() };
+
+	// Constructor works with non-epoch time point
+	//std::cout << "Constructor works with non-epoch time point" << std::endl;
+	//timeOut(dummyT);
+	//datetimeOut(dummyDT);
+
+	//Time problemT{ Time::Chrono{} };
+	Datetime problemDT{ Datetime::Chrono{} };
+
+	// Constructor doesn't work with epoch time point
+	//std::cout << "\n\nConstructor doesn't work with epoch time point" << std::endl;
+	//timeOut(problemT);
+	datetimeOut(problemDT);
+
+	std::cout << '\n'
+		<< problemDT.until(dummyDT)
+		<< std::endl;
+
+	datetimeOut(dummyDT);
+	datetimeOut((problemDT + problemDT.until(dummyDT)));
+
+	// ISOLATE THE PROBLEM
+
+
+
+	//std::cout << '\n' << NULL << std::endl;
 
 	return NULL;
 }
