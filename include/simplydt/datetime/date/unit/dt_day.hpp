@@ -40,7 +40,7 @@ public:
     }
 
     /* Translate day in provided direction with provided units */
-	void displace(Trans trans, uint16_t units) noexcept
+    void displace(Trans trans, uint16_t units) noexcept
     {
         // I am not proud of this but I have to for now
         // There has to be a better way to do this...
@@ -63,6 +63,47 @@ public:
             units -= translate;
 
         }
+    }
+
+    void dayDisplace(Trans trans, uint16_t units) noexcept
+    {
+        // I am not proud of this but I have to for now
+        // There has to be a better way to do this...
+
+        if (units <= this->untilThreshold())
+            return Interval<uint16_t>::displace(trans, units);
+
+        uint16_t translate{ 0 };
+
+        // This is here to allow new day maximums to be accounted in calcs
+        while (units != (uint16_t)0U) {
+
+            translate = (this->untilThreshold() + (uint16_t)1U);
+
+            if (translate > units)
+                return Interval<uint16_t>::displace(trans, units);
+
+            // NOTE: Maybe this method should be more specialized
+            // (Don't use Interval classes displace, do the work here)
+            // (This way we allow specialized date intervals to avoid base methods)
+
+            Interval<uint16_t>::displace(trans, translate);
+
+            units -= translate;
+
+        }
+    }
+
+    /* Increase day provided number of units */
+    virtual void increment(uint16_t units = (uint16_t)1U) noexcept
+    {
+        this->dayDisplace(Day::Trans::POSITIVE, units);
+    }
+
+    /* Decrease day provided number of units */
+    virtual void decrement(uint16_t units = (uint16_t)1U) noexcept
+    {
+        this->dayDisplace(Day::Trans::NEGATIVE, units);
     }
 
 };
