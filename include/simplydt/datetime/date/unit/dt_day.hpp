@@ -29,11 +29,11 @@ public:
         if (!this->hasPrecedingInterval())
             return nullptr;
         
-        if (!this->getPrecedingInterval()->hasPrecedingInterval())
+        if (!this->getPreceding()->hasPrecedingInterval())
             return nullptr;
         
         return simplydt::getDayOfWeek(
-            this->getPrecedingInterval()->precedingPosition(),// Year value
+            this->getPreceding()->precedingPosition(),// Year value
             this->precedingPosition(),// Month value
             this->position()// Day value
         );

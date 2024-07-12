@@ -67,7 +67,7 @@ public:
         if (!this->hasSubsequentInterval())
             return;
         
-        if (!this->getSubsequentInterval()->hasSubsequentInterval())
+        if (!this->getSubsequent()->hasSubsequentInterval())
             return;
 
         // Set new threshold on day interval
@@ -79,7 +79,7 @@ public:
         };
 
         // Need confirmation that this is logic-safe
-        this->getSubsequentInterval()->setSubsequentThreshold(newDayMax);
+        this->getSubsequent()->setSubsequentThreshold(newDayMax);
     }
 
     /* Increase year value by provided amount of units */
