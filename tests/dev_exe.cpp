@@ -260,13 +260,11 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	Range<uint16_t> dummyRange{ 1, 10 };
+	Interval<uint16_t> mins{ 59, 0 };// Minutes in time
 
-	std::cout << "\nInitial: " << dummyRange.position() << '\n';
-	std::cout << dummyRange.largeTranslate(
-		Range<uint16_t>::POSITIVE,
-		(size_t)1'000'000'000Ui64
-	) << " laps to land on " << dummyRange.position() << '\n';
+	std::cout << '\n' << mins << std::endl;
+
+	//
 
 	return NULL;
 }
