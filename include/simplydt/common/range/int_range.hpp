@@ -306,14 +306,13 @@ public:
 		UInt_T posResult{ this->m_position };
 
 		if (add_units == (UInt_T)0 || direction == NEUTRAL)
-			return TranslateResult{ laps, this->m_position };
+			return TranslateResult{ laps, posResult };
 
 		if (this->isBoundless()) {
 			// Not calculating laps here because this is boundless
 			// Boundless range overflows occur here
 			return TranslateResult{ laps, (this->m_position + add_units) };
 		}
-
 
 		switch (direction) {
 		// Positive translation
@@ -380,7 +379,82 @@ public:
 	}
 
 	/* Returns calculated range position translation */
-	LargeTranslateResult calculateLargeTranslation(Translate direction, size_t add_units) const noexcept;
+	LargeTranslateResult calculateLargeTranslation(Translate direction, size_t add_units) const noexcept
+	{
+		size_t lapResult{ 0 };
+		size_t position{ this->m_position };
+		UInt_T posResult{ this->m_position };
+
+		if (add_units == (size_t)0ULL || direction == NEUTRAL)
+			return LargeTranslateResult{ lapResult, posResult };
+
+		if (this->isBoundless()) {
+			// Not calculating laps here because this is boundless
+			// Boundless range overflows occur here
+			return LargeTranslateResult{ lapResult, (this->m_position + add_units) };
+		}
+
+		switch (direction) {
+		// Positive translation
+		case POSITIVE:
+			position += add_units;
+
+			lapResult = (size_t)(
+				(position - this->m_rangeStart) / this->rangeSize()
+			);
+
+			/***************************************************************************\
+			*            vvv           AI GENERATED CODE BELOW           vvv            *
+			\***************************************************************************/
+
+			position = (size_t)(
+				this->m_rangeStart + (position - this->m_rangeStart) % this->rangeSize()
+			);
+
+			/***************************************************************************\
+			*            ^^^           AI GENERATED CODE ABOVE           ^^^            *
+			\***************************************************************************/
+
+			// Cast results
+			posResult = static_cast<UInt_T>(position);
+
+			return LargeTranslateResult{ lapResult, posResult };
+
+
+		// Negative translation
+		case NEGATIVE:
+			/***************************************************************************\
+			*            vvv           AI GENERATED CODE BELOW           vvv            *
+			\***************************************************************************/
+
+			// NOTE: Edits made
+
+			if (position < (size_t)(this->m_rangeStart + add_units)) {
+				lapResult = (size_t)(
+					1 + (this->m_rangeStart - position + add_units - 1)
+					/ this->rangeSize()
+				);
+
+				position = (size_t)(
+					this->rangeEnd() - (this->m_rangeStart - position + add_units - 1)
+					% this->rangeSize()
+				);
+			}
+			else
+				position -= add_units;
+
+			/***************************************************************************\
+			*            ^^^           AI GENERATED CODE ABOVE           ^^^            *
+			\***************************************************************************/
+
+			// Cast results
+			posResult = static_cast<UInt_T>(position);
+
+			return LargeTranslateResult{ lapResult, posResult };
+		}
+
+		return LargeTranslateResult{ lapResult, posResult };
+	}
 
 	/* Returns calculated positive range position translation */
 	TranslateResult calculatePositiveTrans(UInt_T add_units) const noexcept
@@ -418,7 +492,16 @@ public:
 	}
 
 	/* Translate range position in provided direction with provided units and return laps */
-	size_t largeTranslate(Translate direction, size_t add_units) noexcept;
+	size_t largeTranslate(Translate direction, size_t add_units) noexcept
+	{
+		LargeTranslateResult destination{
+			this->calculateLargeTranslation(direction, add_units)
+		};
+
+		this->setPosition(destination.second);
+
+		return destination.first;
+	}
 
 	/* Set range starting integer */
 	bool setRangeStart(UInt_T start) noexcept
@@ -442,8 +525,39 @@ public:
 		return true;
 	}
 
-	/* Shift entire range in provided direction with provided number of units */
-	void shiftRange(Translate direction, UInt_T units) noexcept;
+	/* Shift range end-points in provided direction with provided number of units */
+	void shiftRange(Translate direction, UInt_T units) noexcept
+	{
+		switch (direction) {
+		case POSITIVE:
+			if ((this->integerTypeMax() - units) < this->m_rangeEnd)
+				units -= (this->m_rangeEnd - (this->integerTypeMax() - units));
+
+			if (!units)
+				return;
+
+			this->m_rangeStart += units;
+			this->m_rangeEnd += units;
+
+			if (!isWithinRange(this->m_position))
+				this->setPosition(this->m_rangeStart);
+
+			return;
+
+		case NEGATIVE:
+			if (units > this->m_rangeStart)
+				units -= (units - this->m_rangeStart);
+			
+			if (!units)
+				return;
+			
+			this->m_rangeStart -= units;
+			this->m_rangeEnd -= units;
+
+			if (!isWithinRange(this->m_position))
+				this->setPosition(this->m_rangeEnd);
+		}
+	}
 
 	/* Increase range position provided number of units */
 	void increment(UInt_T add_units = (UInt_T)1) noexcept
@@ -452,7 +566,10 @@ public:
 	}
 
 	/* Increase range position provided number of units */
-	void largeIncrement(size_t add_units) noexcept;
+	void largeIncrement(size_t add_units) noexcept
+	{
+		this->largeTranslate(Translate::POSITIVE, add_units);
+	}
 
 	/* Decrease range position provided number of units */
 	void decrement(UInt_T add_units = (UInt_T)1) noexcept
@@ -461,7 +578,10 @@ public:
 	}
 
 	/* Decrease range position provided number of units */
-	void largeDecrement(size_t add_units) noexcept;
+	void largeDecrement(size_t add_units) noexcept
+	{
+		this->largeTranslate(Translate::NEGATIVE, add_units);
+	}
 
 	/* Reset range position to starting integer */
 	void reset() noexcept

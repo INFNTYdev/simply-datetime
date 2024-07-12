@@ -257,5 +257,13 @@ int main(size_t argc, char* argv[])
 
 	Range<uint16_t> dummyRange{ 1, 10 };
 
+	std::cout << "\nInitial: " << dummyRange.position() << '\n';
+	std::cout << dummyRange.largeTranslate(
+		Range<uint16_t>::POSITIVE,
+		(size_t)1'000'000'000Ui64
+	) << " laps to land on " << dummyRange.position() << '\n';
+
+	dummyRange.shiftRange(Range<uint16_t>::POSITIVE, 2);
+
 	return NULL;
 }
