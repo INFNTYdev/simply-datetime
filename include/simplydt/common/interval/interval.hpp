@@ -16,6 +16,8 @@ class Interval {
 public:
 	/* Interval position translation result */
 	using TransResult = Range<UInt_T>::TranslateResult;
+	/* Large interval position translation result */
+	using LargeTransResult = Range<UInt_T>::LargeTranslateResult;
 	/* Interval translation modes */
 	using Trans = Range<UInt_T>::Translate;
 
@@ -103,20 +105,6 @@ public:
 			return false;
 		
 		return true;
-	}
-
-	/* Returns true if right-side interval position is greater than left-side position */
-	template <typename Other_UInt_T>
-	bool operator<(const Interval<Other_UInt_T>& interval) const noexcept
-	{
-		return this->isAfter(interval);
-	}
-
-	/* Returns true if right-side interval position is less than left-side position */
-	template <typename Other_UInt_T>
-	bool operator>(const Interval<Other_UInt_T>& interval) const noexcept
-	{
-		return this->isBefore(interval);
 	}
 
 	/* Returns interval starting position */
@@ -254,8 +242,14 @@ public:
 		return this->m_range.setPosition(pos);
 	}
 
+	/* Set interval ending position */
+	bool setThreshold(UInt_T cmax) noexcept
+	{
+		return this->m_range.setRangeEnd(cmax);
+	}
+
 	/* Set linked preceding interval position */
-	bool setPrecedingPosition(UInt_T pos) noexcept
+	bool setPrecedingPosition(UInt_T pos) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasPrecedingInterval())
 			return false;
@@ -264,7 +258,7 @@ public:
 	}
 
 	/* Set linked subsequent interval position */
-	bool setSubsequentPosition(UInt_T pos) noexcept
+	bool setSubsequentPosition(UInt_T pos) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasSubsequentInterval())
 			return false;
@@ -273,7 +267,7 @@ public:
 	}
 
 	/* Returns linked preceding interval position */
-	UInt_T precedingPosition() const noexcept
+	UInt_T precedingPosition() const noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasPrecedingInterval())
 			return (UInt_T)0;
@@ -282,7 +276,7 @@ public:
 	}
 
 	/* Returns linked subsequent interval position */
-	UInt_T subsequentPosition() const noexcept
+	UInt_T subsequentPosition() const noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasSubsequentInterval())
 			return (UInt_T)0;
@@ -290,20 +284,14 @@ public:
 		return this->m_subsequent_ptr->position();
 	}
 
-	/* Set interval ending position */
-	bool setThreshold(UInt_T cmax) noexcept
-	{
-		return this->m_range.setRangeEnd(cmax);
-	}
-
 	/* Set linked preceding interval ending position */
-	bool setPrecedingThreshold(UInt_T cmax) noexcept
+	bool setPrecedingThreshold(UInt_T cmax) noexcept//	<--- DELETE THIS!
 	{
 		return this->m_preceding_ptr->setThreshold(cmax);
 	}
 
 	/* Set linked subsequent interval ending position */
-	bool setSubsequentThreshold(UInt_T cmax) noexcept
+	bool setSubsequentThreshold(UInt_T cmax) noexcept//	<--- DELETE THIS!
 	{
 		return this->m_subsequent_ptr->setThreshold(cmax);
 	}
@@ -315,7 +303,7 @@ public:
 	}
 
 	/* Returns calculated preceding interval position translation */
-	TransResult calculatePrecedingTranslation(Trans trans, UInt_T units) const noexcept
+	TransResult calculatePrecedingTranslation(Trans trans, UInt_T units) const noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasPrecedingInterval())
 			return TransResult{ NULL, NULL };
@@ -324,7 +312,7 @@ public:
 	}
 
 	/* Returns calculated subsequent interval position translation */
-	TransResult calculateSubsequentTranslation(Trans trans, UInt_T units) const noexcept
+	TransResult calculateSubsequentTranslation(Trans trans, UInt_T units) const noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasSubsequentInterval())
 			return TransResult{ NULL, NULL };
@@ -370,7 +358,7 @@ public:
 	}
 
 	/* Translate linked preceding interval position in provided direction with provided units */
-	void doPrecedingDisplace(Trans trans, UInt_T units) noexcept
+	void doPrecedingDisplace(Trans trans, UInt_T units) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasPrecedingInterval())
 			return;
@@ -379,7 +367,7 @@ public:
 	}
 
 	/* Translate linked subsequent interval position in provided direction with provided units */
-	void doSubsequentDisplace(Trans trans, UInt_T units) noexcept
+	void doSubsequentDisplace(Trans trans, UInt_T units) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasSubsequentInterval())
 			return;
@@ -394,7 +382,7 @@ public:
 	}
 
 	/* Increase linked preceding interval position provided number of units */
-	void doPrecedingIncrement(UInt_T units = (UInt_T)1) noexcept
+	void doPrecedingIncrement(UInt_T units = (UInt_T)1) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasPrecedingInterval())
 			return;
@@ -403,7 +391,7 @@ public:
 	}
 
 	/* Increase linked subsequent interval position provided number of units */
-	void doSubsequentIncrement(UInt_T units = (UInt_T)1) noexcept
+	void doSubsequentIncrement(UInt_T units = (UInt_T)1) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasSubsequentInterval())
 			return;
@@ -418,7 +406,7 @@ public:
 	}
 
 	/* Decrease linked preceding interval position provided number of units */
-	void doPrecedingDecrement(UInt_T units = (UInt_T)1) noexcept
+	void doPrecedingDecrement(UInt_T units = (UInt_T)1) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasPrecedingInterval())
 			return;
@@ -427,7 +415,7 @@ public:
 	}
 
 	/* Decrease linked subsequent interval position provided number of units */
-	void doSubsequentDecrement(UInt_T units = (UInt_T)1) noexcept
+	void doSubsequentDecrement(UInt_T units = (UInt_T)1) noexcept//	<--- DELETE THIS!
 	{
 		if (!this->hasSubsequentInterval())
 			return;
