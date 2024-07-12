@@ -352,6 +352,9 @@ public:
 		float maxCalc{ (this->m_range.integerTypeMax() * (float).7) };
 		UInt_T displaceMax{ static_cast<UInt_T>(maxCalc) };
 
+		// NOTE: Implement this method in Range class to remove this loop
+		// (Use large int type to conduct calculations and return UInt_T types in results)
+
 		while (units != (size_t)0ULL) {
 
 			if (units >= displaceMax) {
@@ -465,6 +468,9 @@ private:
 	{
 		if (!this->hasPrecedingInterval())
 			return;
+
+		// NOTE: Maybe this should be protected and overridable
+		// (Date intervals need to be able to use specialized methods)
 		
 		this->m_preceding_ptr->displace(trans, lap_units);
 	}
