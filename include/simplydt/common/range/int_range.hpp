@@ -105,6 +105,8 @@ public:
 
 	/* Range position translation result (laps, position) */
 	using TranslateResult = std::pair<UInt_T, UInt_T>;
+	/* Large range position translation result (laps, position) */
+	using LargeTranslateResult = std::pair<size_t, UInt_T>;
 
 	/* Range translation modes */
 	enum Translate {
@@ -217,9 +219,6 @@ public:
 	/* Returns total number of units position is from range start */
 	UInt_T displacement() const noexcept
 	{
-		if (this->isBoundless())
-			return (UInt_T)(this->m_position - this->m_rangeStart);
-
 		return (UInt_T)(this->m_position - this->m_rangeStart);
 	}
 
@@ -380,6 +379,9 @@ public:
 		return TranslateResult{ laps, posResult };
 	}
 
+	/* Returns calculated range position translation */
+	LargeTranslateResult calculateLargeTranslation(Translate direction, size_t add_units) const noexcept;
+
 	/* Returns calculated positive range position translation */
 	TranslateResult calculatePositiveTrans(UInt_T add_units) const noexcept
 	{
@@ -415,6 +417,9 @@ public:
 		return destination.first;
 	}
 
+	/* Translate range position in provided direction with provided units and return laps */
+	size_t largeTranslate(Translate direction, size_t add_units) noexcept;
+
 	/* Set range starting integer */
 	bool setRangeStart(UInt_T start) noexcept
 	{
@@ -437,17 +442,26 @@ public:
 		return true;
 	}
 
+	/* Shift entire range in provided direction with provided number of units */
+	void shiftRange(Translate direction, UInt_T units) noexcept;
+
 	/* Increase range position provided number of units */
 	void increment(UInt_T add_units = (UInt_T)1) noexcept
 	{
 		this->translate(Translate::POSITIVE, add_units);
 	}
 
+	/* Increase range position provided number of units */
+	void largeIncrement(size_t add_units) noexcept;
+
 	/* Decrease range position provided number of units */
 	void decrement(UInt_T add_units = (UInt_T)1) noexcept
 	{
 		this->translate(Translate::NEGATIVE, add_units);
 	}
+
+	/* Decrease range position provided number of units */
+	void largeDecrement(size_t add_units) noexcept;
 
 	/* Reset range position to starting integer */
 	void reset() noexcept
