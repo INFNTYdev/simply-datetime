@@ -3,28 +3,30 @@
 #include<cmath>
 
 // Developer Includes:
-#include"simplydt/duration/duration_interval.hpp"
-#include"simplydt/duration/unit/dur_unit_def.hpp"
-#include"simplydt/datetime/date/unit/dt_year.hpp"
-#include"simplydt/datetime/date/unit/dt_month.hpp"
-#include"simplydt/datetime/date/unit/dt_day.hpp"
+#include"simplydt/common/range/int_range.hpp"
 
-#include"simplydt/datetime/time/unit/dt_hour.hpp"
-#include"simplydt/datetime/time/unit/dt_minute.hpp"
-#include"simplydt/datetime/time/unit/dt_second.hpp"
-#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
+//#include"simplydt/duration/duration_interval.hpp"
+//#include"simplydt/duration/unit/dur_unit_def.hpp"
+//#include"simplydt/datetime/date/unit/dt_year.hpp"
+//#include"simplydt/datetime/date/unit/dt_month.hpp"
+//#include"simplydt/datetime/date/unit/dt_day.hpp"
 
-#include"simplydt/common/sequence/linked_sequence.hpp"
-#include"simplydt/datetime/sequence/dt_sequence.hpp"
+//#include"simplydt/datetime/time/unit/dt_hour.hpp"
+//#include"simplydt/datetime/time/unit/dt_minute.hpp"
+//#include"simplydt/datetime/time/unit/dt_second.hpp"
+//#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
-#include"simplydt/datetime/date/comp/dt_date.hpp"
-#include"simplydt/datetime/time/comp/dt_time.hpp"
-#include"simplydt/datetime/time/comp/dt_stime.hpp"
+//#include"simplydt/common/sequence/linked_sequence.hpp"
+//#include"simplydt/datetime/sequence/dt_sequence.hpp"
 
-#include"simplydt/duration/comp/dt_duration.hpp"
+//#include"simplydt/datetime/date/comp/dt_date.hpp"
+//#include"simplydt/datetime/time/comp/dt_time.hpp"
+//#include"simplydt/datetime/time/comp/dt_stime.hpp"
 
-#include"simplydt/datetime/comp/sdt_datetime.hpp"
-#include"simplydt/datetime/comp/sdt_sdatetime.hpp"
+//#include"simplydt/duration/comp/dt_duration.hpp"
+
+//#include"simplydt/datetime/comp/sdt_datetime.hpp"
+//#include"simplydt/datetime/comp/sdt_sdatetime.hpp"
 
 
 
@@ -72,65 +74,65 @@
 
 
 
-void dateCompare(const Date& date1, const Date& date2) noexcept
-{
-	std::cout
-		<< "\nFrom " << date1.dateStr(Date::Format::STANDARD)
-		<< " -> " << date2.dateStr(Date::Format::STANDARD)
-		<< " = " << date1.until(date2) << std::endl;
-}
-
-void timeCompare(const Time& time1, const Time& time2) noexcept
-{
-	std::cout
-		<< "\nFrom " << time1.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
-		<< " -> " << time2.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
-		<< " = " << time1.until(time2) << std::endl;
-}
-
-void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
-{
-	std::cout << "\n( " << dur1 << " ) + ( " << dur2 << " ) = ";
-
-	dur1.displace(dur2);
-
-	std::cout << dur1 << std::endl;
-}
-
-void datetimeOut(const Datetime& datetime) noexcept
-{
-	std::cout
-		<< '\n'
-		<< datetime.datetimeStr(
-			Date::Format::STANDARD,
-			Date::Layout::M_D_YYYY,
-			Time::Format::STANDARD,
-			Time::Layout::H_M_S_P
-		)
-		<< std::endl;
-}
-
-void dateOut(const Date& date) noexcept
-{
-	std::cout
-		<< '\n'
-		<< date.dateStr(
-			Date::Format::STANDARD,
-			Date::Layout::M_D_YYYY
-		)
-		<< std::endl;
-}
-
-void timeOut(const Time& time) noexcept
-{
-	std::cout
-		<< '\n'
-		<< time.timeStr(
-			Time::Format::STANDARD,
-			Time::Layout::H_M_S_P
-		)
-		<< std::endl;
-}
+//void dateCompare(const Date& date1, const Date& date2) noexcept
+//{
+//	std::cout
+//		<< "\nFrom " << date1.dateStr(Date::Format::STANDARD)
+//		<< " -> " << date2.dateStr(Date::Format::STANDARD)
+//		<< " = " << date1.until(date2) << std::endl;
+//}
+//
+//void timeCompare(const Time& time1, const Time& time2) noexcept
+//{
+//	std::cout
+//		<< "\nFrom " << time1.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
+//		<< " -> " << time2.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
+//		<< " = " << time1.until(time2) << std::endl;
+//}
+//
+//void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
+//{
+//	std::cout << "\n( " << dur1 << " ) + ( " << dur2 << " ) = ";
+//
+//	dur1.displace(dur2);
+//
+//	std::cout << dur1 << std::endl;
+//}
+//
+//void datetimeOut(const Datetime& datetime) noexcept
+//{
+//	std::cout
+//		<< '\n'
+//		<< datetime.datetimeStr(
+//			Date::Format::STANDARD,
+//			Date::Layout::M_D_YYYY,
+//			Time::Format::STANDARD,
+//			Time::Layout::H_M_S_P
+//		)
+//		<< std::endl;
+//}
+//
+//void dateOut(const Date& date) noexcept
+//{
+//	std::cout
+//		<< '\n'
+//		<< date.dateStr(
+//			Date::Format::STANDARD,
+//			Date::Layout::M_D_YYYY
+//		)
+//		<< std::endl;
+//}
+//
+//void timeOut(const Time& time) noexcept
+//{
+//	std::cout
+//		<< '\n'
+//		<< time.timeStr(
+//			Time::Format::STANDARD,
+//			Time::Layout::H_M_S_P
+//		)
+//		<< std::endl;
+//}
 
 
 int to_jdn(int day, int month, int year) {
@@ -165,88 +167,88 @@ void add_days(int& day, int& month, int& year, int days) {
 
 int main(size_t argc, char* argv[])
 {
-	Date epochDate{ 1969, 12, 31 };
-	Date epochNeig{ 1970, 1, 1 };
-	Date todayDate{ std::chrono::system_clock::now() };
+	//Date epochDate{ 1969, 12, 31 };
+	//Date epochNeig{ 1970, 1, 1 };
+	//Date todayDate{ std::chrono::system_clock::now() };
 
-	std::cout << "\nEpoch:";
-	dateOut(epochDate);
+	//std::cout << "\nEpoch:";
+	//dateOut(epochDate);
 
-	std::cout << "\nEpoch neighbor:";
-	dateOut(epochNeig);
+	//std::cout << "\nEpoch neighbor:";
+	//dateOut(epochNeig);
 
-	std::cout << "\nToday:";
-	dateOut(todayDate);
-
-
-	// 19,916 days ago was epoch
-	// Updated (7/11/2024)
+	//std::cout << "\nToday:";
+	//dateOut(todayDate);
 
 
-	// This stuff is correct
-	std::cout
-		<< "\n\nEpoch Date  --->  Today Date\n\n"
-		<< std::setw(25) << "daysUntil(today): " << epochDate.daysUntil(todayDate) << '\n'
-		<< std::setw(25) << "until(today): " << epochDate.until(todayDate) << '\n'
-		<< std::setw(25) << "until(neighbor): " << epochDate.until(epochNeig) << '\n'
-		<< std::endl;
-
-	std::cout << "\nJDN Number test:" << std::endl;
-	std::cout
-		<< days_between(
-			epochDate.day(),
-			epochDate.month(),
-			epochDate.year(),
-			todayDate.day(),
-			todayDate.month(),
-			todayDate.year()
-		)
-		<< " days until" << std::endl;
+	//// 19,916 days ago was epoch
+	//// Updated (7/11/2024)
 
 
-	// This stuff is incorrect
-	std::cout << '\n'
-		<< std::setw(25) << "epoch + until today: ";
-	Duration untilToday = epochDate.until(todayDate);
-	Date expectToday = (epochDate + untilToday);
-	std::cout << expectToday << " (missing ";
-	// Extra day becase time not accounted
-	size_t daysMissing = expectToday.daysUntil(todayDate);
-	std::cout << daysMissing << " days)" << std::endl;
+	//// This stuff is correct
+	//std::cout
+	//	<< "\n\nEpoch Date  --->  Today Date\n\n"
+	//	<< std::setw(25) << "daysUntil(today): " << epochDate.daysUntil(todayDate) << '\n'
+	//	<< std::setw(25) << "until(today): " << epochDate.until(todayDate) << '\n'
+	//	<< std::setw(25) << "until(neighbor): " << epochDate.until(epochNeig) << '\n'
+	//	<< std::endl;
 
-	std::cout << std::setw(25) << "epoch + until neighb.: ";
-	Duration untilNeig = epochDate.until(epochNeig);
-	Date expectNeig = (epochDate + untilNeig);
-	std::cout << expectNeig << " (missing ";
-	// Extra day becase time not accounted
-	daysMissing = expectNeig.daysUntil(epochNeig);
-	std::cout << daysMissing << " days)" << std::endl;
+	//std::cout << "\nJDN Number test:" << std::endl;
+	//std::cout
+	//	<< days_between(
+	//		epochDate.day(),
+	//		epochDate.month(),
+	//		epochDate.year(),
+	//		todayDate.day(),
+	//		todayDate.month(),
+	//		todayDate.year()
+	//	)
+	//	<< " days until" << std::endl;
 
-	std::cout << "\nSearching for day loss..." << std::endl;
 
-	while (daysMissing == 0) {
+	//// This stuff is incorrect
+	//std::cout << '\n'
+	//	<< std::setw(25) << "epoch + until today: ";
+	//Duration untilToday = epochDate.until(todayDate);
+	//Date expectToday = (epochDate + untilToday);
+	//std::cout << expectToday << " (missing ";
+	//// Extra day becase time not accounted
+	//size_t daysMissing = expectToday.daysUntil(todayDate);
+	//std::cout << daysMissing << " days)" << std::endl;
 
-		epochNeig.getDay().increment();
+	//std::cout << std::setw(25) << "epoch + until neighb.: ";
+	//Duration untilNeig = epochDate.until(epochNeig);
+	//Date expectNeig = (epochDate + untilNeig);
+	//std::cout << expectNeig << " (missing ";
+	//// Extra day becase time not accounted
+	//daysMissing = expectNeig.daysUntil(epochNeig);
+	//std::cout << daysMissing << " days)" << std::endl;
 
-		untilNeig = epochDate.until(epochNeig);
+	//std::cout << "\nSearching for day loss..." << std::endl;
 
-		if (untilNeig.days() == 59)
-			std::cout << "\nNext loop" << std::endl;
+	//while (daysMissing == 0) {
 
-		expectNeig = (epochDate + untilNeig);
-		daysMissing = expectNeig.daysUntil(epochNeig);
+	//	epochNeig.getDay().increment();
 
-	}
+	//	untilNeig = epochDate.until(epochNeig);
 
-	std::cout << "\n\nDay loss started with:";
-	dateOut(expectNeig);
-	std::cout << "("
-		<< epochDate.daysUntil(expectNeig)
-		<< " days from epoch)"
-		<< "\n(" << expectNeig.daysUntil(epochNeig) << " days missing)"
-		<< std::endl;
+	//	if (untilNeig.days() == 59)
+	//		std::cout << "\nNext loop" << std::endl;
 
-	// Seems like wrong method calls are happening
+	//	expectNeig = (epochDate + untilNeig);
+	//	daysMissing = expectNeig.daysUntil(epochNeig);
+
+	//}
+
+	//std::cout << "\n\nDay loss started with:";
+	//dateOut(expectNeig);
+	//std::cout << "("
+	//	<< epochDate.daysUntil(expectNeig)
+	//	<< " days from epoch)"
+	//	<< "\n(" << expectNeig.daysUntil(epochNeig) << " days missing)"
+	//	<< std::endl;
+
+	//// Seems like wrong method calls are happening
 	// Day maximum was not updated during displace
 
 	// ANALYSIS
@@ -262,8 +264,6 @@ int main(size_t argc, char* argv[])
 		Range<uint16_t>::POSITIVE,
 		(size_t)1'000'000'000Ui64
 	) << " laps to land on " << dummyRange.position() << '\n';
-
-	dummyRange.shiftRange(Range<uint16_t>::POSITIVE, 2);
 
 	return NULL;
 }
