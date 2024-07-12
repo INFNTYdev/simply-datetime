@@ -343,6 +343,8 @@ public:
     /* Returns absolute total number of days from this date until provided date */
     size_t daysUntil(const Date& date) const noexcept
     {
+        // NOTE: This method is changing, new solution found
+
         size_t totalDays{ 0 };
 
         if (this == &date || *this == date)
@@ -489,6 +491,9 @@ private:
         Month* monthRef{ this->retrieveMonth() };
         Interval<uint16_t>* dayRef{ this->getInterval(DAY_INDEX) };
 
+        // NOTE: Maybe here we should check if new max is greater than current pos.
+        // (If so, we find the difference from max and increment that difference?)
+
         dayRef->setThreshold(monthRef->getTotalDays());
     }
 
@@ -515,16 +520,16 @@ private:
 
     void positiveDisplace(const Duration& duration) noexcept
     {
-        return this->getInterval(DAY_INDEX)->displace(
-            Duration::Sign::POSITIVE,
+        return this->getDay().dayDisplace(
+            Day::Trans::POSITIVE,
             duration.convertedTo(Duration::TimeUnit::DAY)
         );
     }
 
     void negativeDisplace(const Duration& duration) noexcept
     {
-        return this->getInterval(DAY_INDEX)->displace(
-            Duration::Sign::NEGATIVE,
+        return this->getDay().dayDisplace(
+            Day::Trans::POSITIVE,
             duration.convertedTo(Duration::TimeUnit::DAY)
         );
     }
