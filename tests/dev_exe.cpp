@@ -10,7 +10,7 @@
 
 // Date Core
 #include"simplydt/datetime/date/date_interval.hpp"
-#include"simplydt/datetime/date/unit/dt_year.hpp"
+//#include"simplydt/datetime/date/unit/dt_year.hpp"
 
 //#include"simplydt/duration/duration_interval.hpp"
 //#include"simplydt/duration/unit/dur_unit_def.hpp"
@@ -264,14 +264,71 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	// Month in time
-	DateInterval month{
-		DateInterval::Unit::MONTH, 2
+	size_t outCount{ 0 };
+
+	auto printDate = [&](DateInterval& year, DateInterval& month, DateInterval& day) -> void {
+		std::cout
+			<< "\nAdding " << outCount << " year(s): "
+			<< month << '/' << day << '/' << year
+			<< std::endl;
+
+		++outCount;
 	};
 
-	std::cout << '\n' << month << std::endl;
+	DateInterval year{ DateInterval::YEAR, 2024 };
+	DateInterval month{ DateInterval::MONTH, 1 };
+	DateInterval day{ DateInterval::DAY, 31 };
 
-	//
+	day.linkPrecedingInterval(month);
+	month.linkPrecedingInterval(year);
+
+	// 2024(366 days) + 2025(365 days) + 2026(365 days)
+	// Every year past first one is a day off, why?
+
+	//day.dateDisplace(DateInterval::Trans::POSITIVE, 366);
+
+	//printDate(year, month, day);
+
+
+	// I think this issue might be based off adding month value to offset
+	// (This might be the key you've been looking for)
+	// (Actually it might be month value +5 instead of my approach)
+	// (Jan(1+5)=6, Feb(2+5)=7, Mar(3+5)=8, ..., Dec(12+5)=17)
+
+	std::cout << "\nStarting with:";
+
+	printDate(year, month, day);
+
+	std::cout << std::boolalpha
+		<< "Is leap year: " << simplydt::isLeapYear(year.position())
+		<< std::endl;
+
+	while (year.position() != 2035) {
+
+		std::cout << std::boolalpha
+			<< "\nAttempting to displace to " << (year.position() + 1)
+			<< "\nUsing units: " << simplydt::getTotalDaysInYear(year.position())
+			<< "\nIs leap year: " << simplydt::isLeapYear((year.position() + 1));
+
+		if ((year.position() % 2) == 0) {
+			std::cout << "\nIncrementing month now...";
+
+			month.dateDisplace(
+				DateInterval::Trans::POSITIVE, 1
+			);
+
+			std::cout
+				<< "\nNew date: " << month << '/' << day << '/' << year;
+		}
+
+		day.dateDisplace(
+			DateInterval::Trans::POSITIVE,
+			simplydt::getTotalDaysInYear(year.position())
+		);
+
+		printDate(year, month, day);
+
+	}
 
 	return NULL;
 }
