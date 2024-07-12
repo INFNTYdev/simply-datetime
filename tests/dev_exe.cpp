@@ -3,7 +3,10 @@
 #include<cmath>
 
 // Developer Includes:
+
+// Core Functionality
 #include"simplydt/common/range/int_range.hpp"
+#include"simplydt/common/interval/interval.hpp"
 
 //#include"simplydt/duration/duration_interval.hpp"
 //#include"simplydt/duration/unit/dur_unit_def.hpp"
