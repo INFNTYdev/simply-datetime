@@ -249,13 +249,16 @@ public:
 	}
 
 	/* Returns calculated interval position translation */
-	TransResult calculateTranslation(Trans trans, UInt_T units) const noexcept
+	virtual TransResult calculateTranslation(Trans trans, UInt_T units) const noexcept
 	{
 		return this->m_range.calculateTranslation(trans, units);
 	}
 
 	/* Returns calculated interval position translation */
-	LargeTransResult calculateLargeTranslation(Trans trans, size_t units) const noexcept;
+	virtual LargeTransResult calculateLargeTranslation(Trans trans, size_t units) const noexcept
+	{
+		return this->m_range.calculateLargeTranslation(trans, units);
+	}
 
 	/* Translate position in provided direction with provided units */
 	virtual void displace(Trans trans, UInt_T units) noexcept
@@ -269,7 +272,17 @@ public:
 	}
 
 	/* Translate position in provided direction with provided units */
-	void largeDisplace(Trans trans, size_t units) noexcept;
+	virtual void largeDisplace(Trans trans, size_t units) noexcept
+	{
+		LargeTransResult destination{
+			this->m_range.calculateLargeTranslation(trans, units)
+		};
+
+		this->m_range.setPosition(destination.second);
+
+		if (this->hasPrecedingInterval() && destination.first)
+			this->largeLap(trans, destination.first);
+	}
 
 	/* Increase position provided number of units */
 	virtual void increment(UInt_T units = (UInt_T)1) noexcept
@@ -278,7 +291,10 @@ public:
 	}
 
 	/* Increase position provided number of units */
-	void largeIncrement(size_t units) noexcept;
+	void largeIncrement(size_t units) noexcept
+	{
+		this->largeDisplace(Trans::POSITIVE, units);
+	}
 
 	/* Decrease position provided number of units */
 	virtual void decrement(UInt_T units = (UInt_T)1) noexcept
@@ -287,7 +303,10 @@ public:
 	}
 
 	/* Decrease position provided number of units */
-	void largeDecrement(size_t units) noexcept;
+	void largeDecrement(size_t units) noexcept
+	{
+		this->largeDisplace(Trans::NEGATIVE, units);
+	}
 
 	/* Reset interval position to starting position */
 	virtual void reset() noexcept
@@ -301,19 +320,22 @@ protected:
 	using LinkedInterval = Interval<UInt_T>*;
 
 	/* Invoke displacement on preceding interval */
-	void lap(Trans trans, UInt_T lap_units) noexcept
+	virtual void lap(Trans trans, UInt_T lap_units) noexcept
 	{
 		if (!this->hasPrecedingInterval())
 			return;
-
-		// NOTE: Maybe this should be protected and overridable
-		// (Date intervals need to be able to use specialized methods)
 		
 		this->m_preceding_ptr->displace(trans, lap_units);
 	}
 
 	/* Invoke displacement on preceding interval */
-	void largeLap(Trans trans, size_t lap_units) noexcept;
+	virtual void largeLap(Trans trans, size_t lap_units) noexcept
+	{
+		if (!this->hasPrecedingInterval())
+			return;
+
+		this->m_preceding_ptr->largeDisplace(trans, lap_units);
+	}
 
 	/* Returns linked preceding interval */
 	LinkedInterval getPreceding() const noexcept

@@ -262,6 +262,8 @@ int main(size_t argc, char* argv[])
 
 	Interval<uint16_t> mins{ 59, 0 };// Minutes in time
 
+	std::cout << '\n' << mins << std::endl;
+
 	//
 
 	return NULL;
