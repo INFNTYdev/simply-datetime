@@ -8,6 +8,9 @@
 #include"simplydt/common/range/int_range.hpp"
 #include"simplydt/common/interval/interval.hpp"
 
+// Date Core
+#include"simplydt/datetime/date/date_interval.hpp"
+
 //#include"simplydt/duration/duration_interval.hpp"
 //#include"simplydt/duration/unit/dur_unit_def.hpp"
 //#include"simplydt/datetime/date/unit/dt_year.hpp"
@@ -260,9 +263,12 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	Interval<uint16_t> mins{ 59, 0 };// Minutes in time
+	// Month in time
+	DateInterval month{
+		DateInterval::Unit::MONTH, 2
+	};
 
-	std::cout << '\n' << mins << std::endl;
+	std::cout << '\n' << month << std::endl;
 
 	//
 

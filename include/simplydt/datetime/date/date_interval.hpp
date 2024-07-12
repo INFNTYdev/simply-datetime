@@ -55,7 +55,7 @@ public:
         case Unit::DAY:
             return (uint16_t)31U;
         default:
-            return std::numeric_limits<uint16_t>::max();
+            return (std::numeric_limits<uint16_t>::max() - (uint16_t)1Ui16);
         }
     }
 
