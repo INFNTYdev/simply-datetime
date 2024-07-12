@@ -1,5 +1,6 @@
 
 #include<iostream>
+#include<cmath>
 
 // Developer Includes:
 #include"simplydt/duration/duration_interval.hpp"
@@ -132,10 +133,50 @@ void timeOut(const Time& time) noexcept
 }
 
 
+int to_jdn(int day, int month, int year) {
+	if (month < 3) {
+		--year;
+		month += 12;
+	}
+
+	return day + std::floor((153 * month + 2) / 5) + 365 * year + std::floor(year / 4) - std::floor(year / 100) + std::floor(year / 400) - 32045;
+}
+
+void from_jdn(int jdn, int& day, int& month, int& year) {
+	jdn += 32044;
+	int n = 4 * jdn + 3 + 146097 * 3 / 4;
+	int k = n % 146097 / 4;
+	int m = 4000 * (k + 1) / 1461001;
+	int jd = 5 * (k - 1461 * m / 4 + 31) / 153;
+	day = (jd % 153 * 5 + 2) / 5;
+	month = jd / 153 % 12 + 1;
+	year = n / 146097 * 100 + m - 4800 + (month <= 2 ? 1 : 0);
+}
+
+int days_between(int day1, int month1, int year1, int day2, int month2, int year2) {
+	return std::abs(to_jdn(day1, month1, year1) - to_jdn(day2, month2, year2));
+}
+
+void add_days(int& day, int& month, int& year, int days) {
+	int jdn = to_jdn(day, month, year) + days;
+	from_jdn(jdn, day, month, year);
+}
+
+
 int main(size_t argc, char* argv[])
 {
 	Date epochDate{ 1969, 12, 31 };
+	Date epochNeig{ 1970, 1, 1 };
 	Date todayDate{ std::chrono::system_clock::now() };
+
+	std::cout << "\nEpoch:";
+	dateOut(epochDate);
+
+	std::cout << "\nEpoch neighbor:";
+	dateOut(epochNeig);
+
+	std::cout << "\nToday:";
+	dateOut(todayDate);
 
 
 	// 19,916 days ago was epoch
@@ -145,12 +186,76 @@ int main(size_t argc, char* argv[])
 	// This stuff is correct
 	std::cout
 		<< "\n\nEpoch Date  --->  Today Date\n\n"
-		<< std::setw(30) << "daysUntil(today): " << epochDate.daysUntil(todayDate) << '\n'
-		<< std::setw(30) << "until(today): " << epochDate.until(todayDate) << '\n'
+		<< std::setw(25) << "daysUntil(today): " << epochDate.daysUntil(todayDate) << '\n'
+		<< std::setw(25) << "until(today): " << epochDate.until(todayDate) << '\n'
+		<< std::setw(25) << "until(neighbor): " << epochDate.until(epochNeig) << '\n'
 		<< std::endl;
 
+	std::cout << "\nJDN Number test:" << std::endl;
+	std::cout
+		<< days_between(
+			epochDate.day(),
+			epochDate.month(),
+			epochDate.year(),
+			todayDate.day(),
+			todayDate.month(),
+			todayDate.year()
+		)
+		<< " days until" << std::endl;
 
-	//
+
+	// This stuff is incorrect
+	std::cout << '\n'
+		<< std::setw(25) << "epoch + until today: ";
+	Duration untilToday = epochDate.until(todayDate);
+	Date expectToday = (epochDate + untilToday);
+	std::cout << expectToday << " (missing ";
+	// Extra day becase time not accounted
+	size_t daysMissing = expectToday.daysUntil(todayDate);
+	std::cout << daysMissing << " days)" << std::endl;
+
+	std::cout << std::setw(25) << "epoch + until neighb.: ";
+	Duration untilNeig = epochDate.until(epochNeig);
+	Date expectNeig = (epochDate + untilNeig);
+	std::cout << expectNeig << " (missing ";
+	// Extra day becase time not accounted
+	daysMissing = expectNeig.daysUntil(epochNeig);
+	std::cout << daysMissing << " days)" << std::endl;
+
+	std::cout << "\nSearching for day loss..." << std::endl;
+
+	while (daysMissing == 0) {
+
+		epochNeig.getDay().increment();
+
+		untilNeig = epochDate.until(epochNeig);
+
+		if (untilNeig.days() == 59)
+			std::cout << "\nNext loop" << std::endl;
+
+		expectNeig = (epochDate + untilNeig);
+		daysMissing = expectNeig.daysUntil(epochNeig);
+
+	}
+
+	std::cout << "\n\nDay loss started with:";
+	dateOut(expectNeig);
+	std::cout << "("
+		<< epochDate.daysUntil(expectNeig)
+		<< " days from epoch)"
+		<< "\n(" << expectNeig.daysUntil(epochNeig) << " days missing)"
+		<< std::endl;
+
+	// Seems like wrong method calls are happening
+	// Day maximum was not updated during displace
+
+	// ANALYSIS
+	// -> (Must be careful with use of methods!)
+	// -> Date intervals need specialized control methods
+	// 
+
+
+	Range<uint16_t> dummyRange{ 1, 10 };
 
 	return NULL;
 }
