@@ -24,7 +24,7 @@ public:
     ~Month() = default;
 
     /* Returns month literal */
-    const char* getName() const noexcept
+    const char* getTitle() const noexcept
     {
         return simplydt::getMonth(this->position());
     }
@@ -33,44 +33,54 @@ public:
     uint16_t getTotalDays() const noexcept
     {
         if (!this->hasPrecedingInterval())
-            return (uint16_t)0U;
+            return (uint16_t)0Ui16;
         
         return simplydt::getTotalDaysInMonth(
-            this->precedingPosition(),// Year value
+            this->precedingNode().position(),// Year value
             this->position()// Month value
         );
+    }
+
+    /* Set month value */
+    bool setPosition(uint16_t pos) noexcept
+    {
+        if (!Interval<uint16_t>::setPosition(pos))
+            return false;
+
+        if (this->hasSubsequentInterval())
+            this->updateDayThreshold();
+
+        return true;
+    }
+
+    /* Set month value */
+    bool setMonth(uint16_t month) noexcept
+    {
+        return this->setPosition(month);
     }
 
     /* Displace month in provided direction with provided units */
     void displace(Trans trans, uint16_t units) noexcept
     {
-        Interval<uint16_t>::displace(trans, units);
+        DateInterval::dateDisplace(trans, units);
+    }
 
-        if (!this->hasPrecedingInterval())
-            return;
-
-        // Set new threshold on day interval
-        uint16_t newDayMax{
-            simplydt::getTotalDaysInMonth(
-                this->precedingPosition(),// Year value
-                this->position()// Month value
-            )
-        };
-
-        // Need confirmation that this is logic-safe
-        this->setSubsequentThreshold(newDayMax);
+    /* Displace month in provided direction with provided units */
+    void largeDisplace(Trans trans, size_t units) noexcept
+    {
+        DateInterval::dateDisplace(trans, units);
     }
 
     /* Increase month value by provided amount of units */
-    void increment(uint16_t units = (uint16_t)1U) noexcept
+    void increase(size_t units = (size_t)1Ui64) noexcept
     {
-        this->displace(Trans::POSITIVE, units);
+        this->largeDisplace(Trans::POSITIVE, units);
     }
 
     /* Decrease month value by provided amount of units */
-    void decrement(uint16_t units = (uint16_t)1U) noexcept
+    void decrease(size_t units = (size_t)1Ui64) noexcept
     {
-        this->displace(Trans::NEGATIVE, units);
+        this->largeDisplace(Trans::NEGATIVE, units);
     }
 
 };

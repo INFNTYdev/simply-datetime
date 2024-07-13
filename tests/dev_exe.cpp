@@ -11,6 +11,7 @@
 // Date Core
 #include"simplydt/datetime/date/date_interval.hpp"
 #include"simplydt/datetime/date/unit/dt_year.hpp"
+#include"simplydt/datetime/date/unit/dt_month.hpp"
 
 //#include"simplydt/duration/duration_interval.hpp"
 //#include"simplydt/duration/unit/dur_unit_def.hpp"
@@ -264,29 +265,12 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	size_t outCount{ 0 };
-
-	auto printDate = [&](DateInterval& year, DateInterval& month, DateInterval& day) -> void {
-		std::cout
-			<< "\nAdding " << outCount << " year(s): "
-			<< month << '/' << day << '/' << year
-			<< std::endl;
-
-		++outCount;
-	};
-
-	DateInterval year{ DateInterval::YEAR, 2024 };
-	DateInterval month{ DateInterval::MONTH, 1 };
-	DateInterval day{ DateInterval::DAY, 31 };
-
-	day.linkPrecedingInterval(month);
-	month.linkPrecedingInterval(year);
-
-
 	// -> Time linked to Date should be calling .dateDisplace() NOT .displace()
 	Year thisYear{ 2024 };
+	Month thisMonth{ 7 };
 
-	std::cout << '\n' << thisYear;
+	std::cout << "\nDate: "
+		<< thisMonth << '/' << "xx" << '/' << thisYear << std::endl;
 
 	return NULL;
 }
