@@ -283,7 +283,7 @@ int main(size_t argc, char* argv[])
 	month.linkPrecedingInterval(year);
 
 
-	//
+	// -> Time linked to Date should be calling .dateDisplace() NOT .displace()
 
 	return NULL;
 }
