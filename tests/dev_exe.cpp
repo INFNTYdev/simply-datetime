@@ -284,6 +284,9 @@ int main(size_t argc, char* argv[])
 
 
 	// -> Time linked to Date should be calling .dateDisplace() NOT .displace()
+	Year thisYear{ 2024 };
+
+	std::cout << '\n' << thisYear;
 
 	return NULL;
 }
