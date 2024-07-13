@@ -54,6 +54,12 @@ public:
         return Interval<uint16_t>::setPosition(pos);
     }
 
+    /* Set year value */
+    bool setYear(uint16_t pos) noexcept
+    {
+        return this->setPosition(pos);
+    }
+
     /* Displace year in provided direction with provided units */
     void displace(Trans trans, uint16_t units) noexcept
     {
