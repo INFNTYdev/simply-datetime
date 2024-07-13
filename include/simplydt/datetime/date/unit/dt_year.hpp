@@ -51,13 +51,18 @@ public:
         if (pos < YEAR_MIN)
             return false;
 
-        return Interval<uint16_t>::setPosition(pos);
+        if (!Interval<uint16_t>::setPosition(pos))
+            return false;
+
+        this->updateDayThreshold();
+
+        return true;
     }
 
     /* Set year value */
-    bool setYear(uint16_t pos) noexcept
+    bool setYear(uint16_t year) noexcept
     {
-        return this->setPosition(pos);
+        return this->setPosition(year);
     }
 
     /* Displace year in provided direction with provided units */
@@ -67,7 +72,7 @@ public:
         if (this->getExpectedPosition(trans, units) < YEAR_MIN)
             return;
 
-        return DateInterval::dateDisplace(trans, units);
+        DateInterval::dateDisplace(trans, units);
     }
 
     /* Displace year in provided direction with provided units */
@@ -77,7 +82,7 @@ public:
         if (this->getExpectedPosition(trans, units) < YEAR_MIN)
             return;
 
-        return DateInterval::dateDisplace(trans, units);
+        DateInterval::dateDisplace(trans, units);
     }
 
     /* Increase year value by provided amount of units */
