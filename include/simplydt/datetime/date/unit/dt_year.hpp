@@ -89,7 +89,7 @@ public:
     void increase(size_t units = (size_t)1Ui64) noexcept
     {
         // Year does not respond to requests below the minimum
-        // (this is for a year that intends to overflows)
+        // (this is for a year that intends to overflow)
         if (this->getExpectedPosition(Trans::POSITIVE, units) < YEAR_MIN)
             return;
 

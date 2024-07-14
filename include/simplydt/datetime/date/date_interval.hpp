@@ -158,12 +158,20 @@ public:
     /* Translate date interval position in provided direction with provided units */
     virtual void dateDisplace(Trans trans, size_t units) noexcept
     {
+        // NOTE: This method is changing; DON'T USE INTERVAL CLASS!
+        // (Lap call MUST be made from this class - NOT base class)
+        // (This is because we need to use .dateDisplace() on lap calls)
+        // -> Use 'if' scope to init vars for displace calc (units != 0 or trans != neutral)
+
         switch (this->m_unitOfMeasure) {
         case Unit::YEAR:
         case Unit::MONTH:
-            Interval<uint16_t>::largeDisplace(trans, units);
+            Interval<uint16_t>::largeDisplace(trans, units);// <--- Manually do this
 
-            break;
+            if (!this->isDateLinked())
+                return;
+            
+            return this->updateDayThreshold();
 
         case Unit::DAY:
             this->dayDisplace(trans, units);
@@ -173,11 +181,6 @@ public:
         default:
             return;
         }
-
-        if (!this->isDateLinked())
-            return;
-
-        this->updateDayThreshold();
     }
 
 
@@ -266,8 +269,8 @@ private:
 
         uint16_t translate{ 0 };
 
-        // Traverse by years (if applicable)
-        if (units > (uint16_t)364Ui16) {
+        // Loop by year (if applicable)
+        if (units > (size_t)364Ui64) {
             uint16_t offset{ 7 };// for 7 days lost using 31 as threshold
 
             while (units != (size_t)0Ui64) {
@@ -292,7 +295,7 @@ private:
                 // If 1 year from date exceeds desired displace units:
                 // (offset applies to Interval class only)
                 if ((translate - offset) > units)
-                    break;// Traverse by months next (if applicable)
+                    break;// Loop by month next
 
                 // Go to next year and update day threshold
                 Interval<uint16_t>::displace(trans, translate);
@@ -304,7 +307,7 @@ private:
             }
         }
 
-        // Traverse by month
+        // Loop by month
         while (units != (size_t)0Ui64) {
 
             // Units needed to reach 1st of next month
