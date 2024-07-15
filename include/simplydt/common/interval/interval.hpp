@@ -20,6 +20,8 @@ public:
 	using LargeTransResult = Range<UInt_T>::LargeTranslateResult;
 	/* Interval translation modes */
 	using Trans = Range<UInt_T>::Translate;
+	/* Linked interval pointer */
+	using LinkedInterval = Interval<UInt_T>*;
 
 	Interval(UInt_T cmax, UInt_T cstart, UInt_T pos) noexcept
 		: m_range{ cstart, cmax, pos },
@@ -308,6 +310,30 @@ public:
 		this->largeDisplace(Trans::NEGATIVE, units);
 	}
 
+	/* Returns linked preceding interval */
+	const Interval<UInt_T>& precedingNode() const noexcept
+	{
+		return *this->m_preceding_ptr;
+	}
+
+	/* Returns linked subsequent interval */
+	const Interval<UInt_T>& subsequentNode() const noexcept
+	{
+		return *this->m_subsequent_ptr;
+	}
+
+	/* Returns linked preceding interval */
+	LinkedInterval getPreceding() noexcept
+	{
+		return this->m_preceding_ptr;
+	}
+
+	/* Returns linked subsequent interval */
+	LinkedInterval getSubsequent() noexcept
+	{
+		return this->m_subsequent_ptr;
+	}
+
 	/* Reset interval position to starting position */
 	virtual void reset() noexcept
 	{
@@ -316,9 +342,6 @@ public:
 
 
 protected:
-	/* Linked interval pointer */
-	using LinkedInterval = Interval<UInt_T>*;
-
 	/* Invoke displacement on preceding interval */
 	virtual void lap(Trans trans, UInt_T lap_units) noexcept
 	{
@@ -335,18 +358,6 @@ protected:
 			return;
 
 		this->m_preceding_ptr->largeDisplace(trans, lap_units);
-	}
-
-	/* Returns linked preceding interval */
-	LinkedInterval getPreceding() const noexcept
-	{
-		return this->m_preceding_ptr;
-	}
-
-	/* Returns linked subsequent interval */
-	LinkedInterval getSubsequent() const noexcept
-	{
-		return this->m_subsequent_ptr;
 	}
 
 

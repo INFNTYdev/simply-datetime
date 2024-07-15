@@ -25,7 +25,7 @@ public:
 
     ~Year() = default;
 
-	static const uint16_t YEAR_MIN{ 1900 };
+	static const uint16_t YEAR_MIN{ 1900 };// Standard library is limitting factor
 
     /* Returns true if year is a leap year */
     bool isLeapYear() const noexcept
@@ -46,13 +46,23 @@ public:
     }
     
     /* Set year value */
-    template <typename UInt_T>
-    bool setPosition(UInt_T pos) noexcept
+    bool setPosition(uint16_t pos) noexcept
     {
-        if ((size_t)pos < (size_t)YEAR_MIN)
+        if (pos < YEAR_MIN)
             return false;
 
-        return Interval<uint16_t>::setPosition(pos);
+        if (!Interval<uint16_t>::setPosition(pos))
+            return false;
+
+        this->updateDayThreshold();
+
+        return true;
+    }
+
+    /* Set year value */
+    bool setYear(uint16_t year) noexcept
+    {
+        return this->setPosition(year);
     }
 
     /* Displace year in provided direction with provided units */
@@ -62,52 +72,46 @@ public:
         if (this->getExpectedPosition(trans, units) < YEAR_MIN)
             return;
 
-        Interval<uint16_t>::displace(trans, units);
+        DateInterval::dateDisplace(trans, units);
+    }
 
-        if (!this->hasSubsequentInterval())
+    /* Displace year in provided direction with provided units */
+    void largeDisplace(Trans trans, size_t units) noexcept
+    {
+        // Year does not respond to requests below the minimum
+        if (this->getExpectedPosition(trans, units) < YEAR_MIN)
             return;
-        
-        if (!this->getSubsequent()->hasSubsequentInterval())
-            return;
 
-        // Set new threshold on day interval
-        uint16_t newDayMax{
-            simplydt::getTotalDaysInMonth(
-                this->position(),// Year value
-                this->subsequentPosition()// Month value
-            )
-        };
-
-        // Need confirmation that this is logic-safe
-        this->getSubsequent()->setSubsequentThreshold(newDayMax);
+        DateInterval::dateDisplace(trans, units);
     }
 
     /* Increase year value by provided amount of units */
-    void increment(uint16_t units = (uint16_t)1U) noexcept
+    void increase(size_t units = (size_t)1Ui64) noexcept
     {
         // Year does not respond to requests below the minimum
+        // (this is for a year that intends to overflow)
         if (this->getExpectedPosition(Trans::POSITIVE, units) < YEAR_MIN)
             return;
 
-        this->displace(Trans::POSITIVE, units);
+        this->largeDisplace(Trans::POSITIVE, units);
     }
 
     /* Decrease year value by provided amount of units */
-    void decrement(uint16_t units = (uint16_t)1U) noexcept
+    void decrease(size_t units = (size_t)1Ui64) noexcept
     {
         // Year does not respond to requests below the minimum
         if (this->getExpectedPosition(Trans::NEGATIVE, units) < YEAR_MIN)
             return;
 
-        this->displace(Trans::NEGATIVE, units);
+        this->largeDisplace(Trans::NEGATIVE, units);
     }
 
 
 private:
-    uint16_t getExpectedPosition(Trans trans, uint16_t units) const noexcept
+    uint16_t getExpectedPosition(Trans trans, size_t units) const noexcept
     {
-        Interval<uint16_t>::TransResult destination{
-            this->calculateTranslation(trans, units)
+        Interval<uint16_t>::LargeTransResult destination{
+            this->calculateLargeTranslation(trans, units)
         };
 
         return destination.second;

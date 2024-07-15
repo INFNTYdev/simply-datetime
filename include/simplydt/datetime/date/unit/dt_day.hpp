@@ -24,86 +24,52 @@ public:
     ~Day() = default;
 
     /* Returns days day-of-week literal if linked in a date */
-    const char* getDayOfWeek() noexcept
+    const char* getDayOfWeek() const noexcept
     {
         if (!this->hasPrecedingInterval())
             return nullptr;
         
-        if (!this->getPreceding()->hasPrecedingInterval())
+        if (!this->precedingNode().hasPrecedingInterval())
             return nullptr;
         
         return simplydt::getDayOfWeek(
-            this->getPreceding()->precedingPosition(),// Year value
-            this->precedingPosition(),// Month value
+            this->precedingNode().precedingNode().position(),// Year value
+            this->precedingNode().position(),// Month value
             this->position()// Day value
         );
+    }
+
+    /* Set day value */
+    bool setDay(uint16_t day) noexcept
+    {
+        return this->setPosition(day);
     }
 
     /* Translate day in provided direction with provided units */
     void displace(Trans trans, uint16_t units) noexcept
     {
-        // I am not proud of this but I have to for now
-        // There has to be a better way to do this...
-
-        if (units <= this->untilThreshold())
+        if (this->untilThreshold() >= units)
             return Interval<uint16_t>::displace(trans, units);
 
-        uint16_t translate{ 0 };
-
-        // This is here to allow new day maximums to be accounted in calcs
-        while (units != (uint16_t)0U) {
-
-            translate = (this->untilThreshold() + (uint16_t)1U);
-
-            if (translate > units)
-                return Interval<uint16_t>::displace(trans, units);
-
-            Interval<uint16_t>::displace(trans, translate);
-
-            units -= translate;
-
-        }
+        DateInterval::dateDisplace(trans, units);
     }
 
-    void dayDisplace(Trans trans, uint16_t units) noexcept
+    /* Translate day in provided direction with provided units */
+    void largeDisplace(Trans trans, size_t units) noexcept
     {
-        // I am not proud of this but I have to for now
-        // There has to be a better way to do this...
-
-        if (units <= this->untilThreshold())
-            return Interval<uint16_t>::displace(trans, units);
-
-        uint16_t translate{ 0 };
-
-        // This is here to allow new day maximums to be accounted in calcs
-        while (units != (uint16_t)0U) {
-
-            translate = (this->untilThreshold() + (uint16_t)1U);
-
-            if (translate > units)
-                return Interval<uint16_t>::displace(trans, units);
-
-            // NOTE: Maybe this method should be more specialized
-            // (Don't use Interval classes displace, do the work here)
-            // (This way we allow specialized date intervals to avoid base methods)
-
-            Interval<uint16_t>::displace(trans, translate);
-
-            units -= translate;
-
-        }
+        DateInterval::dateDisplace(trans, units);
     }
 
     /* Increase day provided number of units */
-    virtual void increment(uint16_t units = (uint16_t)1U) noexcept
+    void increase(size_t units = (size_t)1Ui64) noexcept
     {
-        this->dayDisplace(Day::Trans::POSITIVE, units);
+        this->largeDisplace(Trans::POSITIVE, units);
     }
 
     /* Decrease day provided number of units */
-    virtual void decrement(uint16_t units = (uint16_t)1U) noexcept
+    void decrease(size_t units = (size_t)1Ui64) noexcept
     {
-        this->dayDisplace(Day::Trans::NEGATIVE, units);
+        this->largeDisplace(Trans::NEGATIVE, units);
     }
 
 };

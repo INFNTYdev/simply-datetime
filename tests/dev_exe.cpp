@@ -8,6 +8,18 @@
 #include"simplydt/common/range/int_range.hpp"
 #include"simplydt/common/interval/interval.hpp"
 
+// Date Core
+#include"simplydt/datetime/date/date_interval.hpp"
+#include"simplydt/datetime/date/unit/dt_year.hpp"
+#include"simplydt/datetime/date/unit/dt_month.hpp"
+#include"simplydt/datetime/date/unit/dt_day.hpp"
+
+// Time Core
+// N/A
+
+// Datetime
+// N/A
+
 //#include"simplydt/duration/duration_interval.hpp"
 //#include"simplydt/duration/unit/dur_unit_def.hpp"
 //#include"simplydt/datetime/date/unit/dt_year.hpp"
@@ -260,11 +272,21 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	Interval<uint16_t> mins{ 59, 0 };// Minutes in time
+	// -> Time linked to Date should be calling .dateDisplace() NOT .displace()
+	Year thisYear{ 2024 };
+	Month thisMonth{ 7 };
+	Day thisDay{ 14 };
 
-	std::cout << '\n' << mins << std::endl;
+	thisDay.linkPrecedingInterval(thisMonth);
+	thisMonth.linkPrecedingInterval(thisYear);
 
-	//
+	std::cout << "\nDate: "
+		<< thisMonth << '/' << thisDay << '/' << thisYear << std::endl;
+
+	thisDay.increase(31);
+
+	std::cout << "\nDate: "
+		<< thisMonth << '/' << thisDay << '/' << thisYear << std::endl;
 
 	return NULL;
 }
