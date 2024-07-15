@@ -24,13 +24,13 @@
 
 // Duration Core
 #include"simplydt/duration/duration_interval.hpp"
+#include"simplydt/duration/unit/dur_unit_def.hpp"
 
 // Datetime Core
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 // Duration
 //#include"simplydt/duration/comp/dt_duration.hpp"
-//#include"simplydt/duration/unit/dur_unit_def.hpp"
 
 // Date
 // N/A
