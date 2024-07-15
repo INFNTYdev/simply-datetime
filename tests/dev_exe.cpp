@@ -30,7 +30,7 @@
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 // Duration
-//#include"simplydt/duration/comp/dt_duration.hpp"
+#include"simplydt/duration/comp/dt_duration.hpp"
 
 // Date
 // N/A
