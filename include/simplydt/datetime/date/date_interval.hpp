@@ -158,11 +158,6 @@ public:
     /* Translate date interval position in provided direction with provided units */
     virtual void dateDisplace(Trans trans, size_t units) noexcept
     {
-        // NOTE: This method is changing; DON'T USE INTERVAL CLASS!
-        // (Lap call MUST be made from this class - NOT base class)
-        // (This is because we need to use .dateDisplace() on lap calls)
-        // -> Use 'if' scope to init vars for displace calc (units != 0 or trans != neutral)
-
         switch (this->m_unitOfMeasure) {
         case Unit::YEAR:
         case Unit::MONTH:
