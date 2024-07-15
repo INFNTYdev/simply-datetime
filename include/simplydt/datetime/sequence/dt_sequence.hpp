@@ -189,39 +189,6 @@ public:
         return false;
     }
 
-    // This needs more thought
-    /* Returns sequence of differences between this and provided datetime sequence */
-    //DatetimeSequence<Dt_Interval_T...> getDelta(const DatetimeSequence<Dt_Interval_T...>& dt_sequence) const noexcept
-    //{
-    //    DatetimeSequence<Dt_Interval_T...> deltaSeq{ *this };
-    //    
-    //    //
-    //
-    //    return deltaSeq;
-    //}
-
-    /* Increase value of datetime interval at provided position if any, provided amount of units */
-    bool incrementInterval(size_t index, uint16_t units) noexcept
-    {
-        if (index >= this->linkSize())
-            return false;
-        
-        this->getInterval(index)->increment(units);
-
-        return true;
-    }
-
-    /* Decrease value of datetime interval at provided position if any, provided amount of units */
-    bool decrementInterval(size_t index, uint16_t units) noexcept
-    {
-        if (index >= this->linkSize())
-            return false;
-        
-        this->getInterval(index)->decrement(units);
-
-        return true;
-    }
-
 
 private:
     DatetimeType m_datetimeType;
