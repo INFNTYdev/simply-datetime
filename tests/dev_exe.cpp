@@ -16,6 +16,7 @@
 
 // Time Core
 #include"simplydt/datetime/time/time_interval.hpp"
+#include"simplydt/datetime/time/unit/dt_hour.hpp"
 
 // Datetime
 // N/A
