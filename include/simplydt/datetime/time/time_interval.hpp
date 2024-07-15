@@ -5,13 +5,17 @@
 
 
 #include"simplydt/common/interval/interval.hpp"
+#include"simplydt/datetime/date/date_interval.hpp"
 
 
 /* Datetime time interval */
 class TimeInterval : public Interval<uint16_t> {
 
 public:
-	/* Time interval unit */
+	/* Time interval translation modes */
+	using Trans = Interval<uint16_t>::Trans;
+
+    /* Time interval unit */
     enum Unit {
         ARB,// Arbitrary unit of time
         HOUR,// Hour unit
@@ -48,7 +52,7 @@ public:
     virtual ~TimeInterval() = default;
 
     /* Returns provided time unit max value */
-    uint16_t getUnitMax(Unit unit) noexcept
+    static uint16_t getUnitMax(Unit unit) noexcept
     {
         switch (unit) {
         case Unit::HOUR:
