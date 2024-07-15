@@ -15,7 +15,7 @@
 #include"simplydt/datetime/date/unit/dt_day.hpp"
 
 // Time Core
-// N/A
+#include"simplydt/datetime/time/time_interval.hpp"
 
 // Datetime
 // N/A
@@ -273,20 +273,6 @@ int main(size_t argc, char* argv[])
 
 
 	// -> Time linked to Date should be calling .dateDisplace() NOT .displace()
-	Year thisYear{ 2024 };
-	Month thisMonth{ 7 };
-	Day thisDay{ 14 };
-
-	thisDay.linkPrecedingInterval(thisMonth);
-	thisMonth.linkPrecedingInterval(thisYear);
-
-	std::cout << "\nDate: "
-		<< thisMonth << '/' << thisDay << '/' << thisYear << std::endl;
-
-	thisDay.increase(31);
-
-	std::cout << "\nDate: "
-		<< thisMonth << '/' << thisDay << '/' << thisYear << std::endl;
 
 	return NULL;
 }
