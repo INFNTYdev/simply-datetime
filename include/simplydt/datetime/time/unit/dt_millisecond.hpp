@@ -24,10 +24,10 @@ public:
 
     std::string toTripleDigitStr() const noexcept
     {
-        if (this->position() > (uint16_t)99U)
+        if (this->position() > (uint16_t)99Ui16)
             return this->toStr();
 
-        if (this->position() < (uint16_t)10U)
+        if (this->position() < (uint16_t)10Ui16)
             return std::string{ ("00" + this->toStr()) };
 
         return std::string{ ('0' + this->toStr()) };

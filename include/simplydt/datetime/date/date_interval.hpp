@@ -24,7 +24,7 @@ public:
     };
 
     DateInterval(Unit unit, uint16_t value) noexcept
-        : Interval<uint16_t>{ getUnitMax(unit), (uint16_t)1U, value },
+        : Interval<uint16_t>{ getUnitMax(unit), (uint16_t)1Ui16, value },
         m_unitOfMeasure{ unit }
     {
         //
@@ -55,11 +55,11 @@ public:
     {
         switch (unit) {
         case Unit::MONTH:
-            return (uint16_t)12U;
+            return (uint16_t)12Ui16;
         case Unit::DAY:
-            return (uint16_t)31U;
+            return (uint16_t)31Ui16;
         default:
-            return (std::numeric_limits<uint16_t>::max() - (uint16_t)1Ui16);
+            return (uint16_t)(std::numeric_limits<uint16_t>::max() - (uint16_t)1Ui16);
         }
     }
 
@@ -109,15 +109,15 @@ public:
     /* Returns date interval value in double digit format */
     std::string toDoubleDigitStr() const noexcept
     {
-        if (this->position() > (uint16_t)9U && this->position() <= (uint16_t)99U)
+        if (this->position() > (uint16_t)9Ui16 && this->position() <= (uint16_t)99Ui16)
             return this->toStr();
 
-        if (this->position() < (uint16_t)10U)
+        if (this->position() < (uint16_t)10Ui16)
             return std::string{ ('0' + this->toStr()) };
 
         std::string pos{ this->toStr() };
 
-        return pos.substr((pos.size() - (size_t)2));
+        return pos.substr((pos.size() - (size_t)2Ui64));
     }
 
     /* Returns true if interval is composed in date */

@@ -5,13 +5,17 @@
 
 
 #include"simplydt/common/interval/interval.hpp"
+#include"simplydt/datetime/date/date_interval.hpp"
 
 
 /* Datetime time interval */
 class TimeInterval : public Interval<uint16_t> {
 
 public:
-	/* Time interval unit */
+	/* Time interval translation modes */
+	using Trans = Interval<uint16_t>::Trans;
+
+    /* Time interval unit */
     enum Unit {
         ARB,// Arbitrary unit of time
         HOUR,// Hour unit
@@ -21,7 +25,7 @@ public:
     };
 
     TimeInterval(Unit unit, uint16_t value) noexcept
-        : Interval<uint16_t>{ getUnitMax(unit), (uint16_t)0U, value },
+        : Interval<uint16_t>{ getUnitMax(unit), (uint16_t)0Ui16, value },
         m_unitOfMeasure{ unit }
     {
         //
@@ -48,19 +52,19 @@ public:
     virtual ~TimeInterval() = default;
 
     /* Returns provided time unit max value */
-    uint16_t getUnitMax(Unit unit) noexcept
+    static uint16_t getUnitMax(Unit unit) noexcept
     {
         switch (unit) {
         case Unit::HOUR:
-            return (uint16_t)23U;
+            return (uint16_t)23Ui16;
         case Unit::MINUTE:
-            return (uint16_t)59U;
+            return (uint16_t)59Ui16;
         case Unit::SECOND:
-            return (uint16_t)59U;
+            return (uint16_t)59Ui16;
         case Unit::MILLISECOND:
-            return (uint16_t)999U;
+            return (uint16_t)999Ui16;
         default:
-            return std::numeric_limits<uint16_t>::max();
+            return (uint16_t)(std::numeric_limits<uint16_t>::max() - (uint16_t)1Ui16);
         }
     }
 
@@ -110,15 +114,71 @@ public:
     /* Returns date interval value in double digit format */
     std::string toDoubleDigitStr() const noexcept
     {
-        if (this->position() > (uint16_t)9U && this->position() <= (uint16_t)99U)
+        if (this->position() > (uint16_t)9Ui16 && this->position() <= (uint16_t)99Ui16)
             return this->toStr();
 
-        if (this->position() < (uint16_t)10U)
+        if (this->position() < (uint16_t)10Ui16)
             return std::string{ ('0' + this->toStr()) };
 
         std::string posStr{ this->toStr() };
 
-        return posStr.substr((posStr.size() - (size_t)2));
+        return posStr.substr((posStr.size() - (size_t)2Ui64));
+    }
+
+    /* Displace time interval in provided direction with provided units */
+    void displace(Trans trans, uint16_t units) noexcept
+    {
+        if (this->m_unitOfMeasure != Unit::HOUR)
+            return Interval<uint16_t>::displace(trans, units);
+
+        Interval<uint16_t>::TransResult destination{
+            this->calculateTranslation(trans, units)
+        };
+
+        this->setPosition(destination.second);
+
+        if (this->hasPrecedingInterval()) {
+            // hour interval invokes DateInterval behavior on lap
+            DateInterval* preceding_ptr{
+                static_cast<DateInterval*>(this->getPreceding())
+            };
+
+            preceding_ptr->dateDisplace(trans, destination.first);
+        }
+    }
+
+    /* Displace time interval in provided direction with provided units */
+    void largeDisplace(Trans trans, size_t units) noexcept
+    {
+        if (this->m_unitOfMeasure != Unit::HOUR)
+            return Interval<uint16_t>::largeDisplace(trans, units);
+
+        Interval<uint16_t>::LargeTransResult destination{
+            this->calculateLargeTranslation(trans, units)
+        };
+
+        this->setPosition(destination.second);
+
+        if (this->hasPrecedingInterval()) {
+            // hour interval invokes DateInterval behavior on lap
+            DateInterval* preceding_ptr{
+                static_cast<DateInterval*>(this->getPreceding())
+            };
+
+            preceding_ptr->dateDisplace(trans, destination.first);
+        }
+    }
+
+    /* Increase time interval value by provided amount of units */
+    void increase(size_t units = (size_t)1Ui64) noexcept
+    {
+        this->largeDisplace(Trans::POSITIVE, units);
+    }
+
+    /* Decrease time interval value by provided amount of units */
+    void decrease(size_t units = (size_t)1Ui64) noexcept
+    {
+        this->largeDisplace(Trans::NEGATIVE, units);
     }
 
 

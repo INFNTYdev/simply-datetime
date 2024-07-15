@@ -16,6 +16,19 @@
 
 // Time Core
 #include"simplydt/datetime/time/time_interval.hpp"
+#include"simplydt/datetime/time/unit/dt_hour.hpp"
+#include"simplydt/datetime/time/unit/dt_minute.hpp"
+#include"simplydt/datetime/time/unit/dt_second.hpp"
+#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
+
+// Date
+// N/A
+
+// Time
+// N/A
+
+// Datetime Core
+// N/A
 
 // Datetime
 // N/A
@@ -272,7 +285,22 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	// -> Time linked to Date should be calling .dateDisplace() NOT .displace()
+	//
+	Year year{ 2024 };
+	Month month{ 7 };
+	Day day{ 15 };
+
+	Hour hour{ 23 };
+	Minute minute{ 9 };
+	Second second{ 0 };
+	Millisecond ms{ 0 };
+
+	ms.linkPrecedingInterval(second);
+	second.linkPrecedingInterval(minute);
+	minute.linkPrecedingInterval(hour);
+	hour.linkPrecedingInterval(day);
+	day.linkPrecedingInterval(month);
+	month.linkPrecedingInterval(year);
 
 	return NULL;
 }

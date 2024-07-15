@@ -14,9 +14,9 @@ template <typename UInt_T>
 class Interval {
 
 public:
-	/* Interval position translation result */
+	/* Interval position translation result (laps, position) */
 	using TransResult = Range<UInt_T>::TranslateResult;
-	/* Large interval position translation result */
+	/* Large interval position translation result (laps, position) */
 	using LargeTransResult = Range<UInt_T>::LargeTranslateResult;
 	/* Interval translation modes */
 	using Trans = Range<UInt_T>::Translate;
