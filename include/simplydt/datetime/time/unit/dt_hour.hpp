@@ -28,7 +28,7 @@ public:
     /* Returns hour day phase */
     Phase getPhase() const noexcept
     {
-        if (this->position() < (uint16_t)12U)
+        if (this->position() < (uint16_t)12Ui16)
             return Phase::AM;
         
         return Phase::PM;
@@ -48,11 +48,11 @@ public:
     /* Returns 12-hour representation of hour */
     uint16_t standardPosition() const noexcept
     {
-        if (this->position() == (uint16_t)0U)
-            return (uint16_t)12U;
+        if (this->position() == (uint16_t)0Ui16)
+            return (uint16_t)12Ui16;
         
-        if (this->position() > (uint16_t)12U)
-            return (this->position() - (uint16_t)12U);
+        if (this->position() > (uint16_t)12Ui16)
+            return (this->position() - (uint16_t)12Ui16);
 
         return this->position();
     }
@@ -66,10 +66,10 @@ public:
     /* Returns 12-hour string representation of hour in double digit format */
     std::string toDoubleDigitStandardStr() const noexcept
     {
-        if (this->position() == (uint16_t)0U)
+        if (this->position() == (uint16_t)0Ui16)
             return toStandardStr();
 
-        if (this->position() < (uint16_t)10U)
+        if (this->position() < (uint16_t)10Ui16)
             return std::string{ ('0' + this->toStr()) };
         else
             return this->toStandardStr();

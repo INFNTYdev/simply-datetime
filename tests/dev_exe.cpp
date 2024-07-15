@@ -17,6 +17,9 @@
 // Time Core
 #include"simplydt/datetime/time/time_interval.hpp"
 #include"simplydt/datetime/time/unit/dt_hour.hpp"
+#include"simplydt/datetime/time/unit/dt_minute.hpp"
+#include"simplydt/datetime/time/unit/dt_second.hpp"
+#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
 // Datetime
 // N/A
@@ -278,8 +281,14 @@ int main(size_t argc, char* argv[])
 	Month month{ 7 };
 	Day day{ 15 };
 
-	TimeInterval hour{ TimeInterval::HOUR, 23 };
+	Hour hour{ 23 };
+	Minute minute{ 9 };
+	Second second{ 0 };
+	Millisecond ms{ 0 };
 
+	ms.linkPrecedingInterval(second);
+	second.linkPrecedingInterval(minute);
+	minute.linkPrecedingInterval(hour);
 	hour.linkPrecedingInterval(day);
 	day.linkPrecedingInterval(month);
 	month.linkPrecedingInterval(year);
