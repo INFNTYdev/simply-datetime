@@ -281,7 +281,7 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	//
+	// -> Need to fix Duration class hour interval bug (hour invokes DateInterval class)
 	DatetimeSequence<Year, Month, Day> date{
 		DatetimeSequence<Year, Month, Day>::DATE_DATETIME,
 		Year{ 2024 },
