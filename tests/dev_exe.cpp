@@ -7,6 +7,7 @@
 // Core Functionality
 #include"simplydt/common/range/int_range.hpp"
 #include"simplydt/common/interval/interval.hpp"
+#include"simplydt/common/sequence/linked_sequence.hpp"
 
 // Date Core
 #include"simplydt/datetime/date/date_interval.hpp"
@@ -21,30 +22,25 @@
 #include"simplydt/datetime/time/unit/dt_second.hpp"
 #include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
+// Duration Core
+#include"simplydt/duration/duration_interval.hpp"
+
+// Datetime Core
+#include"simplydt/datetime/sequence/dt_sequence.hpp"
+
+// Duration
+//#include"simplydt/duration/comp/dt_duration.hpp"
+//#include"simplydt/duration/unit/dur_unit_def.hpp"
+
 // Date
 // N/A
 
 // Time
 // N/A
 
-// Datetime Core
-// N/A
-
 // Datetime
 // N/A
 
-//#include"simplydt/duration/duration_interval.hpp"
-//#include"simplydt/duration/unit/dur_unit_def.hpp"
-//#include"simplydt/datetime/date/unit/dt_year.hpp"
-//#include"simplydt/datetime/date/unit/dt_month.hpp"
-//#include"simplydt/datetime/date/unit/dt_day.hpp"
-
-//#include"simplydt/datetime/time/unit/dt_hour.hpp"
-//#include"simplydt/datetime/time/unit/dt_minute.hpp"
-//#include"simplydt/datetime/time/unit/dt_second.hpp"
-//#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
-
-//#include"simplydt/common/sequence/linked_sequence.hpp"
 //#include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 //#include"simplydt/datetime/date/comp/dt_date.hpp"
@@ -286,21 +282,20 @@ int main(size_t argc, char* argv[])
 
 
 	//
-	Year year{ 2024 };
-	Month month{ 7 };
-	Day day{ 15 };
+	DatetimeSequence<Year, Month, Day> date{
+		DatetimeSequence<Year, Month, Day>::DATE_DATETIME,
+		Year{ 2024 },
+		Month{ 7 },
+		Day{ 15 }
+	};
 
-	Hour hour{ 23 };
-	Minute minute{ 9 };
-	Second second{ 0 };
-	Millisecond ms{ 0 };
-
-	ms.linkPrecedingInterval(second);
-	second.linkPrecedingInterval(minute);
-	minute.linkPrecedingInterval(hour);
-	hour.linkPrecedingInterval(day);
-	day.linkPrecedingInterval(month);
-	month.linkPrecedingInterval(year);
+	DatetimeSequence<Hour, Minute, Second, Millisecond> time{
+		DatetimeSequence<Hour, Minute, Second, Millisecond>::TIME_DATETIME,
+		Hour{ 6 },
+		Minute{ 30 },
+		Second{ 0 },
+		Millisecond{ 0 }
+	};
 
 	return NULL;
 }

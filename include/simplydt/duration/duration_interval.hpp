@@ -46,15 +46,15 @@ public:
 	/* Returns duration interval value in double digit format */
 	std::string toDoubleDigitStr() const noexcept
 	{
-		if (this->position() > (uint16_t)9U && this->position() <= (uint16_t)99U)
+		if (this->position() > (uint16_t)9Ui16 && this->position() <= (uint16_t)99Ui16)
             return this->toStr();
 
-        if (this->position() < (uint16_t)10U)
+        if (this->position() < (uint16_t)10Ui16)
             return std::string{ ('0' + this->toStr()) };
 
         std::string posStr{ this->toStr() };
 
-        return posStr.substr((posStr.size() - (size_t)2));
+        return posStr.substr((posStr.size() - (size_t)2Ui64));
 	}
 
 };
