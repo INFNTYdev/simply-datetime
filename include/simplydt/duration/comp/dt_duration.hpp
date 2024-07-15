@@ -4,6 +4,8 @@
 
 
 
+#include<chrono>
+
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 #include"simplydt/duration/unit/dur_unit_def.hpp"
 #include"simplydt/datetime/time/unit/dt_hour.hpp"
@@ -22,6 +24,8 @@ public:
     using DatetimeType = DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::DatetimeType;
     /* Duration direction sign */
     using Sign = Interval<uint16_t>::Trans;
+    /* Standard library chronological duration (64-bit) */
+    using ChronoDuration = std::chrono::duration<size_t>;
 
     /* Duration layout */
     enum Layout {
@@ -188,6 +192,8 @@ public:
     {
         //
     }
+
+    Duration(const ChronoDuration chrono_duration) noexcept;//   <--- INCOMPLETE!
 
     Duration() noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
