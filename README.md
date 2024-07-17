@@ -24,12 +24,12 @@ Datetime is one of the most commonly used features in software development proje
 >
 > The first addition to the Simply Datetime library is a family of virtualized datetime classes, which are designed to emulate real-world date and time with the use of simple arithmetic algebra. These objects provide powerful interfaces to perform detailed simulation and calculations while maintaining compatibility with the standard libraries *\<chrono>* header. Each type in this family can be driven manually easily without the need to worry about small details - virtual dates follow the real-world calendar and time objects conduct themselves as expected.
 > ### **Virtual Datetime Family**
-> - ***`VirtualDate`***
-> - ***`VirtualTime`***
-> - ***`SVirtualTime`***
-> - ***`VirtualDuration`***
-> - ***`VirtualDatetime`***
-> - ***`VirtualSDatetime`***
+> - ***`VDuration`***
+> - ***`VDate`***
+> - ***`VTime`***
+> - ***`VFTime`***
+> - ***`VDatetime`***
+> - ***`VFDatetime`***
 
 <br/>
 
