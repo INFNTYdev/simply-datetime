@@ -583,33 +583,48 @@ public:
     }
 
     /* Returns arbitrary day in duration */
-    ArbDay& getDays() const noexcept
+    const ArbDay& daysRef() const noexcept;
+
+    /* Returns hour in duration */
+    const Hour& hourRef() const noexcept;
+
+    /* Returns minute in duration */
+    const Minute& minuteRef() const noexcept;
+
+    /* Returns second in duration */
+    const Second& secondRef() const noexcept;
+
+    /* Returns millisecond in duration */
+    const Millisecond& msRef() const noexcept;
+
+    /* Returns arbitrary day in duration */
+    ArbDay* getDays() noexcept
     {
-        return *(this->retrieveDays());
+        return this->retrieveDays();
     }
 
     /* Returns hour in duration */
-    Hour& getHour() const noexcept
+    Hour* getHour() noexcept
     {
-        return *(this->retrieveHour());
+        return this->retrieveHour();
     }
 
     /* Returns minute in duration */
-    Minute& getMinute() const noexcept
+    Minute* getMinute() noexcept
     {
-        return *(this->retrieveMinute());
+        return this->retrieveMinute();
     }
 
     /* Returns second in duration */
-    Second& getSecond() const noexcept
+    Second* getSecond() const noexcept
     {
-        return *(this->retrieveSecond());
+        return this->retrieveSecond();
     }
 
     /* Returns millisecond in duration */
-    Millisecond& getMillisecond() const noexcept
+    Millisecond* getMillisecond() const noexcept
     {
-        return *(this->retrieveMillisecond());
+        return this->retrieveMillisecond();
     }
 
     /* Returns true if provided duration is longer than this one */
@@ -682,17 +697,26 @@ public:
     }
 
     /* Returns durations as standard chronological duration */
-    std::chrono::duration<size_t> toChronoDuration() const noexcept
+    ChronoDuration toChronoDuration() const noexcept
     {
-        std::chrono::duration<size_t> duration{
+        ChronoDuration duration{
             this->convertedTo(VDuration::TimeUnit::SECOND)
         };
 
         return duration;
     }
 
+    /* Returns absolute total number of days from this duration until provided duration */
+    uint16_t daysUntil(const VDuration& duration) const noexcept;
+
+    /* Returns absolute total number of hours from this duration until provided duration */
+    uint32_t hoursUntil(const VDuration& duration) const noexcept;
+
+    /* Returns absolute total number of minutes from this duration until provided duration */
+    uint32_t minutesUntil(const VDuration& duration) const noexcept;
+
     /* Returns absolute total number of seconds from this duration until provided duration */
-    size_t secondsUntil(const VDuration& duration) const noexcept
+    uint32_t secondsUntil(const VDuration& duration) const noexcept//   <--- Return type changed here!!!!
     {
         size_t totalSeconds{ 0 };
 
@@ -806,6 +830,11 @@ private:
     static const uint8_t MILLIS_INDEX{ 4 };
 
     Sign m_directionSign;
+    ArbDay* m_days_ptr;
+    Hour* m_hour_ptr;
+    Minute* m_minute_ptr;
+    Second* m_second_ptr;
+    Millisecond* m_millisecond_ptr;
 
     size_t timeUnitEnumToIndex(TimeUnit time_unit) noexcept
     {
