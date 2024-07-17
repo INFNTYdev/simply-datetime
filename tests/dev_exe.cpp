@@ -22,14 +22,14 @@
 #include"simplydt/datetime/time/unit/dt_second.hpp"
 #include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
-// Duration Core
+// VDuration Core
 #include"simplydt/duration/duration_interval.hpp"
 #include"simplydt/duration/unit/dur_unit_def.hpp"
 
 // Datetime Core
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
-// Duration
+// VDuration
 #include"simplydt/duration/comp/dt_duration.hpp"
 
 // Date
@@ -67,13 +67,13 @@
 * -> [X] Implement .linkDate() method in Time/STime class
 * -> [X] Just fix STime classes .secondsUntil() method
 * -> [X] Start DurationInterval class (create preset type names)
-* -> [X] Plan and implement Duration class interface
+* -> [X] Plan and implement VDuration class interface
 * -> [X] Implement .millisecondsUntil() method in Time class
 * -> [X] Implement .until() methods in Date, Time, and STime classes
 * -> [X] Implement Time constructor/=operators that accept STime
-* -> [X] Implement Date/Time/STime/Duration .displace() method
-* -> [X] Implement Date/Time/STime/Duration .operator+=()/.operator-=() methods
-* -> [X] Implement Date/Time/STime/Duration .operator+()/.operator-() methods
+* -> [X] Implement Date/Time/STime/VDuration .displace() method
+* -> [X] Implement Date/Time/STime/VDuration .operator+=()/.operator-=() methods
+* -> [X] Implement Date/Time/STime/VDuration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
 * -> [X] Determine highest possible number Range class can handle with an int type
 * -> [X] Implement Date .toChrono() method
@@ -89,7 +89,7 @@
 * -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
 * -> [] *Implement Date/Time/STime .operator=() for std::chrono <- IMPORTANT
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
-* -> [] Implement Date/Time/STime/Duration string parsing capability
+* -> [] Implement Date/Time/STime/VDuration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
@@ -114,7 +114,7 @@
 //		<< " = " << time1.until(time2) << std::endl;
 //}
 //
-//void durationDisplace(Duration& dur1, const Duration& dur2) noexcept
+//void durationDisplace(VDuration& dur1, const VDuration& dur2) noexcept
 //{
 //	std::cout << "\n( " << dur1 << " ) + ( " << dur2 << " ) = ";
 //
@@ -233,7 +233,7 @@ int main(size_t argc, char* argv[])
 	//// This stuff is incorrect
 	//std::cout << '\n'
 	//	<< std::setw(25) << "epoch + until today: ";
-	//Duration untilToday = epochDate.until(todayDate);
+	//VDuration untilToday = epochDate.until(todayDate);
 	//Date expectToday = (epochDate + untilToday);
 	//std::cout << expectToday << " (missing ";
 	//// Extra day becase time not accounted
@@ -241,7 +241,7 @@ int main(size_t argc, char* argv[])
 	//std::cout << daysMissing << " days)" << std::endl;
 
 	//std::cout << std::setw(25) << "epoch + until neighb.: ";
-	//Duration untilNeig = epochDate.until(epochNeig);
+	//VDuration untilNeig = epochDate.until(epochNeig);
 	//Date expectNeig = (epochDate + untilNeig);
 	//std::cout << expectNeig << " (missing ";
 	//// Extra day becase time not accounted
@@ -281,7 +281,7 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	// -> Need to fix Duration class hour interval bug (hour invokes DateInterval class)
+	// -> Need to fix VDuration class hour interval bug (hour invokes DateInterval class)
 	DatetimeSequence<Year, Month, Day> date{
 		DatetimeSequence<Year, Month, Day>::DATE_DATETIME,
 		Year{ 2024 },
