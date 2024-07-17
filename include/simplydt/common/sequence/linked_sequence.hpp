@@ -41,7 +41,7 @@ public:
 
     virtual ~LinkedSequence() noexcept = default;
 
-    LinkedSequence<UInt_T, Interval_T...>& operator=(LinkedSequence<UInt_T, Interval_T...>&& sequence)
+    LinkedSequence<UInt_T, Interval_T...>& operator=(LinkedSequence<UInt_T, Interval_T...>&& sequence) noexcept
     {
         if (this == &sequence)
             return *this;

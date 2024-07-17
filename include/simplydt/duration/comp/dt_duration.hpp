@@ -193,7 +193,7 @@ public:
         //
     }
 
-    Duration(const ChronoDuration chrono_duration) noexcept;//   <--- INCOMPLETE!
+    Duration(const ChronoDuration& chrono_duration) noexcept;//   <--- INCOMPLETE!
 
     Duration() noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
@@ -261,6 +261,8 @@ public:
 
         return *this;
     }
+
+    Duration& operator=(const ChronoDuration& chrono_duration) noexcept;//   <--- INCOMPLETE!
 
     bool operator==(const Duration& duration) const noexcept
     {
@@ -410,7 +412,7 @@ public:
 
         // Handle this duration sign
         if (this->m_directionSign == Sign::NEGATIVE && negativeMultiplicand)
-            this->invert();
+            this->invert();// Double negative = positive
         else if (this->m_directionSign == Sign::POSITIVE && negativeMultiplicand)
             this->invert();
 
