@@ -93,6 +93,7 @@
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
+* -> [] Take a good look at this libraries structure and start improving
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
@@ -282,20 +283,11 @@ int main(size_t argc, char* argv[])
 
 
 	// -> Need to fix VDuration class hour interval bug (hour invokes DateInterval class)
-	DatetimeSequence<Year, Month, Day> date{
-		DatetimeSequence<Year, Month, Day>::DATE_DATETIME,
-		Year{ 2024 },
-		Month{ 7 },
-		Day{ 15 }
-	};
+	VDuration demo{ VDuration::Sign::POSITIVE, 0, 5, 15 };
 
-	DatetimeSequence<Hour, Minute, Second, Millisecond> time{
-		DatetimeSequence<Hour, Minute, Second, Millisecond>::TIME_DATETIME,
-		Hour{ 6 },
-		Minute{ 30 },
-		Second{ 0 },
-		Millisecond{ 0 }
-	};
+	VDuration out{ (demo * 2) };
+
+	std::cout << '\n' << out << std::endl;
 
 	return NULL;
 }
