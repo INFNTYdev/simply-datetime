@@ -9,13 +9,13 @@
 #include"simplydt/common/interval/interval.hpp"
 #include"simplydt/common/sequence/linked_sequence.hpp"
 
-// Date Core
+// VDate Core
 #include"simplydt/datetime/date/date_interval.hpp"
 #include"simplydt/datetime/date/unit/dt_year.hpp"
 #include"simplydt/datetime/date/unit/dt_month.hpp"
 #include"simplydt/datetime/date/unit/dt_day.hpp"
 
-// Time Core
+// VTime Core
 #include"simplydt/datetime/time/time_interval.hpp"
 #include"simplydt/datetime/time/unit/dt_hour.hpp"
 #include"simplydt/datetime/time/unit/dt_minute.hpp"
@@ -26,19 +26,19 @@
 #include"simplydt/duration/duration_interval.hpp"
 #include"simplydt/duration/unit/dur_unit_def.hpp"
 
-// Datetime Core
+// VDatetime Core
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 // VDuration
 #include"simplydt/duration/comp/dt_duration.hpp"
 
-// Date
+// VDate
 // N/A
 
-// Time
+// VTime
 // N/A
 
-// Datetime
+// VDatetime
 // N/A
 
 //#include"simplydt/datetime/sequence/dt_sequence.hpp"
