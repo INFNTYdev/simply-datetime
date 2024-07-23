@@ -282,7 +282,6 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	// -> Need to fix VDuration class hour interval bug (hour invokes DateInterval class)
 	VDuration demo_1{ 100, 0, 30 };
 	VDuration demo_2{ 10, 1, 45 };
 
