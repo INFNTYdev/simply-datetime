@@ -7,11 +7,14 @@
 #include<chrono>
 
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
+#include"simplydt/datetime/date/unit/dt_year.hpp"
+#include"simplydt/datetime/date/unit/dt_month.hpp"
+#include"simplydt/datetime/date/unit/dt_day.hpp"
 #include"simplydt/duration/comp/dt_duration.hpp"
 
 
 /* Full date ( YYYY-mm-dd ) */
-class Date : public DatetimeSequence<Year, Month, Day> {
+class VDate : public DatetimeSequence<Year, Month, Day> {
 
 public:
     /* Datetime time unit */
@@ -19,12 +22,12 @@ public:
     /* Datetime type */
     using DatetimeType = DatetimeSequence<Year, Month, Day>::DatetimeType;
     /* Standard library chronological time point (system clock) */
-    using Chrono = std::chrono::time_point<std::chrono::system_clock>;
+    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
     /* Date format */
     enum Format {
-        RECORD,// Record date format (00-00-0000)
-        STANDARD,// Standard date format (00/00/0000)
+        RECORD,// Date record format (01-01-1970)
+        STANDARD,// Date standard format (01/01/1970)
     };
 
     /* Date layout */
@@ -43,7 +46,11 @@ public:
         D_M,// (dd/mm) [ Example: 13-01 ]
     };
 
-    Date(Chrono chrono) noexcept
+    static const uint16_t EPOCH_YEAR = 1970Ui16;
+    static const uint8_t EPOCH_MONTH = 1Ui8;
+    static const uint8_t EPOCH_DAY = 1Ui8;
+
+    VDate(TimePoint sys_clock) noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
             Year(Year::YEAR_MIN),
@@ -51,7 +58,7 @@ public:
             Day((uint16_t)1U)
         }
     {
-        std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
+        std::time_t timeT{ std::chrono::system_clock::to_time_t(sys_clock) };
         std::tm* tm_ptr{ std::localtime(&timeT) };
 
         // Retrieve date from time point
@@ -71,7 +78,7 @@ public:
         dayRef->setThreshold(monthRef->getTotalDays());
     }
 
-    Date(uint16_t year, uint16_t month, uint16_t day) noexcept
+    VDate(uint16_t year, uint16_t month, uint16_t day) noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
             Year(year),
@@ -82,7 +89,7 @@ public:
         this->adjustDayThreshold();
     }
 
-    Date(uint16_t year, uint16_t month) noexcept
+    VDate(uint16_t year, uint16_t month) noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
             Year(year),
@@ -93,7 +100,7 @@ public:
         this->adjustDayThreshold();
     }
 
-    Date(uint16_t year) noexcept
+    VDate(uint16_t year) noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
             Year(year),
@@ -104,7 +111,7 @@ public:
         this->adjustDayThreshold();
     }
 
-    Date() noexcept
+    VDate() noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
             Year(Year::YEAR_MIN),
@@ -115,16 +122,16 @@ public:
         this->adjustDayThreshold();
     }
 
-    virtual ~Date() noexcept = default;
+    virtual ~VDate() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const Date& date) noexcept
+    friend std::ostream& operator<<(std::ostream& os, const VDate& date) noexcept
     {
         os << date.dateStr();
 
         return os;
     }
 
-    Date& operator=(const Chrono& chrono) noexcept
+    VDate& operator=(const TimePoint& chrono) noexcept
     {
         std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
         std::tm* tm_ptr{ std::localtime(&timeT) };
@@ -148,18 +155,18 @@ public:
         return *this;
     }
 
-    Date operator+(const VDuration& duration) const noexcept
+    VDate operator+(const VDuration& duration) const noexcept
     {
-        Date result{ *this };
+        VDate result{ *this };
 
         result.displace(duration);
 
         return result;
     }
 
-    Date operator-(const VDuration& duration) const noexcept
+    VDate operator-(const VDuration& duration) const noexcept
     {
-        Date result{ *this };
+        VDate result{ *this };
 
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
@@ -174,14 +181,14 @@ public:
         return result;
     }
 
-    Date& operator+=(const VDuration& duration) noexcept
+    VDate& operator+=(const VDuration& duration) noexcept
     {
         this->displace(duration);
 
         return *this;
     }
 
-    Date& operator-=(const VDuration& duration) noexcept
+    VDate& operator-=(const VDuration& duration) noexcept
     {
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
@@ -217,13 +224,13 @@ public:
     /* Returns date day-of-week literal */
     const char* dayOfWeek() const noexcept
     {
-        this->retrieveDay()->getDayOfWeek();
+        return this->m_day_ptr->getDayOfWeek();
     }
 
     /* Returns date month literal */
     const char* monthTitle() const noexcept
     {
-        this->retrieveMonth()->getName();
+        return this->m_month_ptr->getTitle();
     }
 
     /* Returns date string with provided configuration */
@@ -341,7 +348,7 @@ public:
     }
 
     /* Returns absolute total number of days from this date until provided date */
-    size_t daysUntil(const Date& date) const noexcept
+    size_t daysUntil(const VDate& date) const noexcept//        <--- (This is going to require some thought)
     {
         // NOTE: This method is changing, new solution found
 
@@ -350,7 +357,7 @@ public:
         if (this == &date || *this == date)
             return totalDays;
 
-        std::pair<const Date*, const Date*> dateRef{ nullptr, nullptr };// (high, low)
+        std::pair<const VDate*, const VDate*> dateRef{ nullptr, nullptr };// (high, low)
 
         if (this->isAfter(date)) {
             dateRef.first = this;
@@ -366,7 +373,7 @@ public:
             return (dateRef.first->day() - dateRef.second->day());
 
         // Lambda: Returns true if simulated year-month frame matches dates
-        auto monthFrameMatch = [](const Date* date, uint16_t year, uint16_t month)-> bool {
+        auto monthFrameMatch = [](const VDate* date, uint16_t year, uint16_t month)-> bool {
             return (year == date->year() && month == date->month());
         };
 
@@ -401,7 +408,7 @@ public:
     }
 
     /* Returns duration between this date and provided date */
-    VDuration until(const Date& date) const noexcept
+    VDuration until(const VDate& date) const noexcept
     {
         if (this == &date || *this == date)
             return VDuration{};
@@ -409,7 +416,7 @@ public:
         if (this->isAfter(date)) {
             VDuration newDur{ VDuration::Sign::NEGATIVE };
 
-            newDur.getDays().largeDisplace(
+            newDur.getDays()->largeDisplace(
                 VDuration::Sign::POSITIVE,
                 this->daysUntil(date)
             );
@@ -419,7 +426,7 @@ public:
         else {
             VDuration newDur{ VDuration::Sign::POSITIVE };
 
-            newDur.getDays().largeDisplace(
+            newDur.getDays()->largeDisplace(
                 VDuration::Sign::POSITIVE,
                 this->daysUntil(date)
             );
@@ -429,11 +436,11 @@ public:
     }
 
     /* Returns date as standard chronological system time point */
-    Chrono toChrono() const noexcept
+    TimePoint toChrono() const noexcept
     {
-        Chrono timePoint{};
+        TimePoint timePoint{};
 
-        Date epoch{ Chrono{} };
+        VDate epoch{ TimePoint{} };
         VDuration sinceEpoch{ epoch.until(*this) };
 
         timePoint = (timePoint + sinceEpoch.toChronoDuration());
@@ -457,6 +464,10 @@ private:
     static const uint8_t YEAR_INDEX{ 0 };
     static const uint8_t MONTH_INDEX{ 1 };
     static const uint8_t DAY_INDEX{ 2 };
+
+    Year* m_year_ptr;
+    Month* m_month_ptr;
+    Day* m_day_ptr;
 
     size_t timeUnitEnumToIndex(TimeUnit time_unit) noexcept
     {
@@ -493,8 +504,9 @@ private:
 
         // NOTE: Maybe here we should check if new max is greater than current pos.
         // (If so, we find the difference from max and increment that difference?)
+        // NEW NOTE: (^ Hand this responsibility off to DateInterval class ^)
 
-        dayRef->setThreshold(monthRef->getTotalDays());
+        dayRef->setThreshold(monthRef->getTotalDays());// This to most likely be deleted
     }
 
     Year* retrieveYear() const noexcept
@@ -520,7 +532,7 @@ private:
 
     void positiveDisplace(const VDuration& duration) noexcept
     {
-        return this->getDay().dayDisplace(
+        this->getDay()->dateDisplace(
             Day::Trans::POSITIVE,
             duration.convertedTo(VDuration::TimeUnit::DAY)
         );
@@ -528,10 +540,17 @@ private:
 
     void negativeDisplace(const VDuration& duration) noexcept
     {
-        return this->getDay().dayDisplace(
+        this->getDay()->dateDisplace(
             Day::Trans::POSITIVE,
             duration.convertedTo(VDuration::TimeUnit::DAY)
         );
+    }
+
+    void populateIntervalPointers() noexcept
+    {
+        this->m_year_ptr = this->retrieveYear();
+        this->m_month_ptr = this->retrieveMonth();
+        this->m_day_ptr = this->retrieveDay();
     }
 
 };

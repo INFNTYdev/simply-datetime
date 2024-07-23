@@ -33,7 +33,7 @@
 #include"simplydt/duration/comp/dt_duration.hpp"
 
 // VDate
-// N/A
+#include"simplydt/datetime/date/comp/dt_date.hpp"
 
 // VTime
 // N/A
@@ -43,7 +43,6 @@
 
 
 
-//#include"simplydt/datetime/date/comp/dt_date.hpp"
 //#include"simplydt/datetime/time/comp/dt_time.hpp"
 //#include"simplydt/datetime/time/comp/dt_stime.hpp"
 
@@ -67,14 +66,14 @@
 * -> [X] Start DurationInterval class (create preset type names)
 * -> [X] Plan and implement VDuration class interface
 * -> [X] Implement .millisecondsUntil() method in Time class
-* -> [X] Implement .until() methods in Date, Time, and STime classes
+* -> [X] Implement .until() methods in VDate, Time, and STime classes
 * -> [X] Implement Time constructor/=operators that accept STime
-* -> [X] Implement Date/Time/STime/VDuration .displace() method
-* -> [X] Implement Date/Time/STime/VDuration .operator+=()/.operator-=() methods
-* -> [X] Implement Date/Time/STime/VDuration .operator+()/.operator-() methods
+* -> [X] Implement VDate/Time/STime/VDuration .displace() method
+* -> [X] Implement VDate/Time/STime/VDuration .operator+=()/.operator-=() methods
+* -> [X] Implement VDate/Time/STime/VDuration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
 * -> [X] Determine highest possible number Range class can handle with an int type
-* -> [X] Implement Date .toChrono() method
+* -> [X] Implement VDate .toChrono() method
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
@@ -83,11 +82,11 @@
 * (Some future point...)
 * 
 * -> [] Plan and implement DatetimeStub class
-* -> [] Implement Date/Time/STime class .toStub() method
-* -> [] Implement Date/Time/STime constructor that accepts DatetimeStub
-* -> [] *Implement Date/Time/STime .operator=() for std::chrono <- IMPORTANT
+* -> [] Implement VDate/Time/STime class .toStub() method
+* -> [] Implement VDate/Time/STime constructor that accepts DatetimeStub
+* -> [] *Implement VDate/Time/STime .operator=() for std::chrono <- IMPORTANT
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
-* -> [] Implement Date/Time/STime/VDuration string parsing capability
+* -> [] Implement VDate/Time/STime/VDuration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
@@ -97,11 +96,11 @@
 
 
 
-//void dateCompare(const Date& date1, const Date& date2) noexcept
+//void dateCompare(const VDate& date1, const VDate& date2) noexcept
 //{
 //	std::cout
-//		<< "\nFrom " << date1.dateStr(Date::Format::STANDARD)
-//		<< " -> " << date2.dateStr(Date::Format::STANDARD)
+//		<< "\nFrom " << date1.dateStr(VDate::Format::STANDARD)
+//		<< " -> " << date2.dateStr(VDate::Format::STANDARD)
 //		<< " = " << date1.until(date2) << std::endl;
 //}
 //
@@ -127,21 +126,21 @@
 //	std::cout
 //		<< '\n'
 //		<< datetime.datetimeStr(
-//			Date::Format::STANDARD,
-//			Date::Layout::M_D_YYYY,
+//			VDate::Format::STANDARD,
+//			VDate::Layout::M_D_YYYY,
 //			Time::Format::STANDARD,
 //			Time::Layout::H_M_S_P
 //		)
 //		<< std::endl;
 //}
 //
-//void dateOut(const Date& date) noexcept
+//void dateOut(const VDate& date) noexcept
 //{
 //	std::cout
 //		<< '\n'
 //		<< date.dateStr(
-//			Date::Format::STANDARD,
-//			Date::Layout::M_D_YYYY
+//			VDate::Format::STANDARD,
+//			VDate::Layout::M_D_YYYY
 //		)
 //		<< std::endl;
 //}
@@ -190,9 +189,9 @@ void add_days(int& day, int& month, int& year, int days) {
 
 int main(size_t argc, char* argv[])
 {
-	//Date epochDate{ 1969, 12, 31 };
-	//Date epochNeig{ 1970, 1, 1 };
-	//Date todayDate{ std::chrono::system_clock::now() };
+	//VDate epochDate{ 1969, 12, 31 };
+	//VDate epochNeig{ 1970, 1, 1 };
+	//VDate todayDate{ std::chrono::system_clock::now() };
 
 	//std::cout << "\nEpoch:";
 	//dateOut(epochDate);
@@ -233,7 +232,7 @@ int main(size_t argc, char* argv[])
 	//std::cout << '\n'
 	//	<< std::setw(25) << "epoch + until today: ";
 	//VDuration untilToday = epochDate.until(todayDate);
-	//Date expectToday = (epochDate + untilToday);
+	//VDate expectToday = (epochDate + untilToday);
 	//std::cout << expectToday << " (missing ";
 	//// Extra day becase time not accounted
 	//size_t daysMissing = expectToday.daysUntil(todayDate);
@@ -241,7 +240,7 @@ int main(size_t argc, char* argv[])
 
 	//std::cout << std::setw(25) << "epoch + until neighb.: ";
 	//VDuration untilNeig = epochDate.until(epochNeig);
-	//Date expectNeig = (epochDate + untilNeig);
+	//VDate expectNeig = (epochDate + untilNeig);
 	//std::cout << expectNeig << " (missing ";
 	//// Extra day becase time not accounted
 	//daysMissing = expectNeig.daysUntil(epochNeig);
@@ -276,7 +275,7 @@ int main(size_t argc, char* argv[])
 
 	// ANALYSIS
 	// -> (Must be careful with use of methods!)
-	// -> Date intervals need specialized control methods
+	// -> VDate intervals need specialized control methods
 	// 
 
 

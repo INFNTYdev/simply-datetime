@@ -13,9 +13,9 @@ class SDatetime {
 
 public:
     /* Datetime time unit */
-    using Unit = Date::TimeUnit;
+    using Unit = VDate::TimeUnit;
     /* Datetime type */
-    using Type = Date::DatetimeType;
+    using Type = VDate::DatetimeType;
     /* Standard library chronological time point (system clock) */
     using Chrono = std::chrono::time_point<std::chrono::system_clock>;
 
@@ -27,17 +27,17 @@ public:
 
     SDatetime(Chrono chrono) noexcept;
 
-    SDatetime(const Date& date, const STime& s_time) noexcept;
+    SDatetime(const VDate& date, const STime& s_time) noexcept;
 
-    SDatetime(Date&& date, STime&& s_time) noexcept;
+    SDatetime(VDate&& date, STime&& s_time) noexcept;
 
-    SDatetime(const Date& date, STime&& s_time) noexcept;
+    SDatetime(const VDate& date, STime&& s_time) noexcept;
 
-    SDatetime(Date&& date, const STime& s_time) noexcept;
+    SDatetime(VDate&& date, const STime& s_time) noexcept;
 
-    SDatetime(const Date& date) noexcept;
+    SDatetime(const VDate& date) noexcept;
 
-    SDatetime(Date&& date) noexcept;
+    SDatetime(VDate&& date) noexcept;
 
     SDatetime(const SDatetime& s_datetime) noexcept;
 
@@ -93,7 +93,7 @@ public:
     uint16_t second() const noexcept;
 
     /* Datetime date object */
-    const Date& date() const noexcept;
+    const VDate& date() const noexcept;
 
     /* Datetime time object */
     const STime& time() const noexcept;
@@ -105,30 +105,30 @@ public:
     std::string hourPhaseStr() const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Layout layout, Date::Format date_format, Date::Layout date_layout,
+    std::string datetimeStr(Layout layout, VDate::Format date_format, VDate::Layout date_layout,
         STime::Format time_format, STime::Layout time_layout) const noexcept;
     
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format, Date::Layout date_layout,
+    std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout,
         STime::Format time_format, STime::Layout time_layout) const noexcept;
     
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format, Date::Layout date_layout) const noexcept;
+    std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(STime::Format time_format, STime::Layout time_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format, STime::Format time_format) const noexcept;
+    std::string datetimeStr(VDate::Format date_format, STime::Format time_format) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Layout date_layout, STime::Layout time_layout) const noexcept;
+    std::string datetimeStr(VDate::Layout date_layout, STime::Layout time_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format) const noexcept;
+    std::string datetimeStr(VDate::Format date_format) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Layout date_layout) const noexcept;
+    std::string datetimeStr(VDate::Layout date_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(STime::Format time_format) const noexcept;
@@ -152,16 +152,16 @@ public:
     bool isBefore(const SDatetime& s_datetime) const noexcept;
 
     /* Returns true if provided date occurs after this datetime date */
-    bool isBefore(const Date& date) const noexcept;
+    bool isBefore(const VDate& date) const noexcept;
 
     /* Returns true if provided datetime occurs before this datetime */
     bool isAfter(const SDatetime& s_datetime) const noexcept;
 
     /* Returns true if provided date occurs before this datetime date */
-    bool isAfter(const Date& date) const noexcept;
+    bool isAfter(const VDate& date) const noexcept;
 
     /* Returns pointer to datetime date */
-    Date* getDate() noexcept;
+    VDate* getDate() noexcept;
 
     /* Returns pointer to datetime time */
     Time* getTime() noexcept;
@@ -186,7 +186,7 @@ public:
 
 
 private:
-    Date m_date;
+    VDate m_date;
     STime m_time;
 
     void linkDatetime() noexcept
