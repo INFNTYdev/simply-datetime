@@ -39,6 +39,25 @@ public:
         D_H,// ( dd:HH ) [ Example: 124:08 ]
     };
 
+    template <typename Integer_T>
+    VDuration(const std::chrono::duration<Integer_T>& chrono_duration) noexcept
+        : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
+            DatetimeType::DURATION_DATETIME,
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, (uint16_t)0Ui16),
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
+        }
+    {
+        this->getInterval(SECOND_INDEX)->largeDisplace(
+            Sign::POSITIVE,
+            chrono_duration.count()
+        );
+
+        this->populateIntervalPointers();
+    }
+
     VDuration(Sign sign, uint16_t days, uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
@@ -190,25 +209,6 @@ public:
         },
         m_directionSign{ sign }
     {
-        this->populateIntervalPointers();
-    }
-
-    template <typename Integer_T>
-    VDuration(const std::chrono::duration<Integer_T>& chrono_duration) noexcept
-        : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
-            DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, (uint16_t)0Ui16),
-            Hour((uint16_t)0Ui16),
-            Minute((uint16_t)0Ui16),
-            Second((uint16_t)0Ui16),
-            Millisecond((uint16_t)0Ui16)
-        }
-    {
-        this->getInterval(SECOND_INDEX)->largeDisplace(
-            Sign::POSITIVE,
-            chrono_duration.count()
-        );
-
         this->populateIntervalPointers();
     }
 
