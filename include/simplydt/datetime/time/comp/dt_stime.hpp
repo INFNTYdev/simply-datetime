@@ -128,7 +128,7 @@ public:
         return *this;
     }
 
-    STime operator+(const Duration& duration) const noexcept
+    STime operator+(const VDuration& duration) const noexcept
     {
         STime result{ *this };
 
@@ -137,12 +137,12 @@ public:
         return result;
     }
 
-    STime operator-(const Duration& duration) const noexcept
+    STime operator-(const VDuration& duration) const noexcept
     {
         STime result{ *this };
 
         switch (duration.sign()) {
-        case Duration::Sign::NEGATIVE:
+        case VDuration::Sign::NEGATIVE:
             // Double negative = positive
             result.positiveDisplace(duration);
             break;
@@ -154,17 +154,17 @@ public:
         return result;
     }
 
-    STime& operator+=(const Duration& duration) noexcept
+    STime& operator+=(const VDuration& duration) noexcept
     {
         this->displace(duration);
 
         return *this;
     }
 
-    STime& operator-=(const Duration& duration) noexcept
+    STime& operator-=(const VDuration& duration) noexcept
     {
         switch (duration.sign()) {
-        case Duration::Sign::NEGATIVE:
+        case VDuration::Sign::NEGATIVE:
             // Double negative = positive
             this->positiveDisplace(duration);
             break;
@@ -367,15 +367,15 @@ public:
     }
 
     /* Returns duration between this time and provided time */
-    Duration until(const STime& s_time) const noexcept
+    VDuration until(const STime& s_time) const noexcept
     {
         if (this == &s_time || *this == s_time)
-            return Duration{};
+            return VDuration{};
 
-        Duration newDur{ Duration::Sign::POSITIVE };
+        VDuration newDur{ VDuration::Sign::POSITIVE };
 
         newDur.getSecond().largeDisplace(
-            Duration::Sign::POSITIVE,
+            VDuration::Sign::POSITIVE,
             this->secondsUntil(s_time)
         );
 
@@ -383,10 +383,10 @@ public:
     }
 
     /* Displace time using provided duration */
-    void displace(const Duration& duration) noexcept
+    void displace(const VDuration& duration) noexcept
     {
         switch (duration.sign()) {
-        case Duration::Sign::NEGATIVE:
+        case VDuration::Sign::NEGATIVE:
             return this->negativeDisplace(duration);
         default:
             return this->positiveDisplace(duration);
@@ -448,19 +448,19 @@ private:
         return static_cast<Second*>(rawInterval);
     }
 
-    void positiveDisplace(const Duration& duration) noexcept
+    void positiveDisplace(const VDuration& duration) noexcept
     {
         return this->getInterval(SECOND_INDEX)->largeDisplace(
-            Duration::Sign::POSITIVE,
-            duration.convertedTo(Duration::TimeUnit::SECOND)
+            VDuration::Sign::POSITIVE,
+            duration.convertedTo(VDuration::TimeUnit::SECOND)
         );
     }
 
-    void negativeDisplace(const Duration& duration) noexcept
+    void negativeDisplace(const VDuration& duration) noexcept
     {
         return this->getInterval(SECOND_INDEX)->largeDisplace(
-            Duration::Sign::NEGATIVE,
-            duration.convertedTo(Duration::TimeUnit::SECOND)
+            VDuration::Sign::NEGATIVE,
+            duration.convertedTo(VDuration::TimeUnit::SECOND)
         );
     }
 

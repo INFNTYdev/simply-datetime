@@ -4,6 +4,8 @@
 
 
 
+#include<chrono>
+
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 #include"simplydt/duration/unit/dur_unit_def.hpp"
 #include"simplydt/datetime/time/unit/dt_hour.hpp"
@@ -12,8 +14,8 @@
 #include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
 
-/* Time duration ( dd:HH:MM:SS:MS ) */
-class Duration : public DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond> {
+/* Virtual time duration ( dd:HH:MM:SS:MS ) */
+class VDuration : public DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond> {
 
 public:
     /* Datetime time unit */
@@ -22,6 +24,8 @@ public:
     using DatetimeType = DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::DatetimeType;
     /* Duration direction sign */
     using Sign = Interval<uint16_t>::Trans;
+    /* Standard library chronological duration (64-bit) */
+    using ChronoDuration = std::chrono::duration<size_t>;
 
     /* Duration layout */
     enum Layout {
@@ -35,10 +39,10 @@ public:
         D_H,// ( dd:HH ) [ Example: 124:08 ]
     };
 
-    Duration(Sign sign, uint16_t days, uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
+    VDuration(Sign sign, uint16_t days, uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
             Minute(minute),
             Second(second),
@@ -46,202 +50,228 @@ public:
         },
         m_directionSign{ sign }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration(uint16_t days, uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
+    VDuration(uint16_t days, uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
             Minute(minute),
             Second(second),
-            Millisecond((uint16_t)0U)
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ Sign::POSITIVE }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration(Sign sign, uint16_t days, uint16_t hour, uint16_t minute, uint16_t second) noexcept
+    VDuration(Sign sign, uint16_t days, uint16_t hour, uint16_t minute, uint16_t second) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
             Minute(minute),
             Second(second),
-            Millisecond((uint16_t)0U)
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ sign }
     {
-        //
+        this->populateIntervalPointers();
     }
     
-    Duration(uint16_t days, uint16_t hour, uint16_t minute, uint16_t second) noexcept
+    VDuration(uint16_t days, uint16_t hour, uint16_t minute, uint16_t second) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
             Minute(minute),
             Second(second),
-            Millisecond((uint16_t)0U)
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ Sign::POSITIVE }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration(Sign sign, uint16_t days, uint16_t hour, uint16_t minute) noexcept
+    VDuration(Sign sign, uint16_t days, uint16_t hour, uint16_t minute) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
             Minute(minute),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ sign }
     {
-        //
+        this->populateIntervalPointers();
     }
     
-    Duration(uint16_t days, uint16_t hour, uint16_t minute) noexcept
+    VDuration(uint16_t days, uint16_t hour, uint16_t minute) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
             Minute(minute),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ Sign::POSITIVE }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration(Sign sign, uint16_t days, uint16_t hour) noexcept
+    VDuration(Sign sign, uint16_t days, uint16_t hour) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ sign }
     {
-        //
+        this->populateIntervalPointers();
     }
     
-    Duration(uint16_t days, uint16_t hour) noexcept
+    VDuration(uint16_t days, uint16_t hour) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
             Hour(hour),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ Sign::POSITIVE }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration(Sign sign, uint16_t days) noexcept
+    VDuration(Sign sign, uint16_t days) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
-            Hour((uint16_t)0U),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ sign }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    explicit Duration(uint16_t days) noexcept
+    explicit VDuration(uint16_t days) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, days),
-            Hour((uint16_t)0U),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, days),
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ Sign::POSITIVE }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    explicit Duration(Sign sign) noexcept
+    explicit VDuration(Sign sign) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, (uint16_t)0U),
-            Hour((uint16_t)0U),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, (uint16_t)0Ui16),
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ sign }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration() noexcept
+    template <typename Integer_T>
+    VDuration(const std::chrono::duration<Integer_T>& chrono_duration) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             DatetimeType::DURATION_DATETIME,
-            ArbDay((uint16_t)0U, (uint16_t)0U, (uint16_t)0U),
-            Hour((uint16_t)0U),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, (uint16_t)0Ui16),
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
+        }
+    {
+        this->getInterval(SECOND_INDEX)->largeDisplace(
+            Sign::POSITIVE,
+            chrono_duration.count()
+        );
+
+        this->populateIntervalPointers();
+    }
+
+    VDuration() noexcept
+        : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
+            DatetimeType::DURATION_DATETIME,
+            ArbDay((uint16_t)0Ui16, (uint16_t)0Ui16, (uint16_t)0Ui16),
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         },
         m_directionSign{ Sign::POSITIVE }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration(const Duration& duration) noexcept
+    VDuration(const VDuration& duration) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{ duration },
         m_directionSign{ duration.m_directionSign }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    Duration(Duration&& duration) noexcept
+    VDuration(VDuration&& duration) noexcept
         : DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>{
             std::forward<DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>>(
                 static_cast<DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>&&>(duration)
             )
         },
-        m_directionSign{ std::move(duration.m_directionSign) }
+        m_directionSign{ std::move(duration.m_directionSign) },
+        m_days_ptr{ std::move(duration.m_days_ptr) },
+        m_hour_ptr{ std::move(duration.m_hour_ptr) },
+        m_minute_ptr{ std::move(duration.m_minute_ptr) },
+        m_second_ptr{ std::move(duration.m_second_ptr) },
+        m_millisecond_ptr{ std::move(duration.m_millisecond_ptr) }
     {
         //
     }
 
-    ~Duration() noexcept = default;
+    ~VDuration() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const Duration& duration) noexcept
+    friend std::ostream& operator<<(std::ostream& os, const VDuration& duration) noexcept
     {
         os << duration.durationStr();
 
         return os;
     }
 
-    Duration& operator=(const Duration& duration) noexcept
+    VDuration& operator=(const VDuration& duration) noexcept
     {
         if (this == &duration)
             return *this;
         
         DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::operator=(duration);
+
         this->m_directionSign = duration.m_directionSign;
+        this->populateIntervalPointers();
 
         return *this;
     }
 
-    Duration& operator=(Duration&& duration) noexcept
+    VDuration& operator=(VDuration&& duration) noexcept
     {
         if (this == &duration)
             return *this;
@@ -251,12 +281,30 @@ public:
                 static_cast<DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>&&>(duration)
             )
         );
-        this->m_directionSign = duration.m_directionSign;
+
+        this->m_directionSign = std::move(duration.m_directionSign);
+        this->m_days_ptr = std::move(duration.m_days_ptr);
+        this->m_hour_ptr = std::move(duration.m_hour_ptr);
+        this->m_minute_ptr = std::move(duration.m_minute_ptr);
+        this->m_second_ptr = std::move(duration.m_second_ptr);
+        this->m_millisecond_ptr = std::move(duration.m_millisecond_ptr);
 
         return *this;
     }
 
-    bool operator==(const Duration& duration) const noexcept
+    template <typename Integer_T>
+    VDuration& operator=(const std::chrono::duration<Integer_T>& chrono_duration) noexcept
+    {
+        if (!this->isZero())
+            this->reset();
+
+        this->getInterval(SECOND_INDEX)->largeDisplace(
+            Sign::POSITIVE,
+            chrono_duration.count()
+        );
+    }
+
+    bool operator==(const VDuration& duration) const noexcept
     {
         if (this == &duration)
             return true;
@@ -267,41 +315,41 @@ public:
         return DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::operator==(duration);
     }
 
-    bool operator<(const Duration& duration) const noexcept
+    bool operator<(const VDuration& duration) const noexcept
     {
         return this->isShorterThan(duration);
     }
 
-    bool operator>(const Duration& duration) const noexcept
+    bool operator>(const VDuration& duration) const noexcept
     {
         return this->isLongerThan(duration);
     }
 
-    bool operator<=(const Duration& duration) const noexcept
+    bool operator<=(const VDuration& duration) const noexcept
     {
         return (this->isShorterThan(duration) || this->operator==(duration));
     }
 
-    bool operator>=(const Duration& duration) const noexcept
+    bool operator>=(const VDuration& duration) const noexcept
     {
         return (this->isLongerThan(duration) || this->operator==(duration));
     }
 
-    Duration operator+(const Duration& duration) const noexcept
+    VDuration operator+(const VDuration& duration) const noexcept
     {
-        Duration result{ *this };
+        VDuration result{ *this };
 
         result.displace(duration);
 
         return result;
     }
 
-    Duration operator-(const Duration& duration) const noexcept
+    VDuration operator-(const VDuration& duration) const noexcept
     {
-        Duration result{ *this };
+        VDuration result{ *this };
 
         switch (duration.sign()) {
-        case Duration::Sign::NEGATIVE:
+        case VDuration::Sign::NEGATIVE:
             // Double negative = positive
             result.positiveDisplace(duration);
             break;
@@ -313,17 +361,17 @@ public:
         return result;
     }
 
-    Duration& operator+=(const Duration& duration) noexcept
+    VDuration& operator+=(const VDuration& duration) noexcept
     {
         this->displace(duration);
 
         return *this;
     }
 
-    Duration& operator-=(const Duration& duration) noexcept
+    VDuration& operator-=(const VDuration& duration) noexcept
     {
         switch (duration.sign()) {
-        case Duration::Sign::NEGATIVE:
+        case VDuration::Sign::NEGATIVE:
             // Double negative = positive
             this->positiveDisplace(duration);
             break;
@@ -336,22 +384,21 @@ public:
     }
 
     /* Returns product of this duration and integer */
-    Duration operator*(const long long int& integer) const noexcept
+    VDuration operator*(const long long int& integer) const noexcept
     {
-        // Determine multiplicand effect
-        bool negativeMultiplicand{ (integer < 0LL) };
+        bool negativeMultiplicand{ (integer < (long long)0i64) };
 
         size_t product{ 0 };
 
         // Obtain product
         if (negativeMultiplicand)
-            product = (this->convertedTo(Duration::TimeUnit::MILLISECOND) * (size_t)(integer * -1LL));
+            product = (this->convertedTo(VDuration::TimeUnit::MILLISECOND) * (size_t)(integer * (long long)-1i64));
         else
-            product = (this->convertedTo(Duration::TimeUnit::MILLISECOND) * integer);
+            product = (this->convertedTo(VDuration::TimeUnit::MILLISECOND) * (size_t)integer);
 
         // Provide product to duration
-        Duration result{};
-        result.getInterval(MILLIS_INDEX)->largeDisplace(Duration::Sign::POSITIVE, product);
+        VDuration result{};
+        result.getInterval(MILLIS_INDEX)->largeDisplace(VDuration::Sign::POSITIVE, product);
 
         // Negative duration multiplied by positive number
         if (this->m_directionSign == Sign::NEGATIVE && !negativeMultiplicand)
@@ -365,30 +412,23 @@ public:
     }
 
     /* Multiply duration by provided integer */
-    Duration& operator*=(const long long int& integer) noexcept
+    VDuration& operator*=(const long long int& integer) noexcept
     {
-        // Determine multiplicand effect
-        bool negativeMultiplicand{ (integer < 0LL) };
+        bool negativeMultiplicand{ (integer < (long long)0i64) };
 
         size_t product{ 0 };
 
-        size_t millisecs{ this->convertedTo(Duration::TimeUnit::MILLISECOND) };
+        size_t millisecs{ this->convertedTo(VDuration::TimeUnit::MILLISECOND) };
 
         // Obtain product
         if (negativeMultiplicand)
-            product = (millisecs * (size_t)(integer * -1LL));
+            product = (millisecs * (size_t)(integer * (long long)-1i64));
         else
-            product = (millisecs * integer);
+            product = (millisecs * (size_t)integer);
         
         // Handle zero product
-        if (product == (size_t)0ULL) {
-            this->getInterval(MILLIS_INDEX)->largeDisplace(
-                Duration::Sign::NEGATIVE,
-                millisecs
-            );
-
-            if (this->m_directionSign == Sign::NEGATIVE)
-                this->invert();
+        if (product == (size_t)0Ui64) {
+            this->reset();
             
             return *this;
         }
@@ -398,13 +438,13 @@ public:
 
         // Provide product to this
         this->getInterval(MILLIS_INDEX)->largeDisplace(
-            Duration::Sign::POSITIVE,
+            VDuration::Sign::POSITIVE,
             product
         );
 
         // Handle this duration sign
         if (this->m_directionSign == Sign::NEGATIVE && negativeMultiplicand)
-            this->invert();
+            this->invert();// Double negative = positive
         else if (this->m_directionSign == Sign::POSITIVE && negativeMultiplicand)
             this->invert();
 
@@ -412,7 +452,7 @@ public:
     }
 
     /* Returns quotient of this duration and provided duration as quantity */
-    long long int operator/(const Duration& duration) const noexcept
+    long long int operator/(const VDuration& duration) const noexcept
     {
         // Determine division effect
         bool negativeQuotient{
@@ -420,51 +460,41 @@ public:
             || (this->sign() == Sign::POSITIVE && duration.sign() == Sign::NEGATIVE))
         };
 
-        size_t dividend{ this->convertedTo(Duration::TimeUnit::MILLISECOND) };
-        size_t divisor{ duration.convertedTo(Duration::TimeUnit::MILLISECOND) };
+        size_t dividend{ this->convertedTo(VDuration::TimeUnit::MILLISECOND) };
+        size_t divisor{ duration.convertedTo(VDuration::TimeUnit::MILLISECOND) };
 
         // Divide by zero error
-        if (divisor == (size_t)0ULL)
-            return (long long int)0LL;
+        if (divisor == (size_t)0Ui64)
+            return (long long)0i64;
 
-        // Overflow will never occur with 16-bit based duration intervals
+        // Overflow should never occur with 16-bit based duration intervals
         long long int quotient{ (long long)(dividend / divisor) };
 
         if (negativeQuotient)
-            quotient *= -1LL;
+            quotient *= (long long)-1i64;
 
         return quotient;
     }
 
     /* Returns modulus of this duration and provided duration as duration */
-    Duration operator%(const Duration& duration) const noexcept
+    VDuration operator%(const VDuration& duration) const noexcept
     {
         long long int multiplicand{ *this / duration };
 
-        // NOTE: <--- This is temporary until more thought
-        if (multiplicand == (long long)0LL)
-            return Duration{};
-        
         // No remainder
-        if ((duration * multiplicand) == *this)
-            return Duration{};
+        if (multiplicand == (long long)0i64 || (duration * multiplicand) == *this)
+            return VDuration{};
 
         return (duration * multiplicand).until(*this);
     }
 
-    Duration& operator%=(const Duration& duration) noexcept
+    VDuration& operator%=(const VDuration& duration) noexcept
     {
         long long int multiplicand{ *this / duration };
 
-        // NOTE: <--- This is temporary until more thought (zero multiplicand)
-        if (multiplicand == (long long)0LL || (duration * multiplicand) == *this) {
-            this->getInterval(MILLIS_INDEX)->largeDisplace(
-                Duration::Sign::NEGATIVE,
-                this->convertedTo(Duration::TimeUnit::MILLISECOND)
-            );
-
-            if (this->m_directionSign == Sign::NEGATIVE)
-                this->invert();
+        // No remainder
+        if (multiplicand == (long long)0i64 || (duration * multiplicand) == *this) {
+            this->reset();
             
             return *this;
         }
@@ -472,6 +502,27 @@ public:
         this->operator=((duration * multiplicand).until(*this));
 
         return *this;
+    }
+
+    /* Returns true if duration has no elapsed time */
+    bool isZero() const noexcept
+    {
+        if (!this->m_millisecond_ptr->isAtStart())
+            return false;
+        
+        if (!this->m_second_ptr->isAtStart())
+            return false;
+        
+        if (!this->m_minute_ptr->isAtStart())
+            return false;
+        
+        if (!this->m_hour_ptr->isAtStart())
+            return false;
+        
+        if (!this->m_days_ptr->isAtStart())
+            return false;
+        
+        return true;
     }
 
     /* Returns duration elapsed days */
@@ -524,9 +575,9 @@ public:
     /* Returns duration string with provided format */
     std::string durationStr(Layout layout) const noexcept
     {
-        std::string duration;
-        duration.reserve((size_t)25ULL);
-        duration = "";
+        std::string durString;
+        durString.reserve((size_t)25Ui64);
+        durString = "";
 
         char delimiter{ ':' };
 
@@ -535,37 +586,37 @@ public:
         case Layout::SIGN_D_H_M_S:
         case Layout::SIGN_D_H_M:
         case Layout::SIGN_D_H:
-            duration += this->signChar();
-            duration += (this->getInterval(ARBDAY_INDEX)->toStr() + delimiter);
-            duration += this->retrieveHour()->toDoubleDigitStr();
+            durString += this->signChar();
+            durString += (this->m_days_ptr->toStr() + delimiter);
+            durString += this->m_hour_ptr->toDoubleDigitStr();
             break;
 
         default:
-            duration += (this->getInterval(ARBDAY_INDEX)->toStr() + delimiter);
-            duration += this->retrieveHour()->toDoubleDigitStr();
+            durString += (this->m_days_ptr->toStr() + delimiter);
+            durString += this->m_hour_ptr->toDoubleDigitStr();
         }
 
         switch (layout) {
         case Layout::SIGN_D_H_M:
         case Layout::D_H_M:
-            duration += (delimiter + this->retrieveMinute()->toDoubleDigitStr());
+            durString += (delimiter + this->m_minute_ptr->toDoubleDigitStr());
             break;
 
         case Layout::SIGN_D_H_M_S:
         case Layout::D_H_M_S:
-            duration += (delimiter + this->retrieveMinute()->toDoubleDigitStr());
-            duration += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
+            durString += (delimiter + this->m_minute_ptr->toDoubleDigitStr());
+            durString += (delimiter + this->m_second_ptr->toDoubleDigitStr());
             break;
 
         case Layout::SIGN_D_H_M_S_MS:
         case Layout::D_H_M_S_MS:
-            duration += (delimiter + this->retrieveMinute()->toDoubleDigitStr());
-            duration += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
-            duration += (delimiter + this->retrieveMillisecond()->toTripleDigitStr());
+            durString += (delimiter + this->m_minute_ptr->toDoubleDigitStr());
+            durString += (delimiter + this->m_second_ptr->toDoubleDigitStr());
+            durString += (delimiter + this->m_millisecond_ptr->toTripleDigitStr());
             break;
         }
 
-        return duration;
+        return durString;
     }
 
     /* Returns duration string */
@@ -575,37 +626,67 @@ public:
     }
 
     /* Returns arbitrary day in duration */
-    ArbDay& getDays() const noexcept
+    const ArbDay& daysRef() const noexcept
     {
-        return *(this->retrieveDays());
+        return *(this->m_days_ptr);
     }
 
     /* Returns hour in duration */
-    Hour& getHour() const noexcept
+    const Hour& hourRef() const noexcept
     {
-        return *(this->retrieveHour());
+        return *(this->m_hour_ptr);
     }
 
     /* Returns minute in duration */
-    Minute& getMinute() const noexcept
+    const Minute& minuteRef() const noexcept
     {
-        return *(this->retrieveMinute());
+        return *(this->m_minute_ptr);
     }
 
     /* Returns second in duration */
-    Second& getSecond() const noexcept
+    const Second& secondRef() const noexcept
     {
-        return *(this->retrieveSecond());
+        return *(this->m_second_ptr);
     }
 
     /* Returns millisecond in duration */
-    Millisecond& getMillisecond() const noexcept
+    const Millisecond& msRef() const noexcept
     {
-        return *(this->retrieveMillisecond());
+        return *(this->m_millisecond_ptr);
+    }
+
+    /* Returns arbitrary day in duration */
+    ArbDay* getDays() noexcept
+    {
+        return this->m_days_ptr;
+    }
+
+    /* Returns hour in duration */
+    Hour* getHour() noexcept
+    {
+        return this->m_hour_ptr;
+    }
+
+    /* Returns minute in duration */
+    Minute* getMinute() noexcept
+    {
+        return this->m_minute_ptr;
+    }
+
+    /* Returns second in duration */
+    Second* getSecond() const noexcept
+    {
+        return this->m_second_ptr;
+    }
+
+    /* Returns millisecond in duration */
+    Millisecond* getMillisecond() const noexcept
+    {
+        return this->m_millisecond_ptr;
     }
 
     /* Returns true if provided duration is longer than this one */
-    bool isShorterThan(const Duration& duration) const noexcept
+    bool isShorterThan(const VDuration& duration) const noexcept
     {
         if (this == &duration)
             return false;
@@ -620,7 +701,7 @@ public:
     }
 
     /* Returns true if provided duration is shorter than this one */
-    bool isLongerThan(const Duration& duration) const noexcept
+    bool isLongerThan(const VDuration& duration) const noexcept
     {
         if (this == &duration)
             return false;
@@ -637,61 +718,163 @@ public:
     /* Returns elapsed duration compressed into provided unit  */
     size_t convertedTo(TimeUnit unit) const noexcept
     {
-        size_t total{ 0 };
+        size_t totalUnits{ 0 };
 
         switch (unit) {
         case TimeUnit::DAY:
-            total += this->days();
+            totalUnits += this->days();
             break;
 
         case TimeUnit::HOUR:
-            total += ((size_t)this->days() * (size_t)24ULL);
-            total += this->hour();
+            totalUnits += ((size_t)this->days() * (size_t)24Ui64);
+            totalUnits += this->hour();
             break;
 
         case TimeUnit::MINUTE:
-            total += ((size_t)this->days() * (size_t)1'440ULL);
-            total += ((size_t)this->hour() * (size_t)60ULL);
-            total += this->minute();
+            totalUnits += ((size_t)this->days() * (size_t)1'440Ui64);
+            totalUnits += ((size_t)this->hour() * (size_t)60Ui64);
+            totalUnits += this->minute();
             break;
 
         case TimeUnit::SECOND:
-            total += ((size_t)this->days() * (size_t)86'400ULL);
-            total += ((size_t)this->hour() * (size_t)3'600ULL);
-            total += ((size_t)this->minute() * (size_t)60ULL);
-            total += this->second();
+            totalUnits += ((size_t)this->days() * (size_t)86'400Ui64);
+            totalUnits += ((size_t)this->hour() * (size_t)3'600Ui64);
+            totalUnits += ((size_t)this->minute() * (size_t)60Ui64);
+            totalUnits += this->second();
             break;
 
         case TimeUnit::MILLISECOND:
-            total += ((size_t)this->days() * (size_t)86'400'000ULL);
-            total += ((size_t)this->hour() * (size_t)3'600'000ULL);
-            total += ((size_t)this->minute() * (size_t)60'000ULL);
-            total += ((size_t)this->second() * (size_t)1'000ULL);
-            total += this->millisecond();
+            totalUnits += ((size_t)this->days() * (size_t)86'400'000Ui64);
+            totalUnits += ((size_t)this->hour() * (size_t)3'600'000Ui64);
+            totalUnits += ((size_t)this->minute() * (size_t)60'000Ui64);
+            totalUnits += ((size_t)this->second() * (size_t)1'000Ui64);
+            totalUnits += this->millisecond();
         }
 
-        return total;
+        return totalUnits;
     }
 
     /* Returns durations as standard chronological duration */
-    std::chrono::duration<size_t> toChronoDuration() const noexcept
+    ChronoDuration toChronoDuration() const noexcept
     {
-        std::chrono::duration<size_t> duration{
-            this->convertedTo(Duration::TimeUnit::SECOND)
+        ChronoDuration duration{
+            this->convertedTo(VDuration::TimeUnit::SECOND)
         };
 
         return duration;
     }
 
+    /* Returns absolute total number of days from this duration until provided duration */
+    uint16_t daysUntil(const VDuration& duration) const noexcept
+    {
+        uint16_t totalDays{ 0 };
+
+        if (this == &duration || *this == duration)
+            return totalDays;
+
+        std::pair<const VDuration*, const VDuration*> durationRef{ nullptr, nullptr };// (high, low)
+
+        if (this->isLongerThan(duration)) {
+            durationRef.first = this;
+            durationRef.second = &duration;
+        }
+        else {
+            durationRef.first = &duration;
+            durationRef.second = this;
+        }
+
+        // Overflow should never occur with 16-bit based Intervals
+        uint16_t longDays{
+            static_cast<uint16_t>(durationRef.first->convertedTo(TimeUnit::DAY))
+        };
+
+        // Overflow should never occur with 16-bit based Intervals
+        uint16_t shortDays{
+            static_cast<uint16_t>(durationRef.second->convertedTo(TimeUnit::DAY))
+        };
+
+        totalDays = (longDays - shortDays);
+
+        return totalDays;
+    }
+
+    /* Returns absolute total number of hours from this duration until provided duration */
+    uint32_t hoursUntil(const VDuration& duration) const noexcept
+    {
+        uint32_t totalHours{ 0 };
+
+        if (this == &duration || *this == duration)
+            return totalHours;
+        
+        std::pair<const VDuration*, const VDuration*> durationRef{ nullptr, nullptr };// (high, low)
+
+        if (this->isLongerThan(duration)) {
+            durationRef.first = this;
+            durationRef.second = &duration;
+        }
+        else {
+            durationRef.first = &duration;
+            durationRef.second = this;
+        }
+
+        // Overflow should never occur with 16-bit based Intervals
+        uint32_t longHours{
+            static_cast<uint32_t>(durationRef.first->convertedTo(TimeUnit::HOUR))
+        };
+
+        // Overflow should never occur with 16-bit based Intervals
+        uint32_t shortHours{
+            static_cast<uint32_t>(durationRef.second->convertedTo(TimeUnit::HOUR))
+        };
+
+        totalHours = (longHours - shortHours);
+
+        return totalHours;
+    }
+
+    /* Returns absolute total number of minutes from this duration until provided duration */
+    uint32_t minutesUntil(const VDuration& duration) const noexcept
+    {
+        uint32_t totalMinutes{ 0 };
+
+        if (this == &duration || *this == duration)
+            return totalMinutes;
+        
+        std::pair<const VDuration*, const VDuration*> durationRef{ nullptr, nullptr };// (high, low)
+
+        if (this->isLongerThan(duration)) {
+            durationRef.first = this;
+            durationRef.second = &duration;
+        }
+        else {
+            durationRef.first = &duration;
+            durationRef.second = this;
+        }
+
+        // Overflow should never occur with 16-bit based Intervals
+        uint32_t longMinutes{
+            static_cast<uint32_t>(durationRef.first->convertedTo(TimeUnit::MINUTE))
+        };
+
+        // Overflow should never occur with 16-bit based Intervals
+        uint32_t shortMinutes{
+            static_cast<uint32_t>(durationRef.second->convertedTo(TimeUnit::MINUTE))
+        };
+
+        totalMinutes = (longMinutes - shortMinutes);
+
+        return totalMinutes;
+    }
+
     /* Returns absolute total number of seconds from this duration until provided duration */
-    size_t secondsUntil(const Duration& duration) const noexcept
+    size_t secondsUntil(const VDuration& duration) const noexcept
     {
         size_t totalSeconds{ 0 };
 
         if (this == &duration || *this == duration)
             return totalSeconds;
 
-        std::pair<const Duration*, const Duration*> durationRef{ nullptr, nullptr };// (high, low)
+        std::pair<const VDuration*, const VDuration*> durationRef{ nullptr, nullptr };// (high, low)
 
         if (this->isLongerThan(duration)) {
             durationRef.first = this;
@@ -711,14 +894,14 @@ public:
     }
 
     /* Returns absolute total number of milliseconds from this duration until provided duration */
-    size_t millisecondsUntil(const Duration& duration) const noexcept
+    size_t millisecondsUntil(const VDuration& duration) const noexcept
     {
         size_t totalMs{ 0 };
 
         if (this == &duration || *this == duration)
             return totalMs;
 
-        std::pair<const Duration*, const Duration*> durationRef{ nullptr, nullptr };// (high, low)
+        std::pair<const VDuration*, const VDuration*> durationRef{ nullptr, nullptr };// (high, low)
 
         if (this->isLongerThan(duration)) {
             durationRef.first = this;
@@ -738,15 +921,15 @@ public:
     }
 
     /* Returns duration from this to provided duration */
-    Duration until(const Duration& duration) const noexcept
+    VDuration until(const VDuration& duration) const noexcept
     {
         if (this == &duration || *this == duration)
-            return Duration{};
+            return VDuration{};
 
         if (this->isLongerThan(duration)) {
-            Duration newDur{ Sign::NEGATIVE };
+            VDuration newDur{ Sign::NEGATIVE };
 
-            newDur.getMillisecond().largeDisplace(
+            newDur.getInterval(MILLIS_INDEX)->largeDisplace(
                 Sign::POSITIVE,
                 this->millisecondsUntil(duration)
             );
@@ -754,9 +937,9 @@ public:
             return newDur;
         }
         else {
-            Duration newDur{ Sign::POSITIVE };
+            VDuration newDur{ Sign::POSITIVE };
 
-            newDur.getMillisecond().largeDisplace(
+            newDur.getInterval(MILLIS_INDEX)->largeDisplace(
                 Sign::POSITIVE,
                 this->millisecondsUntil(duration)
             );
@@ -766,10 +949,10 @@ public:
     }
 
     /* Displace duration using provided duration */
-    void displace(const Duration& duration) noexcept
+    void displace(const VDuration& duration) noexcept
     {
         switch (duration.sign()) {
-        case Duration::Sign::NEGATIVE:
+        case VDuration::Sign::NEGATIVE:
             return this->negativeDisplace(duration);
         default:
             return this->positiveDisplace(duration);
@@ -789,6 +972,23 @@ public:
         }
     }
 
+    /* Reset duration to zero elapsed time */
+    void reset() noexcept
+    {
+        if (this->isZero())
+            return;
+        
+        this->getInterval(MILLIS_INDEX)->setPosition(0);
+        this->getInterval(SECOND_INDEX)->setPosition(0);
+        this->getInterval(MINUTE_INDEX)->setPosition(0);
+        this->getInterval(HOUR_INDEX)->setPosition(0);
+        this->getInterval(ARBDAY_INDEX)->setPosition(0);
+
+        // Check if this zero duration is negative
+        if (this->m_directionSign != Sign::POSITIVE)
+            this->m_directionSign = Sign::POSITIVE;
+    }
+
 
 private:
     static const uint8_t ARBDAY_INDEX{ 0 };
@@ -798,6 +998,11 @@ private:
     static const uint8_t MILLIS_INDEX{ 4 };
 
     Sign m_directionSign;
+    ArbDay* m_days_ptr;
+    Hour* m_hour_ptr;
+    Minute* m_minute_ptr;
+    Second* m_second_ptr;
+    Millisecond* m_millisecond_ptr;
 
     size_t timeUnitEnumToIndex(TimeUnit time_unit) noexcept
     {
@@ -870,100 +1075,93 @@ private:
         return static_cast<Millisecond*>(rawInterval);
     }
 
-    void positiveDisplace(const Duration& duration) noexcept
+    void positiveDisplace(const VDuration& duration) noexcept
     {
         // Handle opposing duration signs
         if (this->sign() == Sign::NEGATIVE) {
             if (this->isAfter(duration)) {
                 // Short positive duration being added to this longer negative duration
                 return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::NEGATIVE,
-                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                    VDuration::Sign::NEGATIVE,
+                    duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
                 );
             }
 
             if (this->isBefore(duration)) {
                 // Long positive duration being added to this shorter negative duration
                 size_t difference{
-                    (duration.convertedTo(Duration::TimeUnit::MILLISECOND) - this->convertedTo(Duration::TimeUnit::MILLISECOND))
+                    (duration.convertedTo(VDuration::TimeUnit::MILLISECOND) - this->convertedTo(VDuration::TimeUnit::MILLISECOND))
                 };
 
-                // NOTE: Instead, we should be finding our way from current position
-                this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::NEGATIVE,
-                    this->convertedTo(Duration::TimeUnit::MILLISECOND)
-                );
-
-                this->m_directionSign = Sign::POSITIVE;
+                this->reset();
 
                 return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::POSITIVE,
+                    VDuration::Sign::POSITIVE,
                     difference
                 );
             }
 
             if (DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::operator==(duration)) {
                 // Equal positive duration being added to this negative duration
-                return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::NEGATIVE,
-                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-                );
+                return this->reset();
             }
         }
 
         // Normal displace
         return this->getInterval(MILLIS_INDEX)->largeDisplace(
-            Duration::Sign::POSITIVE,
-            duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+            VDuration::Sign::POSITIVE,
+            duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
         );
     }
 
-    void negativeDisplace(const Duration& duration) noexcept
+    void negativeDisplace(const VDuration& duration) noexcept
     {
         // Handle opposing duration signs
         if (this->sign() == Sign::POSITIVE) {
             if (this->isAfter(duration)) {
                 // Short negative duration being added to this longer positive duration
                 return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::NEGATIVE,
-                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+                    VDuration::Sign::NEGATIVE,
+                    duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
                 );
             }
 
             if (this->isBefore(duration)) {
                 // Long negative duration being added to this shorter positive duration
                 size_t difference{
-                    (duration.convertedTo(Duration::TimeUnit::MILLISECOND) - this->convertedTo(Duration::TimeUnit::MILLISECOND))
+                    (duration.convertedTo(VDuration::TimeUnit::MILLISECOND) - this->convertedTo(VDuration::TimeUnit::MILLISECOND))
                 };
 
-                // NOTE: Instead, we should be finding our way from current position
-                this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::NEGATIVE,
-                    this->convertedTo(Duration::TimeUnit::MILLISECOND)
-                );
+                this->reset();
 
                 this->m_directionSign = Sign::NEGATIVE;
 
                 return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::POSITIVE,
+                    VDuration::Sign::POSITIVE,
                     difference
                 );
             }
 
             if (DatetimeSequence<ArbDay, Hour, Minute, Second, Millisecond>::operator==(duration)) {
                 // Equal negative duration being added to this positive duration
-                return this->getInterval(MILLIS_INDEX)->largeDisplace(
-                    Duration::Sign::NEGATIVE,
-                    duration.convertedTo(Duration::TimeUnit::MILLISECOND)
-                );
+                return this->reset();
             }
         }
 
         // Normal displace
         return this->getInterval(MILLIS_INDEX)->largeDisplace(
-            Duration::Sign::POSITIVE,
-            duration.convertedTo(Duration::TimeUnit::MILLISECOND)
+            VDuration::Sign::POSITIVE,
+            duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
         );
+    }
+
+    void populateIntervalPointers() noexcept
+    {
+        this->m_days_ptr = this->retrieveDays();
+        this->m_hour_ptr = this->retrieveHour();
+        this->m_minute_ptr = this->retrieveMinute();
+        this->m_second_ptr = this->retrieveSecond();
+        this->m_millisecond_ptr = this->retrieveMillisecond();
     }
 
 };

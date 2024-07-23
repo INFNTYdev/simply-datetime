@@ -160,6 +160,11 @@ public:
         this->setPosition(destination.second);
 
         if (this->hasPrecedingInterval()) {
+            // Check if this is linked like a datetime
+            // (if not send laps to preceding as usual)
+            if (!this->precedingNode().hasPrecedingInterval())
+                return this->getPreceding()->largeDisplace(trans, destination.first);
+
             // hour interval invokes DateInterval behavior on lap
             DateInterval* preceding_ptr{
                 static_cast<DateInterval*>(this->getPreceding())

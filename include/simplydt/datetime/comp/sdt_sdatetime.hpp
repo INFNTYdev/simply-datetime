@@ -65,13 +65,13 @@ public:
 
     bool operator>=(const SDatetime& s_datetime) const noexcept;
 
-    SDatetime operator+(const Duration& duration) const noexcept;
+    SDatetime operator+(const VDuration& duration) const noexcept;
 
-    SDatetime operator-(const Duration& duration) const noexcept;
+    SDatetime operator-(const VDuration& duration) const noexcept;
 
-    SDatetime& operator+=(const Duration& duration) noexcept;
+    SDatetime& operator+=(const VDuration& duration) noexcept;
 
-    SDatetime& operator-=(const Duration& duration) noexcept;
+    SDatetime& operator-=(const VDuration& duration) noexcept;
 
 
     /* Returns datetime year */
@@ -179,10 +179,10 @@ public:
     size_t secondsUntil(const SDatetime& s_datetime) const noexcept;
 
     /* Returns duration from this datetime to provided datetime */
-    Duration until(const SDatetime& s_datetime) const noexcept;
+    VDuration until(const SDatetime& s_datetime) const noexcept;
 
     /* Displace datetime using provided duration */
-    void displace(const Duration& duration) noexcept;
+    void displace(const VDuration& duration) noexcept;
 
 
 private:

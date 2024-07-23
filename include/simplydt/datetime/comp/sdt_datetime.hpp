@@ -181,7 +181,7 @@ public:
         return (this->isAfter(datetime) || this->operator==(datetime));
     }
 
-    Datetime operator+(const Duration& duration) const noexcept
+    Datetime operator+(const VDuration& duration) const noexcept
     {
         Datetime result{ *this };
 
@@ -190,7 +190,7 @@ public:
         return result;
     }
 
-    Datetime operator-(const Duration& duration) const noexcept
+    Datetime operator-(const VDuration& duration) const noexcept
     {
         Datetime result{ *this };
 
@@ -199,14 +199,14 @@ public:
         return result;
     }
 
-    Datetime& operator+=(const Duration& duration) noexcept
+    Datetime& operator+=(const VDuration& duration) noexcept
     {
         this->m_time += duration;
 
         return *this;
     }
 
-    Datetime& operator-=(const Duration& duration) noexcept
+    Datetime& operator-=(const VDuration& duration) noexcept
     {
         this->m_time -= duration;
 
@@ -677,18 +677,18 @@ public:
     }
 
     /* Returns duration from this datetime to provided datetime */
-    Duration until(const Datetime& datetime) const noexcept
+    VDuration until(const Datetime& datetime) const noexcept
     {
         if (this == &datetime || *this == datetime)
-            return Duration{};
+            return VDuration{};
         
-        Duration result{};
+        VDuration result{};
         result.getMillisecond().largeDisplace(
-            Duration::Sign::POSITIVE,
+            VDuration::Sign::POSITIVE,
             this->millisecondsUntil(datetime)
         );
 
-        if (this->isAfter(datetime) && result.sign() != Duration::Sign::NEGATIVE)
+        if (this->isAfter(datetime) && result.sign() != VDuration::Sign::NEGATIVE)
             result.invert();
 
         return result;
@@ -700,7 +700,7 @@ public:
         Chrono timePoint{};
 
         Datetime epoch{ Chrono{} };
-        Duration sinceEpoch{ epoch.until(*this) };
+        VDuration sinceEpoch{ epoch.until(*this) };
 
         timePoint = (timePoint + sinceEpoch.toChronoDuration());
 
@@ -708,7 +708,7 @@ public:
     }
 
     /* Displace datetime using provided duration */
-    void displace(const Duration& duration) noexcept
+    void displace(const VDuration& duration) noexcept
     {
         this->m_time.displace(duration);
     }
