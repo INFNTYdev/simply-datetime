@@ -283,11 +283,12 @@ int main(size_t argc, char* argv[])
 
 
 	// -> Need to fix VDuration class hour interval bug (hour invokes DateInterval class)
-	VDuration demo{ VDuration::Sign::POSITIVE, 0, 5, 15 };
+	VDuration demo_1{ 100, 0, 30 };
+	VDuration demo_2{ 10, 1, 45 };
 
-	VDuration out{ (demo * 2) };
+	std::cout << '\n' << demo_1 << '\n' << demo_2 << std::endl;
 
-	std::cout << '\n' << out << std::endl;
+	std::cout << demo_1.daysUntil(demo_2) << std::endl;
 
 	return NULL;
 }
