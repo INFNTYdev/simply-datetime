@@ -178,8 +178,6 @@ public:
         }
     }
 
-
-protected:
     /* Update date managed day interval threshold */
     void updateDayThreshold() noexcept
     {
@@ -242,7 +240,7 @@ protected:
         if (dayOffset > (uint16_t)0Ui16) {
             day_ptr->displace(Trans::POSITIVE, dayOffset);
 
-            this->updateDayThreshold();// 1-deep recursive call
+            this->updateDayThreshold();// single depth recursive call
         }
     }
 

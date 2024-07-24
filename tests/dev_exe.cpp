@@ -73,7 +73,7 @@
 * -> [X] Implement VDate/Time/STime/VDuration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in Time class
 * -> [X] Determine highest possible number Range class can handle with an int type
-* -> [X] Implement VDate .toChrono() method
+* -> [X] Implement VDate .toTimePoint() method
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header

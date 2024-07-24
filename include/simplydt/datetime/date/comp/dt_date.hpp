@@ -49,33 +49,17 @@ public:
     static const uint16_t EPOCH_YEAR = 1970Ui16;
     static const uint8_t EPOCH_MONTH = 1Ui8;
     static const uint8_t EPOCH_DAY = 1Ui8;
+    // Epoch date: Thursday - January 1, 1970
 
-    VDate(TimePoint sys_clock) noexcept
+    VDate(const TimePoint& sys_clock) noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
-            Year(Year::YEAR_MIN),
-            Month((uint16_t)1U),
-            Day((uint16_t)1U)
+            Year(EPOCH_YEAR),
+            Month(EPOCH_MONTH),
+            Day(EPOCH_DAY)
         }
     {
-        std::time_t timeT{ std::chrono::system_clock::to_time_t(sys_clock) };
-        std::tm* tm_ptr{ std::localtime(&timeT) };
-
-        // Retrieve date from time point
-        uint16_t tmYear{ static_cast<uint16_t>(tm_ptr->tm_year) };// tm_year only measures years since 1900
-        uint16_t tmMonth{ static_cast<uint16_t>(tm_ptr->tm_mon) };
-        uint16_t tmDay{ static_cast<uint16_t>(tm_ptr->tm_mday) };
-
-        Month* monthRef{ this->retrieveMonth() };
-        Interval<uint16_t>* dayRef{ this->getInterval(DAY_INDEX) };
-
-        // Set datetime interval valeus
-        this->getInterval(YEAR_INDEX)->setPosition((tmYear + (uint16_t)1900U));
-        monthRef->setPosition((tmMonth + (uint16_t)1U));
-        dayRef->setPosition(tmDay);
-
-        // Set day maximum
-        dayRef->setThreshold(monthRef->getTotalDays());
+        this->assumeTimePoint(sys_clock);
     }
 
     VDate(uint16_t year, uint16_t month, uint16_t day) noexcept
@@ -94,7 +78,7 @@ public:
             DatetimeType::DATE_DATETIME,
             Year(year),
             Month(month),
-            Day((uint16_t)1U)
+            Day(EPOCH_DAY)
         }
     {
         this->adjustDayThreshold();
@@ -104,19 +88,23 @@ public:
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
             Year(year),
-            Month((uint16_t)1U),
-            Day((uint16_t)1U)
+            Month(EPOCH_MONTH),
+            Day(EPOCH_DAY)
         }
     {
         this->adjustDayThreshold();
     }
 
+    VDate(const VDate& v_date) noexcept;// <--- INCOMPLETE!
+
+    VDate(VDate&& v_date) noexcept;// <--- INCOMPLETE!
+
     VDate() noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
-            Year(Year::YEAR_MIN),
-            Month((uint16_t)1U),
-            Day((uint16_t)1U)
+            Year(EPOCH_YEAR),
+            Month(EPOCH_MONTH),
+            Day(EPOCH_DAY)
         }
     {
         this->adjustDayThreshold();
@@ -124,84 +112,94 @@ public:
 
     virtual ~VDate() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const VDate& date) noexcept
+    friend std::ostream& operator<<(std::ostream& os, const VDate& v_date) noexcept
     {
-        os << date.dateStr();
+        os << v_date.dateStr();
 
         return os;
     }
 
-    VDate& operator=(const TimePoint& chrono) noexcept
+    VDate& operator=(const VDate& v_date) noexcept;// <--- INCOMPLETE!
+
+    VDate& operator=(VDate&& v_date) noexcept;// <--- INCOMPLETE!
+
+    VDate& operator=(const TimePoint& sys_clock) noexcept
     {
-        std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
-        std::tm* tm_ptr{ std::localtime(&timeT) };
-
-        // Retrieve date from time point
-        uint16_t tmYear{ static_cast<uint16_t>(tm_ptr->tm_year) };// tm_year only measures years since 1900
-        uint16_t tmMonth{ static_cast<uint16_t>(tm_ptr->tm_mon) };
-        uint16_t tmDay{ static_cast<uint16_t>(tm_ptr->tm_mday) };
-
-        Month* monthRef{ this->retrieveMonth() };
-        Interval<uint16_t>* dayRef{ this->getInterval(DAY_INDEX) };
-
-        // Set datetime interval valeus
-        this->getInterval(YEAR_INDEX)->setPosition((tmYear + (uint16_t)1900U));
-        monthRef->setPosition((tmMonth + (uint16_t)1U));
-        dayRef->setPosition(tmDay);
-
-        // Set day maximum
-        dayRef->setThreshold(monthRef->getTotalDays());
+        this->assumeTimePoint(sys_clock);
 
         return *this;
     }
 
-    VDate operator+(const VDuration& duration) const noexcept
+    bool operator==(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+
+    bool operator==(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+
+    bool operator<(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+
+    bool operator<(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+
+    bool operator>(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+
+    bool operator>(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+
+    bool operator<=(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+
+    bool operator<=(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+
+    bool operator>=(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+    
+    bool operator>=(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+
+    VDate operator+(const VDuration& v_duration) const noexcept
     {
         VDate result{ *this };
 
-        result.displace(duration);
+        result.displace(v_duration);
 
         return result;
     }
 
-    VDate operator-(const VDuration& duration) const noexcept
+    VDate operator-(const VDuration& v_duration) const noexcept
     {
         VDate result{ *this };
 
-        switch (duration.sign()) {
+        switch (v_duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             // Double negative = positive
-            result.positiveDisplace(duration);
+            result.positiveDisplace(v_duration);
             break;
 
         default:
-            result.displace(duration);
+            result.displace(v_duration);
         }
 
         return result;
     }
 
-    VDate& operator+=(const VDuration& duration) noexcept
+    VDate& operator+=(const VDuration& v_duration) noexcept
     {
-        this->displace(duration);
+        this->displace(v_duration);
 
         return *this;
     }
 
-    VDate& operator-=(const VDuration& duration) noexcept
+    VDate& operator-=(const VDuration& v_duration) noexcept
     {
-        switch (duration.sign()) {
+        switch (v_duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             // Double negative = positive
-            this->positiveDisplace(duration);
+            this->positiveDisplace(v_duration);
             break;
 
         default:
-            this->displace(duration);
+            this->displace(v_duration);
         }
 
         return *this;
     }
+
+    /* Returns true if date represents epoch date */
+    bool isEpoch() const noexcept;// <--- INCOMPLETE!
 
     /* Returns year of date */
     uint16_t year() const noexcept
@@ -330,46 +328,68 @@ public:
     }
 
     /* Returns year in date */
-    Year& getYear() const noexcept
+    Year& yearRef() const noexcept
     {
-        return *(this->retrieveYear());
+        return *(this->m_year_ptr);
     }
 
     /* Returns month in date */
-    Month& getMonth() const noexcept
+    Month& monthRef() const noexcept
     {
-        return *(this->retrieveMonth());
+        return *(this->m_month_ptr);
     }
 
     /* Returns day in date */
-    Day& getDay() const noexcept
+    Day& dayRef() const noexcept
     {
-        return *(this->retrieveDay());
+        return *(this->m_day_ptr);
     }
 
+    /* Returns year in date */
+    Year* getYear() noexcept
+    {
+        return this->m_year_ptr;
+    }
+
+    /* Returns month in date */
+    Month* getMonth() noexcept
+    {
+        return this->m_month_ptr;
+    }
+
+    /* Returns day in date */
+    Day* getDay() noexcept
+    {
+        return this->m_day_ptr;
+    }
+
+    /* Returns date as Julian Day Number (JDN) */
+    size_t toJulianDayNumber() const noexcept;// <--- INCOMPLETE!
+
     /* Returns absolute total number of days from this date until provided date */
-    size_t daysUntil(const VDate& date) const noexcept//        <--- (This is going to require some thought)
+    size_t daysUntil(const VDate& v_date) const noexcept
     {
         // NOTE: This method is changing, new solution found
+        // (^ Use Julian day number system to obtain results)
 
         size_t totalDays{ 0 };
 
-        if (this == &date || *this == date)
+        if (this == &v_date || *this == v_date)
             return totalDays;
 
         std::pair<const VDate*, const VDate*> dateRef{ nullptr, nullptr };// (high, low)
 
-        if (this->isAfter(date)) {
+        if (this->isAfter(v_date)) {
             dateRef.first = this;
-            dateRef.second = &date;
+            dateRef.second = &v_date;
         }
         else {
-            dateRef.first = &date;
+            dateRef.first = &v_date;
             dateRef.second = this;
         }
 
         // Dates in same month time frame
-        if (this->year() == date.year() && this->month() == date.month())
+        if (this->year() == v_date.year() && this->month() == v_date.month())
             return (dateRef.first->day() - dateRef.second->day());
 
         // Lambda: Returns true if simulated year-month frame matches dates
@@ -391,7 +411,7 @@ public:
         uint16_t yearSim{ dateRef.second->year() };
         uint16_t monthSim{ dateRef.second->month() };
 
-        totalDays += dateRef.second->getDay().untilThreshold();
+        totalDays += dateRef.second->dayRef().untilThreshold();
         incrementMonthFrame(yearSim, monthSim);
 
         while (!monthFrameMatch(dateRef.first, yearSim, monthSim)) {
@@ -408,17 +428,17 @@ public:
     }
 
     /* Returns duration between this date and provided date */
-    VDuration until(const VDate& date) const noexcept
+    VDuration until(const VDate& v_date) const noexcept
     {
-        if (this == &date || *this == date)
+        if (this == &v_date || *this == v_date)
             return VDuration{};
 
-        if (this->isAfter(date)) {
+        if (this->isAfter(v_date)) {
             VDuration newDur{ VDuration::Sign::NEGATIVE };
 
             newDur.getDays()->largeDisplace(
                 VDuration::Sign::POSITIVE,
-                this->daysUntil(date)
+                this->daysUntil(v_date)
             );
 
             return newDur;
@@ -428,19 +448,19 @@ public:
 
             newDur.getDays()->largeDisplace(
                 VDuration::Sign::POSITIVE,
-                this->daysUntil(date)
+                this->daysUntil(v_date)
             );
 
             return newDur;
         }
     }
 
-    /* Returns date as standard chronological system time point */
-    TimePoint toChrono() const noexcept
+    /* Returns date as standard library system time point */
+    TimePoint toTimePoint() const noexcept
     {
         TimePoint timePoint{};
 
-        VDate epoch{ TimePoint{} };
+        VDate epoch{};
         VDuration sinceEpoch{ epoch.until(*this) };
 
         timePoint = (timePoint + sinceEpoch.toChronoDuration());
@@ -458,6 +478,9 @@ public:
             return this->positiveDisplace(duration);
         }
     }
+
+    /* Reset date to epoch date */
+    void reset() noexcept;// <--- INCOMPLETE!
 
 
 private:
@@ -499,14 +522,39 @@ private:
 
     void adjustDayThreshold() noexcept
     {
-        Month* monthRef{ this->retrieveMonth() };
-        Interval<uint16_t>* dayRef{ this->getInterval(DAY_INDEX) };
+        this->m_month_ptr->updateDayThreshold();
+    }
 
-        // NOTE: Maybe here we should check if new max is greater than current pos.
-        // (If so, we find the difference from max and increment that difference?)
-        // NEW NOTE: (^ Hand this responsibility off to DateInterval class ^)
+    void interpretTimePointDate(const TimePoint& time_point,
+        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept
+    {
+        std::time_t timeT{ std::chrono::system_clock::to_time_t(time_point) };
+        std::tm* tm_ptr{ std::localtime(&timeT) };
 
-        dayRef->setThreshold(monthRef->getTotalDays());// This to most likely be deleted
+        // Retrieve date from time point
+        year = static_cast<uint16_t>(tm_ptr->tm_year);// tm_year only measures years since 1900
+        month = static_cast<uint16_t>(tm_ptr->tm_mon);
+        day = static_cast<uint16_t>(tm_ptr->tm_mday);
+
+        year += (uint16_t)1900Ui16;
+        month += (uint16_t)1Ui16;
+    }
+
+    void assumeTimePoint(const TimePoint& time_point) noexcept
+    {
+        uint16_t tmYear{ 0 };
+        uint16_t tmMonth{ 0 };
+        uint16_t tmDay{ 0 };
+
+        this->interpretTimePointDate(time_point, tmYear, tmMonth, tmDay);
+
+        // Set date interval values
+        this->getInterval(YEAR_INDEX)->setPosition(tmYear);
+        this->getInterval(MONTH_INDEX)->setPosition(tmMonth);
+        this->getInterval(DAY_INDEX)->setPosition(tmDay);
+
+        // Set day threshold
+        this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
     }
 
     Year* retrieveYear() const noexcept

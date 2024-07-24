@@ -754,7 +754,7 @@ public:
         return totalUnits;
     }
 
-    /* Returns durations as standard chronological duration */
+    /* Returns durations as standard library chronological duration */
     ChronoDuration toChronoDuration() const noexcept
     {
         ChronoDuration duration{
