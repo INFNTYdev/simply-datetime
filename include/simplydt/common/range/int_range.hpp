@@ -385,13 +385,13 @@ public:
 		size_t position{ this->m_position };
 		UInt_T posResult{ this->m_position };
 
-		if (add_units == (size_t)0ULL || direction == NEUTRAL)
+		if (add_units == (size_t)0Ui64 || direction == NEUTRAL)
 			return LargeTranslateResult{ lapResult, posResult };
 
 		if (this->isBoundless()) {
 			// Not calculating laps here because this is boundless
 			// Boundless range overflows occur here
-			return LargeTranslateResult{ lapResult, (this->m_position + add_units) };
+			return LargeTranslateResult{ lapResult, (UInt_T)(this->m_position + add_units) };
 		}
 
 		switch (direction) {
