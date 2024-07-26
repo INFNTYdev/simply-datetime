@@ -59,6 +59,8 @@ public:
             Day(EPOCH_DAY)
         }
     {
+        this->populateIntervalPointers();
+
         this->assumeTimePoint(sys_clock);
     }
 
@@ -70,6 +72,8 @@ public:
             Day(day)
         }
     {
+        this->populateIntervalPointers();
+
         this->adjustDayThreshold();
     }
 
@@ -81,6 +85,8 @@ public:
             Day(EPOCH_DAY)
         }
     {
+        this->populateIntervalPointers();
+
         this->adjustDayThreshold();
     }
 
@@ -92,7 +98,7 @@ public:
             Day(EPOCH_DAY)
         }
     {
-        this->adjustDayThreshold();
+        this->populateIntervalPointers();
     }
 
     VDate(const VDate& v_date) noexcept;// <--- INCOMPLETE!
@@ -107,7 +113,7 @@ public:
             Day(EPOCH_DAY)
         }
     {
-        this->adjustDayThreshold();
+        this->populateIntervalPointers();
     }
 
     virtual ~VDate() noexcept = default;

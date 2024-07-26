@@ -279,12 +279,7 @@ int main(size_t argc, char* argv[])
 	// 
 
 
-	VDuration demo_1{ 100, 0, 30 };
-	VDuration demo_2{ 10, 1, 45 };
-
-	std::cout << '\n' << demo_1 << '\n' << demo_2 << std::endl;
-
-	std::cout << demo_1.daysUntil(demo_2) << std::endl;
+	VDate demo_1{ 2024, 6 };
 
 	return NULL;
 }
