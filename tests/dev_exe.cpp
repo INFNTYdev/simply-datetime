@@ -281,11 +281,14 @@ int main(size_t argc, char* argv[])
 
 	VDate demo_1{ 2024, 6 };
 
-	VDate copyDate{ std::move(demo_1) };
+	VDate copyDate{ demo_1 };
 
 	uint8_t dayTick{ 100 };
 
 	while (dayTick != 0Ui8) {
+
+		if (copyDate.day() == 1Ui16)
+			std::cout << "\n\n" << copyDate.monthTitle() << " ->";
 
 		std::cout << "\nDate: " << copyDate << " - " << copyDate.dayOfWeek();
 

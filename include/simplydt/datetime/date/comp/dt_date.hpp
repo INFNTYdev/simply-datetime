@@ -114,7 +114,13 @@ public:
         this->adjustDayThreshold();
     }
 
-    VDate(VDate&& v_date) noexcept;// <--- INCOMPLETE!
+    VDate(VDate&& v_date) noexcept
+        : DatetimeSequence<Year, Month, Day>{
+            static_cast<DatetimeSequence<Year, Month, Day>&&>(v_date)
+        }
+    {
+        this->populateIntervalPointers();
+    }
 
     VDate() noexcept
         : DatetimeSequence<Year, Month, Day>{
