@@ -281,5 +281,20 @@ int main(size_t argc, char* argv[])
 
 	VDate demo_1{ 2024, 6 };
 
+	VDate copyDate{ std::move(demo_1) };
+
+	uint8_t dayTick{ 100 };
+
+	while (dayTick != 0Ui8) {
+
+		std::cout << "\nDate: " << copyDate << " - " << copyDate.dayOfWeek();
+
+		copyDate.displace(VDuration{ 1 });// Displace 1 day
+		--dayTick;
+
+	}
+
+	std::cout << "\nComplete: " << copyDate << std::endl;
+
 	return NULL;
 }

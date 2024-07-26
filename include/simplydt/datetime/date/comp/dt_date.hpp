@@ -101,7 +101,18 @@ public:
         this->populateIntervalPointers();
     }
 
-    VDate(const VDate& v_date) noexcept;// <--- INCOMPLETE!
+    VDate(const VDate& v_date) noexcept
+        : DatetimeSequence<Year, Month, Day>{
+            DatetimeType::DATE_DATETIME,
+            Year(v_date.year()),
+            Month(v_date.month()),
+            Day(v_date.day())
+        }
+    {
+        this->populateIntervalPointers();
+
+        this->adjustDayThreshold();
+    }
 
     VDate(VDate&& v_date) noexcept;// <--- INCOMPLETE!
 
