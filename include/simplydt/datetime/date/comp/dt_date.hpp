@@ -105,6 +105,10 @@ public:
         this->populateIntervalPointers();
     }
 
+    explicit VDate(const JDN& jdn) noexcept;// <--- INCOMPLETE!
+
+    explicit VDate(const double& jdn) noexcept;// <--- INCOMPLETE!
+
     VDate(const VDate& v_date) noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
@@ -693,6 +697,12 @@ private:
         //
     }
 
+    void interpretJDNDate(const double& jdn,
+        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept// <--- INCOMPLETE!
+    {
+        //
+    }
+
     void assumeTimePoint(const TimePoint& time_point) noexcept
     {
         uint16_t tmYear{ 0 };
@@ -711,6 +721,8 @@ private:
     }
 
     void assumeJDN(const JDN& jdn) noexcept;// <--- INCOMPLETE!
+
+    void assumeJDN(const double& jdn) noexcept;// <--- INCOMPLETE!
 
     Year* retrieveYear() const noexcept
     {

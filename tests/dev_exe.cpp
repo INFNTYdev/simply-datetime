@@ -260,6 +260,21 @@ GregorianDate fromJDN(uint32_t JDN)
 	return result;
 }
 
+GregorianDate fromJDN2(uint32_t JDN) {// <--- Zero date: 49'594'124 (1/1/0)
+	JDN += 1;
+
+	uint32_t f = JDN + 1401 + (((4 * JDN + 274277) / 146097) * 3) / 4 - 38;
+	uint32_t e = 4 * f + 3;
+	uint32_t g = e % 1461 / 4;
+	uint32_t h = 5 * g + 2;
+
+	uint16_t day = (h % 153) / 5 + 1;
+	uint16_t month = ((h / 153 + 2) % 12) + 1;
+	uint16_t year = e / 1461 - 4716 + (14 - month) / 12;
+
+	return GregorianDate{ year, month, day };
+}
+
 
 int main(size_t argc, char* argv[])
 {
@@ -368,11 +383,10 @@ int main(size_t argc, char* argv[])
 		<< "\n\nToday until Var: " << todayDate.daysUntil(futureDate) << " days"
 		<< std::endl;
 
-	// ERROR: Information loss ocurring here...
-	// -> .fromJDN() algorithm is culprit
-	GregorianDate ggs{ fromJDN(toJDN(1970, 1, 1)) };
+	GregorianDate ggs{ fromJDN2(49'594'124) };
 
-	std::cout << "Val: " << ggs.month << '/' << ggs.day << '/' << ggs.year;
+	std::cout << "\nUgghhh: " << toJDN(1969, 10, 31);
+	std::cout << "\nVal: " << ggs.month << '/' << ggs.day << '/' << ggs.year;
 
 	// -> OMG, NEW IDEA! Use JDN to displace date WITH NO LOOPS!!!
 	// -> date.displace(1,000,000 days);
