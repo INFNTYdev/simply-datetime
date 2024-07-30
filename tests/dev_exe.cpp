@@ -355,21 +355,32 @@ int main(size_t argc, char* argv[])
 	VDate::TimePoint todayChrono = std::chrono::system_clock::now();
 
 	VDate todayDate{ todayChrono };
+	VDate futureDate{ 2025, 2, 23 };
 
-	std::cout << "\nToday: " << todayDate << std::endl;
-
-	bool isEqual = (todayDate > todayChrono);
-
-	std::cout << std::boolalpha
-		<< "\nToday JDN: " << todayDate.toJulianDayNumber()
+	std::cout << "\nToday: "
+		<< todayDate.dateStr(VDate::Format::STANDARD)
+		<< "\nVar: " << futureDate.dateStr(VDate::Format::STANDARD)
 		<< std::endl;
+
+	std::cout << "\nToday JDN: "
+		<< todayDate.toJulianDayNumber()
+		<< "\nVar JDN: " << futureDate.toJulianDayNumber()
+		<< "\n\nToday until Var: " << todayDate.daysUntil(futureDate) << " days"
+		<< std::endl;
+
+	// ERROR: Information loss ocurring here...
+	// -> .fromJDN() algorithm is culprit
+	GregorianDate ggs{ fromJDN(toJDN(1970, 1, 1)) };
+
+	std::cout << "Val: " << ggs.month << '/' << ggs.day << '/' << ggs.year;
 
 	// -> OMG, NEW IDEA! Use JDN to displace date WITH NO LOOPS!!!
 	// -> date.displace(1,000,000 days);
 	// -> Take JDN of (this) date and add 1,000,000
 	// -> Convert JDN back to Gregorian date
 	// -> Set date interval positions
-	// -> (Leave .dateDisplace() code; triggered by single interval displace)
+	// -> (Leave .dateDisplace() code; valid trigger by single interval displace)
+	// -> (VDate::increase(size_t) / VDate::decrease(size_t))
 
 	return NULL;
 }

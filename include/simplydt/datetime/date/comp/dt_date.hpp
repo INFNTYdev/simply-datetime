@@ -52,6 +52,7 @@ public:
     static const uint16_t EPOCH_YEAR = 1970Ui16;
     static const uint8_t EPOCH_MONTH = 1Ui8;
     static const uint8_t EPOCH_DAY = 1Ui8;
+    static const JDN EPOCH_JDN = 2'440'587Ui32;
     // Epoch date: Thursday - January 1, 1970
 
     VDate(const TimePoint& sys_clock) noexcept
@@ -535,12 +536,9 @@ public:
     }
 
     /* Returns absolute total number of days from this date until provided date */
-    size_t daysUntil(const VDate& v_date) const noexcept
+    uint32_t daysUntil(const VDate& v_date) const noexcept
     {
-        // NOTE: This method is changing, new solution found
-        // (^ Use Julian day number system to obtain results)
-
-        size_t totalDays{ 0 };
+        uint32_t totalDays{ 0 };
 
         if (this == &v_date || *this == v_date)
             return totalDays;
@@ -556,41 +554,13 @@ public:
             dateRef.second = this;
         }
 
-        // Dates in same month time frame
+        // Dates in same year/month time frame
         if (this->year() == v_date.year() && this->month() == v_date.month())
-            return (dateRef.first->day() - dateRef.second->day());
+            return (uint32_t)(dateRef.first->day() - dateRef.second->day());
 
-        // Lambda: Returns true if simulated year-month frame matches dates
-        auto monthFrameMatch = [](const VDate* date, uint16_t year, uint16_t month)-> bool {
-            return (year == date->year() && month == date->month());
-        };
-
-        // Lambda: Increment simulated year-month time frame
-        auto incrementMonthFrame = [](uint16_t& year, uint16_t& month)-> void {
-            if (month < (uint16_t)12U)
-                ++month;
-            else if (month == (uint16_t)12U) {
-                month = (uint16_t)1U;
-                ++year;
-            }
-        };
-
-        // Dates in different month time frames
-        uint16_t yearSim{ dateRef.second->year() };
-        uint16_t monthSim{ dateRef.second->month() };
-
-        totalDays += dateRef.second->dayRef().untilThreshold();
-        incrementMonthFrame(yearSim, monthSim);
-
-        while (!monthFrameMatch(dateRef.first, yearSim, monthSim)) {
-
-            totalDays += simplydt::getTotalDaysInMonth(yearSim, monthSim);
-
-            incrementMonthFrame(yearSim, monthSim);
-
-        }
-
-        totalDays += dateRef.first->day();
+        totalDays = (
+            dateRef.first->toJulianDayNumber() - dateRef.second->toJulianDayNumber()
+        );
 
         return totalDays;
     }
@@ -636,8 +606,14 @@ public:
         return timePoint;
     }
 
+    /* Increase date by provided amount of days */
+    void increase(uint32_t days) noexcept;// <--- INCOMPLETE!
+
+    /* Decrease date by provided amount of days */
+    void decrease(uint32_t days) noexcept;// <--- INCOMPLETE!
+
     /* Displace date using provided duration */
-    void displace(const VDuration& duration) noexcept
+    void displace(const VDuration& duration) noexcept// <--- INCOMPLETE!
     {
         // NOTE: This method is changing, new solution found
         // (^ Use Julian day number system to avoid loops)
@@ -711,6 +687,12 @@ private:
         month += (uint16_t)1Ui16;
     }
 
+    void interpretJDNDate(const JDN& jdn,
+        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept// <--- INCOMPLETE!
+    {
+        //
+    }
+
     void assumeTimePoint(const TimePoint& time_point) noexcept
     {
         uint16_t tmYear{ 0 };
@@ -727,6 +709,8 @@ private:
         // Set day threshold
         this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
     }
+
+    void assumeJDN(const JDN& jdn) noexcept;// <--- INCOMPLETE!
 
     Year* retrieveYear() const noexcept
     {
