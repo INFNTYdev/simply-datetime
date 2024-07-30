@@ -187,6 +187,80 @@ void add_days(int& day, int& month, int& year, int days) {
 }
 
 
+struct GregorianDate {
+	uint16_t year;
+	uint16_t month;
+	uint16_t day;
+};
+
+uint32_t toJDN(uint16_t year, uint16_t month, uint16_t day)// <--- THIS ONE IS IT!!!
+{
+	// Adjust for January and February
+	if (month < 3) {
+		year -= 1;
+		month += 12;
+	}
+
+	// Calculate intermediate values
+	double A = std::floor(year / 100.0);
+	double B = std::floor(A / 4.0);
+	double C = 2 - A + B;
+	double E = std::floor(365.25 * (year + 4716));
+	double F = std::floor(30.6001 * (month + 1));
+
+	// Calculate the JDN
+	uint32_t JD = (uint32_t)std::floor((C + day + E + F - 1524.5));
+
+	return JD;
+}
+
+GregorianDate fromJDN(uint32_t JDN)
+{
+	GregorianDate result{.year=0, .month=0, .day=0};
+
+	double JD = static_cast<double>(JDN);
+
+	JD += 0.5;
+	int Z = std::floor(JD);
+	double F = JD - Z;
+	int A;
+
+	if (Z < 2299161) {
+		A = Z;
+	}
+	else {
+		int alpha = std::floor((Z - 1867216.25) / 36524.25);
+		A = Z + 1 + alpha - std::floor(alpha / 4);
+	}
+
+	int B = A + 1524;
+	int C = std::floor((B - 122.1) / 365.25);
+	int D = std::floor(365.25 * C);
+	int E = std::floor((B - D) / 30.6001);
+
+	// Calculate the day
+	result.day = std::round(B - D - std::floor(30.6001 * E) + F);
+
+	// Calculate the month
+	if (E < 14) {
+		result.month = E - 1;
+	}
+	else {
+		result.month = E - 13;
+	}
+
+	// Calculate the year
+	if (result.month > 2) {
+		result.year = C - 4716;
+	}
+	else {
+		result.year = C - 4715;
+	}
+
+	return result;
+}
+
+
 int main(size_t argc, char* argv[])
 {
 	//VDate epochDate{ 1969, 12, 31 };
@@ -278,26 +352,24 @@ int main(size_t argc, char* argv[])
 	// -> VDate intervals need specialized control methods
 	// 
 
+	VDate::TimePoint todayChrono = std::chrono::system_clock::now();
 
-	VDate demo_1{ 2024, 6 };
+	VDate todayDate{ todayChrono };
 
-	VDate copyDate{ demo_1 };
+	std::cout << "\nToday: " << todayDate << std::endl;
 
-	uint8_t dayTick{ 100 };
+	bool isEqual = (todayDate > todayChrono);
 
-	while (dayTick != 0Ui8) {
+	std::cout << std::boolalpha
+		<< "\nToday JDN: " << todayDate.toJulianDayNumber()
+		<< std::endl;
 
-		if (copyDate.day() == 1Ui16)
-			std::cout << "\n\n" << copyDate.monthTitle() << " ->";
-
-		std::cout << "\nDate: " << copyDate << " - " << copyDate.dayOfWeek();
-
-		copyDate.displace(VDuration{ 1 });// Displace 1 day
-		--dayTick;
-
-	}
-
-	std::cout << "\nComplete: " << copyDate << std::endl;
+	// -> OMG, NEW IDEA! Use JDN to displace date WITH NO LOOPS!!!
+	// -> date.displace(1,000,000 days);
+	// -> Take JDN of (this) date and add 1,000,000
+	// -> Convert JDN back to Gregorian date
+	// -> Set date interval positions
+	// -> (Leave .dateDisplace() code; triggered by single interval displace)
 
 	return NULL;
 }

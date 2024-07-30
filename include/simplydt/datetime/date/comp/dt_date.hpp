@@ -5,6 +5,7 @@
 
 
 #include<chrono>
+#include<cmath>
 
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 #include"simplydt/datetime/date/unit/dt_year.hpp"
@@ -23,6 +24,8 @@ public:
     using DatetimeType = DatetimeSequence<Year, Month, Day>::DatetimeType;
     /* Standard library chronological time point (system clock) */
     using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+    /* Julian Day Number (JDN) */
+    using JDN = uint32_t;
 
     /* Date format */
     enum Format {
@@ -142,9 +145,33 @@ public:
         return os;
     }
 
-    VDate& operator=(const VDate& v_date) noexcept;// <--- INCOMPLETE!
+    VDate& operator=(const VDate& v_date) noexcept
+    {
+        if (this == &v_date || *this == v_date)
+            return *this;
 
-    VDate& operator=(VDate&& v_date) noexcept;// <--- INCOMPLETE!
+        this->getInterval(YEAR_INDEX)->setPosition(v_date.year());
+        this->getInterval(MONTH_INDEX)->setPosition(v_date.month());
+        this->getInterval(DAY_INDEX)->setPosition(v_date.day());
+
+        this->adjustDayThreshold();
+
+        return *this;
+    }
+
+    VDate& operator=(VDate&& v_date) noexcept
+    {
+        if (this == &v_date || *this == v_date)
+            return *this;
+
+        DatetimeSequence<Year, Month, Day>::operator=(
+            static_cast<DatetimeSequence<Year, Month, Day>&&>(v_date)
+        );
+
+        this->populateIntervalPointers();
+
+        return *this;
+    }
 
     VDate& operator=(const TimePoint& sys_clock) noexcept
     {
@@ -153,25 +180,108 @@ public:
         return *this;
     }
 
-    bool operator==(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+    bool operator==(const VDate& v_date) const noexcept
+    {
+        return DatetimeSequence<Year, Month, Day>::operator==(v_date);
+    }
 
-    bool operator==(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+    bool operator==(const TimePoint& sys_clock) const noexcept
+    {
+        uint16_t tpYear{ 0 };
+        uint16_t tpMonth{ 0 };
+        uint16_t tpDay{ 0 };
 
-    bool operator<(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+        this->interpretTimePointDate(sys_clock, tpYear, tpMonth, tpDay);
 
-    bool operator<(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+        if (this->year() != tpYear)
+            return false;
 
-    bool operator>(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+        if (this->month() != tpMonth)
+            return false;
 
-    bool operator>(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+        if (this->day() != tpDay)
+            return false;
 
-    bool operator<=(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
+        return true;
+    }
 
-    bool operator<=(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+    bool operator<(const VDate& v_date) const noexcept
+    {
+        return DatetimeSequence<Year, Month, Day>::operator<(v_date);
+    }
 
-    bool operator>=(const VDate& v_date) const noexcept;// <--- INCOMPLETE!
-    
-    bool operator>=(const TimePoint& sys_clock) const noexcept;// <--- INCOMPLETE!
+    bool operator<(const TimePoint& sys_clock) const noexcept
+    {
+        uint16_t tpYear{ 0 };
+        uint16_t tpMonth{ 0 };
+        uint16_t tpDay{ 0 };
+
+        this->interpretTimePointDate(sys_clock, tpYear, tpMonth, tpDay);
+
+        if (this->year() > tpYear)
+            return false;
+        else if (this->year() < tpYear)
+            return true;
+        
+        if (this->month() > tpMonth)
+            return false;
+        else if (this->month() < tpMonth)
+            return true;
+
+        if (this->day() >= tpDay)
+            return false;
+
+        return true;
+    }
+
+    bool operator>(const VDate& v_date) const noexcept
+    {
+        return DatetimeSequence<Year, Month, Day>::operator>(v_date);
+    }
+
+    bool operator>(const TimePoint& sys_clock) const noexcept
+    {
+        uint16_t tpYear{ 0 };
+        uint16_t tpMonth{ 0 };
+        uint16_t tpDay{ 0 };
+
+        this->interpretTimePointDate(sys_clock, tpYear, tpMonth, tpDay);
+
+        if (this->year() < tpYear)
+            return false;
+        else if (this->year() > tpYear)
+            return true;
+        
+        if (this->month() < tpMonth)
+            return false;
+        else if (this->month() > tpMonth)
+            return true;
+
+        if (this->day() <= tpDay)
+            return false;
+
+        return true;
+    }
+
+    bool operator<=(const VDate& v_date) const noexcept
+    {
+        return DatetimeSequence<Year, Month, Day>::operator<=(v_date);
+    }
+
+    bool operator<=(const TimePoint& sys_clock) const noexcept
+    {
+        return (this->operator<(sys_clock) || this->operator==(sys_clock));
+    }
+
+    bool operator>=(const VDate& v_date) const noexcept
+    {
+        return DatetimeSequence<Year, Month, Day>::operator>=(v_date);
+    }
+
+    bool operator>=(const TimePoint& sys_clock) const noexcept
+    {
+        return (this->operator>(sys_clock) || this->operator==(sys_clock));
+    }
 
     VDate operator+(const VDuration& v_duration) const noexcept
     {
@@ -222,7 +332,19 @@ public:
     }
 
     /* Returns true if date represents epoch date */
-    bool isEpoch() const noexcept;// <--- INCOMPLETE!
+    bool isEpoch() const noexcept
+    {
+        if (this->year() != EPOCH_YEAR)
+            return false;
+        
+        if (this->month() != EPOCH_MONTH)
+            return false;
+        
+        if (this->day() != EPOCH_DAY)
+            return false;
+        
+        return true;
+    }
 
     /* Returns year of date */
     uint16_t year() const noexcept
@@ -351,19 +473,19 @@ public:
     }
 
     /* Returns year in date */
-    Year& yearRef() const noexcept
+    const Year& yearRef() const noexcept
     {
         return *(this->m_year_ptr);
     }
 
     /* Returns month in date */
-    Month& monthRef() const noexcept
+    const Month& monthRef() const noexcept
     {
         return *(this->m_month_ptr);
     }
 
     /* Returns day in date */
-    Day& dayRef() const noexcept
+    const Day& dayRef() const noexcept
     {
         return *(this->m_day_ptr);
     }
@@ -386,8 +508,31 @@ public:
         return this->m_day_ptr;
     }
 
-    /* Returns date as Julian Day Number (JDN) */
-    size_t toJulianDayNumber() const noexcept;// <--- INCOMPLETE!
+    /* Returns date as cardinal Julian Day Number (JDN) */
+    JDN toJulianDayNumber() const noexcept
+    {
+        JDN dtYear{ this->year() };
+        JDN dtMonth{ this->month() };
+        JDN dtDay{ this->day() };
+
+        // Adjust for January and February
+        if (dtMonth < (JDN)3Ui32) {
+            dtYear -= (JDN)1Ui32;
+            dtMonth += (JDN)12Ui32;
+        }
+
+        // Calculate intermediate values
+        double A = std::floor(dtYear / (double)100.0);
+        double B = std::floor(A / (double)4.0);
+        double C = (2 - A + B);
+        double D = std::floor((double)365.25 * (dtYear + (JDN)4716Ui32));
+        double E = std::floor((double)30.6001 * (dtMonth + (JDN)1Ui32));
+
+        // Calculate JDN
+        JDN dateJDN = (uint32_t)std::floor((C + dtDay + D + E - 1524.5));
+
+        return dateJDN;
+    }
 
     /* Returns absolute total number of days from this date until provided date */
     size_t daysUntil(const VDate& v_date) const noexcept
@@ -494,6 +639,9 @@ public:
     /* Displace date using provided duration */
     void displace(const VDuration& duration) noexcept
     {
+        // NOTE: This method is changing, new solution found
+        // (^ Use Julian day number system to avoid loops)
+
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             return this->negativeDisplace(duration);
