@@ -817,6 +817,7 @@ private:
         this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
 
         // Set day threshold
+        // (NOTE: Should we be doing it like this in this case?)
         this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
     }
 
