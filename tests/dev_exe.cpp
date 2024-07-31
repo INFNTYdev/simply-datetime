@@ -260,7 +260,7 @@ GregorianDate fromJDN(uint32_t JDN)
 	return result;
 }
 
-GregorianDate fromJDN2(uint32_t JDN) {// <--- Zero date: 49'594'124 (1/1/0)
+GregorianDate fromJDN2(uint32_t JDN) {
 	JDN += 1;
 
 	uint32_t f = JDN + 1401 + (((4 * JDN + 274277) / 146097) * 3) / 4 - 38;
@@ -383,10 +383,62 @@ int main(size_t argc, char* argv[])
 		<< "\n\nToday until Var: " << todayDate.daysUntil(futureDate) << " days"
 		<< std::endl;
 
-	GregorianDate ggs{ fromJDN2(49'594'124) };
+	std::cout << '\n' << VDate{(double)2'440'587.5};
 
-	std::cout << "\nUgghhh: " << toJDN(1969, 10, 31);
-	std::cout << "\nVal: " << ggs.month << '/' << ggs.day << '/' << ggs.year;
+
+
+	// Algo is spotty, write test to find divergence
+	// JDN Divergence Test:
+	//VDate testDate{};
+
+	//std::cout << "\nLocating JDN divergence..."
+	//	<< "\nUsing start date: " << testDate.dateStr(VDate::Format::STANDARD)
+	//	<< std::endl;
+
+	//bool jdnConflict{ false };
+	//VDuration increment{ 1 };// 1 day
+	//uint16_t currentYear{ testDate.year() };
+	//size_t yearsPassed{ 0 };
+
+	//while (!jdnConflict && yearsPassed != 1) {
+
+	//	if (currentYear != testDate.year()) {
+	//		++yearsPassed;
+	//		currentYear = testDate.year();
+	//		std::cout << yearsPassed << " years passed\n";
+	//	}
+
+	//	/*if (testDate.month() == 3 && testDate.day() == 1)
+	//		std::cout << "Here" << '\n';*/
+
+	//	VDate sample{ testDate.toJulianDayNumber() };
+
+	//	/*std::cout << "Testing: "
+	//		<< testDate.dateStr(VDate::Format::STANDARD)
+	//		<< " vs. " << sample.dateStr(VDate::Format::STANDARD)
+	//		<< '\n';*/
+
+	//	if (sample != testDate) {
+	//		jdnConflict = true;
+
+	//		std::cout << '\n' << std::boolalpha
+	//			<< "JDN conflict found at "
+	//			<< testDate.dateStr(VDate::Format::STANDARD)
+	//			<< " date\n"
+	//			<< "\t -> Expected: " << testDate.dateStr(VDate::Format::STANDARD) << '\n'
+	//			<< "\t -> Expected JDN: " << testDate.toJulianDayNumber() << '\n'
+	//			<< "\t -> Sample: " << sample.dateStr(VDate::Format::STANDARD)
+	//			<< " (" << sample.toJulianDayNumber() << ")\n"
+	//			<< std::endl;
+
+	//		break;
+	//	}
+
+	//	testDate.displace(increment);// Displace 1 day
+
+	//}
+
+	//std::cout << "\n\n[ TEST COMPLETE ]" << std::endl;
 
 	// -> OMG, NEW IDEA! Use JDN to displace date WITH NO LOOPS!!!
 	// -> date.displace(1,000,000 days);

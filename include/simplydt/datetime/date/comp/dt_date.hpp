@@ -49,11 +49,14 @@ public:
         D_M,// (dd/mm) [ Example: 13-01 ]
     };
 
-    static const uint16_t EPOCH_YEAR = 1970Ui16;
-    static const uint8_t EPOCH_MONTH = 1Ui8;
-    static const uint8_t EPOCH_DAY = 1Ui8;
-    static const JDN EPOCH_JDN = 2'440'587Ui32;
+    static const uint16_t EPOCH_YEAR = 1970Ui16;// 1970
+    static const uint8_t EPOCH_MONTH = 1Ui8;// January
+    static const uint8_t EPOCH_DAY = 1Ui8;// 1st
+    static const JDN EPOCH_JDN = 2'440'587Ui32;// December 31, 1970
     // Epoch date: Thursday - January 1, 1970
+
+    static const JDN MAX_JDN = 25'657'225Ui32;// December 31, 65534
+    // 25,657,225.9999999 is 11:59:59.99 UT on December 31, 65534
 
     VDate(const TimePoint& sys_clock) noexcept
         : DatetimeSequence<Year, Month, Day>{
@@ -105,9 +108,31 @@ public:
         this->populateIntervalPointers();
     }
 
-    explicit VDate(const JDN& jdn) noexcept;// <--- INCOMPLETE!
+    explicit VDate(const JDN& jdn) noexcept
+        : DatetimeSequence<Year, Month, Day>{
+            DatetimeType::DATE_DATETIME,
+            Year(EPOCH_YEAR),
+            Month(EPOCH_MONTH),
+            Day(EPOCH_DAY)
+        }
+    {
+        this->populateIntervalPointers();
 
-    explicit VDate(const double& jdn) noexcept;// <--- INCOMPLETE!
+        this->assumeJDN(jdn);
+    }
+
+    explicit VDate(const double& jdn) noexcept
+        : DatetimeSequence<Year, Month, Day>{
+            DatetimeType::DATE_DATETIME,
+            Year(EPOCH_YEAR),
+            Month(EPOCH_MONTH),
+            Day(EPOCH_DAY)
+        }
+    {
+        this->populateIntervalPointers();
+
+        this->assumeJDN(jdn);
+    }
 
     VDate(const VDate& v_date) noexcept
         : DatetimeSequence<Year, Month, Day>{
@@ -516,6 +541,8 @@ public:
     /* Returns date as cardinal Julian Day Number (JDN) */
     JDN toJulianDayNumber() const noexcept
     {
+        // Date implementation of JDN truncates decimal (0.5)
+
         JDN dtYear{ this->year() };
         JDN dtMonth{ this->month() };
         JDN dtDay{ this->day() };
@@ -527,14 +554,15 @@ public:
         }
 
         // Calculate intermediate values
-        double A = std::floor(dtYear / (double)100.0);
-        double B = std::floor(A / (double)4.0);
-        double C = (2 - A + B);
+        double A = std::floor(dtYear / (double)100.);
+        double B = std::floor(A / (double)4.);
+        double C = ((double)2. - A + B);
         double D = std::floor((double)365.25 * (dtYear + (JDN)4716Ui32));
         double E = std::floor((double)30.6001 * (dtMonth + (JDN)1Ui32));
 
-        // Calculate JDN
-        JDN dateJDN = (uint32_t)std::floor((C + dtDay + D + E - 1524.5));
+        // Calculate final Julian Day Number
+        // (JDN decimal truncated here)
+        JDN dateJDN = (JDN)std::floor((C + dtDay + D + E - (double)1524.5));
 
         return dateJDN;
     }
@@ -692,37 +720,110 @@ private:
     }
 
     void interpretJDNDate(const JDN& jdn,
-        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept// <--- INCOMPLETE!
+        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept
     {
-        //
+        // Date implementation of JDN has truncated decimal
+        // JDN Zero date: 49'594'124 (1/1/0)
+
+        // Handle JDN value below VDate representable range
+        if (jdn < EPOCH_JDN)
+            return this->interpretJDNDate(EPOCH_JDN, year, month, day);
+
+        // Handle JDN value above VDate representable range
+        if (jdn > MAX_JDN)
+            return this->interpretJDNDate(MAX_JDN, year, month, day);
+
+        JDN jdnGiven{ (jdn + (JDN)1Ui32) };// +1 to account for decimal truncation
+
+        // Calculate intermediate values
+        JDN a = (JDN)4Ui32 * jdnGiven + (JDN)274'277Ui32;
+        JDN b = a / (JDN)146'097Ui32;
+        JDN c = (b * (JDN)3Ui32) / (JDN)4Ui32;
+
+        JDN f = (jdnGiven + (JDN)1'401Ui32 + c - (JDN)38Ui32);
+        JDN e = ((JDN)4Ui32 * f + (JDN)3Ui32);
+        JDN g = (e % (JDN)1'461Ui32 / (JDN)4Ui32);
+        JDN h = ((JDN)5Ui32 * g + (JDN)2Ui32);
+
+        // Calculate gregorian calendar date values
+        uint16_t gregorianDay = (
+            (h % (uint16_t)153Ui16) / (uint16_t)5Ui16 + (uint16_t)1Ui16
+        );
+
+        uint16_t gregorianMonth = (
+            ((h / (uint16_t)153Ui16 + (uint16_t)2Ui16)
+            % (uint16_t)12Ui16) + (uint16_t)1Ui16
+        );
+
+        uint16_t gregorianYear = (
+            e / (uint16_t)1'461Ui16 - (uint16_t)4'716Ui16 + ((uint16_t)14Ui16 - month)
+            / (uint16_t)12Ui16
+        );
+
+        // Adjust year for January and February as 13th and 14th months of last year
+        if (gregorianMonth > (uint16_t)2Ui16)
+            gregorianYear -= (uint16_t)1Ui16;
+
+        year = gregorianYear;
+        month = gregorianMonth;
+        day = gregorianDay;
     }
 
     void interpretJDNDate(const double& jdn,
-        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept// <--- INCOMPLETE!
+        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept
     {
-        //
+        // Standard JDN implementation
+        // JDN Zero date: 49'594'124.5 (1/1/0)
+
+        // Handle JDN value below VDate representable range
+        if (jdn < (double)EPOCH_JDN)
+            return this->interpretJDNDate(EPOCH_JDN, year, month, day);
+
+        // Handle JDN value above VDate representable range
+        if (jdn >= ((double)MAX_JDN + (double)1.))
+            return this->interpretJDNDate(MAX_JDN, year, month, day);
+
+        this->interpretJDNDate((JDN)std::floor(jdn), year, month, day);
     }
 
     void assumeTimePoint(const TimePoint& time_point) noexcept
     {
-        uint16_t tmYear{ 0 };
-        uint16_t tmMonth{ 0 };
-        uint16_t tmDay{ 0 };
+        uint16_t gregorianYear{ 0 };
+        uint16_t gregorianMonth{ 0 };
+        uint16_t gregorianDay{ 0 };
 
-        this->interpretTimePointDate(time_point, tmYear, tmMonth, tmDay);
+        this->interpretTimePointDate(time_point, gregorianYear, gregorianMonth, gregorianDay);
 
         // Set date interval values
-        this->getInterval(YEAR_INDEX)->setPosition(tmYear);
-        this->getInterval(MONTH_INDEX)->setPosition(tmMonth);
-        this->getInterval(DAY_INDEX)->setPosition(tmDay);
+        this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
+        this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
+        this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
 
         // Set day threshold
         this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
     }
 
-    void assumeJDN(const JDN& jdn) noexcept;// <--- INCOMPLETE!
+    void assumeJDN(const JDN& jdn) noexcept
+    {
+        uint16_t gregorianYear{ 0 };
+        uint16_t gregorianMonth{ 0 };
+        uint16_t gregorianDay{ 0 };
 
-    void assumeJDN(const double& jdn) noexcept;// <--- INCOMPLETE!
+        this->interpretJDNDate(jdn, gregorianYear, gregorianMonth, gregorianDay);
+
+        // Set date interval values
+        this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
+        this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
+        this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
+
+        // Set day threshold
+        this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
+    }
+
+    void assumeJDN(const double& jdn) noexcept
+    {
+        this->assumeJDN((JDN)std::floor(jdn));
+    }
 
     Year* retrieveYear() const noexcept
     {
@@ -745,16 +846,22 @@ private:
         return static_cast<Day*>(rawInterval);
     }
 
-    void positiveDisplace(const VDuration& duration) noexcept
+    void positiveDisplace(const VDuration& duration) noexcept// <--- INCOMPLETE!
     {
+        // NOTE: This method is changing, new solution found
+        // (^ Use Julian day number system to avoid loops)
+
         this->getDay()->dateDisplace(
             Day::Trans::POSITIVE,
             duration.convertedTo(VDuration::TimeUnit::DAY)
         );
     }
 
-    void negativeDisplace(const VDuration& duration) noexcept
+    void negativeDisplace(const VDuration& duration) noexcept// <--- INCOMPLETE!
     {
+        // NOTE: This method is changing, new solution found
+        // (^ Use Julian day number system to avoid loops)
+
         this->getDay()->dateDisplace(
             Day::Trans::POSITIVE,
             duration.convertedTo(VDuration::TimeUnit::DAY)
