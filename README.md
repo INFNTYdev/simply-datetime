@@ -27,9 +27,9 @@ Datetime is one of the most commonly used features in software development proje
 > - ***`VDuration`***
 > - ***`VDate`***
 > - ***`VTime`***
-> - ***`VFTime`***
+> - ***`VTimeEx`***
 > - ***`VDatetime`***
-> - ***`VFDatetime`***
+> - ***`VDatetimeEx`***
 
 <br/>
 
