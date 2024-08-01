@@ -639,17 +639,38 @@ public:
     }
 
     /* Increase date by provided amount of days */
-    void increase(uint32_t days) noexcept;// <--- INCOMPLETE!
+    void increase(uint32_t days) noexcept
+    {
+        JDN newDateJDN{ (this->toJulianDayNumber() + days) };
+
+        // Catches new JDN overflow
+        if (newDateJDN < EPOCH_JDN)
+            return;
+        
+        if (newDateJDN > MAX_JDN)
+            return;
+
+        this->assumeJDN(newDateJDN);
+    }
 
     /* Decrease date by provided amount of days */
-    void decrease(uint32_t days) noexcept;// <--- INCOMPLETE!
+    void decrease(uint32_t days) noexcept
+    {
+        JDN newDateJDN{ (this->toJulianDayNumber() - days) };
+
+        if (newDateJDN < EPOCH_JDN)
+            return;
+        
+        // Catches new JDN overflow
+        if (newDateJDN > MAX_JDN)
+            return;
+
+        this->assumeJDN(newDateJDN);
+    }
 
     /* Displace date using provided duration */
-    void displace(const VDuration& duration) noexcept// <--- INCOMPLETE!
+    void displace(const VDuration& duration) noexcept
     {
-        // NOTE: This method is changing, new solution found
-        // (^ Use Julian day number system to avoid loops)
-
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             return this->negativeDisplace(duration);
@@ -659,7 +680,15 @@ public:
     }
 
     /* Reset date to epoch date */
-    void reset() noexcept;// <--- INCOMPLETE!
+    void reset() noexcept
+    {
+        if (this->isEpoch())
+            return;
+
+        this->getInterval(YEAR_INDEX)->setPosition(EPOCH_YEAR);
+        this->getInterval(MONTH_INDEX)->setPosition(EPOCH_MONTH);
+        this->getInterval(DAY_INDEX)->setPosition(EPOCH_DAY);
+    }
 
 
 private:
@@ -760,7 +789,7 @@ private:
             / (uint16_t)12Ui16
         );
 
-        // Adjust year for January and February as 13th and 14th months of last year
+        // Adjust year for non "13th" and "14th" months
         if (gregorianMonth > (uint16_t)2Ui16)
             gregorianYear -= (uint16_t)1Ui16;
 
@@ -847,26 +876,14 @@ private:
         return static_cast<Day*>(rawInterval);
     }
 
-    void positiveDisplace(const VDuration& duration) noexcept// <--- INCOMPLETE!
+    void positiveDisplace(const VDuration& duration) noexcept
     {
-        // NOTE: This method is changing, new solution found
-        // (^ Use Julian day number system to avoid loops)
-
-        this->getDay()->dateDisplace(
-            Day::Trans::POSITIVE,
-            duration.convertedTo(VDuration::TimeUnit::DAY)
-        );
+        this->increase(duration.days());
     }
 
-    void negativeDisplace(const VDuration& duration) noexcept// <--- INCOMPLETE!
+    void negativeDisplace(const VDuration& duration) noexcept
     {
-        // NOTE: This method is changing, new solution found
-        // (^ Use Julian day number system to avoid loops)
-
-        this->getDay()->dateDisplace(
-            Day::Trans::POSITIVE,
-            duration.convertedTo(VDuration::TimeUnit::DAY)
-        );
+        this->decrease(duration.days());
     }
 
     void populateIntervalPointers() noexcept

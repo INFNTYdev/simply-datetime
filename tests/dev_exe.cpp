@@ -383,7 +383,11 @@ int main(size_t argc, char* argv[])
 		<< "\n\nToday until Var: " << todayDate.daysUntil(futureDate) << " days"
 		<< std::endl;
 
-	std::cout << '\n' << VDate{(double)2'440'587.5};
+	std::cout << '\n' << VDate{ (double)2'440'587.5 } << '\n';
+
+	todayDate.displace(VDuration{ 10 });
+
+	std::cout << todayDate.dateStr(VDate::Format::STANDARD);
 
 
 
