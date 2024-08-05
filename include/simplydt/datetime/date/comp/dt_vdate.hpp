@@ -802,7 +802,7 @@ private:
         uint16_t& year, uint16_t& month, uint16_t& day) const noexcept
     {
         // Standard JDN implementation
-        // JDN Zero date: 49'594'124.5 (1/1/0)
+        // JDN Zero date: 49,594,124.5 (1/1/0)
 
         // Handle JDN value below VDate representable range
         if (jdn < (double)EPOCH_JDN)
