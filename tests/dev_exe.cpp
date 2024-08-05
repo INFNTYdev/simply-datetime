@@ -9,36 +9,36 @@
 #include"simplydt/common/interval/interval.hpp"
 #include"simplydt/common/sequence/linked_sequence.hpp"
 
-// VDate Core
+// Virtual Date Core
 #include"simplydt/datetime/date/date_interval.hpp"
 #include"simplydt/datetime/date/unit/dt_year.hpp"
 #include"simplydt/datetime/date/unit/dt_month.hpp"
 #include"simplydt/datetime/date/unit/dt_day.hpp"
 
-// VTime Core
+// Virtual Time Core
 #include"simplydt/datetime/time/time_interval.hpp"
 #include"simplydt/datetime/time/unit/dt_hour.hpp"
 #include"simplydt/datetime/time/unit/dt_minute.hpp"
 #include"simplydt/datetime/time/unit/dt_second.hpp"
 #include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 
-// VDuration Core
+// Virtual Duration Core
 #include"simplydt/duration/duration_interval.hpp"
 #include"simplydt/duration/unit/dur_unit_def.hpp"
 
-// VDatetime Core
+// Virtual Datetime Core
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
-// VDuration
-#include"simplydt/duration/comp/dt_duration.hpp"
+// Virtual Duration
+#include"simplydt/duration/comp/dt_vduration.hpp"
 
-// VDate
+// Virtual Date
 #include"simplydt/datetime/date/comp/dt_vdate.hpp"
 
-// VTime
+// Virtual Time
 // N/A
 
-// VDatetime
+// Virtual Datetime
 // N/A
 
 
