@@ -33,7 +33,7 @@
 #include"simplydt/duration/comp/dt_duration.hpp"
 
 // VDate
-#include"simplydt/datetime/date/comp/dt_date.hpp"
+#include"simplydt/datetime/date/comp/dt_vdate.hpp"
 
 // VTime
 // N/A
@@ -157,129 +157,11 @@
 //}
 
 
-int to_jdn(int day, int month, int year) {
-	if (month < 3) {
-		--year;
-		month += 12;
-	}
-
-	return day + std::floor((153 * month + 2) / 5) + 365 * year + std::floor(year / 4) - std::floor(year / 100) + std::floor(year / 400) - 32045;
-}
-
-void from_jdn(int jdn, int& day, int& month, int& year) {
-	jdn += 32044;
-	int n = 4 * jdn + 3 + 146097 * 3 / 4;
-	int k = n % 146097 / 4;
-	int m = 4000 * (k + 1) / 1461001;
-	int jd = 5 * (k - 1461 * m / 4 + 31) / 153;
-	day = (jd % 153 * 5 + 2) / 5;
-	month = jd / 153 % 12 + 1;
-	year = n / 146097 * 100 + m - 4800 + (month <= 2 ? 1 : 0);
-}
-
-int days_between(int day1, int month1, int year1, int day2, int month2, int year2) {
-	return std::abs(to_jdn(day1, month1, year1) - to_jdn(day2, month2, year2));
-}
-
-void add_days(int& day, int& month, int& year, int days) {
-	int jdn = to_jdn(day, month, year) + days;
-	from_jdn(jdn, day, month, year);
-}
-
-
-struct GregorianDate {
-	uint16_t year;
-	uint16_t month;
-	uint16_t day;
-};
-
-uint32_t toJDN(uint16_t year, uint16_t month, uint16_t day)// <--- THIS ONE IS IT!!!
-{
-	// Adjust for January and February
-	if (month < 3) {
-		year -= 1;
-		month += 12;
-	}
-
-	// Calculate intermediate values
-	double A = std::floor(year / 100.0);
-	double B = std::floor(A / 4.0);
-	double C = 2 - A + B;
-	double E = std::floor(365.25 * (year + 4716));
-	double F = std::floor(30.6001 * (month + 1));
-
-	// Calculate the JDN
-	uint32_t JD = (uint32_t)std::floor((C + day + E + F - 1524.5));
-
-	return JD;
-}
-
-GregorianDate fromJDN(uint32_t JDN)
-{
-	GregorianDate result{.year=0, .month=0, .day=0};
-
-	double JD = static_cast<double>(JDN);
-
-	JD += 0.5;
-	int Z = std::floor(JD);
-	double F = JD - Z;
-	int A;
-
-	if (Z < 2299161) {
-		A = Z;
-	}
-	else {
-		int alpha = std::floor((Z - 1867216.25) / 36524.25);
-		A = Z + 1 + alpha - std::floor(alpha / 4);
-	}
-
-	int B = A + 1524;
-	int C = std::floor((B - 122.1) / 365.25);
-	int D = std::floor(365.25 * C);
-	int E = std::floor((B - D) / 30.6001);
-
-	// Calculate the day
-	result.day = std::round(B - D - std::floor(30.6001 * E) + F);
-
-	// Calculate the month
-	if (E < 14) {
-		result.month = E - 1;
-	}
-	else {
-		result.month = E - 13;
-	}
-
-	// Calculate the year
-	if (result.month > 2) {
-		result.year = C - 4716;
-	}
-	else {
-		result.year = C - 4715;
-	}
-
-	return result;
-}
-
-GregorianDate fromJDN2(uint32_t JDN) {
-	JDN += 1;
-
-	uint32_t f = JDN + 1401 + (((4 * JDN + 274277) / 146097) * 3) / 4 - 38;
-	uint32_t e = 4 * f + 3;
-	uint32_t g = e % 1461 / 4;
-	uint32_t h = 5 * g + 2;
-
-	uint16_t day = (h % 153) / 5 + 1;
-	uint16_t month = ((h / 153 + 2) % 12) + 1;
-	uint16_t year = e / 1461 - 4716 + (14 - month) / 12;
-
-	return GregorianDate{ year, month, day };
-}
-
 
 int main(size_t argc, char* argv[])
 {
-	//VDate epochDate{ 1969, 12, 31 };
-	//VDate epochNeig{ 1970, 1, 1 };
+	//VDate epochDate{};
+	//VDate epochNeig{};
 	//VDate todayDate{ std::chrono::system_clock::now() };
 
 	//std::cout << "\nEpoch:";
@@ -303,18 +185,6 @@ int main(size_t argc, char* argv[])
 	//	<< std::setw(25) << "until(today): " << epochDate.until(todayDate) << '\n'
 	//	<< std::setw(25) << "until(neighbor): " << epochDate.until(epochNeig) << '\n'
 	//	<< std::endl;
-
-	//std::cout << "\nJDN Number test:" << std::endl;
-	//std::cout
-	//	<< days_between(
-	//		epochDate.day(),
-	//		epochDate.month(),
-	//		epochDate.year(),
-	//		todayDate.day(),
-	//		todayDate.month(),
-	//		todayDate.year()
-	//	)
-	//	<< " days until" << std::endl;
 
 
 	//// This stuff is incorrect
@@ -359,13 +229,6 @@ int main(size_t argc, char* argv[])
 	//	<< "\n(" << expectNeig.daysUntil(epochNeig) << " days missing)"
 	//	<< std::endl;
 
-	//// Seems like wrong method calls are happening
-	// Day maximum was not updated during displace
-
-	// ANALYSIS
-	// -> (Must be careful with use of methods!)
-	// -> VDate intervals need specialized control methods
-	// 
 
 	VDate::TimePoint todayChrono = std::chrono::system_clock::now();
 
@@ -383,74 +246,10 @@ int main(size_t argc, char* argv[])
 		<< "\n\nToday until Var: " << todayDate.daysUntil(futureDate) << " days"
 		<< std::endl;
 
-	std::cout << '\n' << VDate{ (double)2'440'587.5 } << '\n';
-
-	todayDate.displace(VDuration{ 10 });
-
-	std::cout << todayDate.dateStr(VDate::Format::STANDARD);
-
-
-
-	// Algo is spotty, write test to find divergence
-	// JDN Divergence Test:
-	//VDate testDate{};
-
-	//std::cout << "\nLocating JDN divergence..."
-	//	<< "\nUsing start date: " << testDate.dateStr(VDate::Format::STANDARD)
-	//	<< std::endl;
-
-	//bool jdnConflict{ false };
-	//VDuration increment{ 1 };// 1 day
-	//uint16_t currentYear{ testDate.year() };
-	//size_t yearsPassed{ 0 };
-
-	//while (!jdnConflict && yearsPassed != 1) {
-
-	//	if (currentYear != testDate.year()) {
-	//		++yearsPassed;
-	//		currentYear = testDate.year();
-	//		std::cout << yearsPassed << " years passed\n";
-	//	}
-
-	//	/*if (testDate.month() == 3 && testDate.day() == 1)
-	//		std::cout << "Here" << '\n';*/
-
-	//	VDate sample{ testDate.toJulianDayNumber() };
-
-	//	/*std::cout << "Testing: "
-	//		<< testDate.dateStr(VDate::Format::STANDARD)
-	//		<< " vs. " << sample.dateStr(VDate::Format::STANDARD)
-	//		<< '\n';*/
-
-	//	if (sample != testDate) {
-	//		jdnConflict = true;
-
-	//		std::cout << '\n' << std::boolalpha
-	//			<< "JDN conflict found at "
-	//			<< testDate.dateStr(VDate::Format::STANDARD)
-	//			<< " date\n"
-	//			<< "\t -> Expected: " << testDate.dateStr(VDate::Format::STANDARD) << '\n'
-	//			<< "\t -> Expected JDN: " << testDate.toJulianDayNumber() << '\n'
-	//			<< "\t -> Sample: " << sample.dateStr(VDate::Format::STANDARD)
-	//			<< " (" << sample.toJulianDayNumber() << ")\n"
-	//			<< std::endl;
-
-	//		break;
-	//	}
-
-	//	testDate.displace(increment);// Displace 1 day
-
-	//}
-
-	//std::cout << "\n\n[ TEST COMPLETE ]" << std::endl;
-
-	// -> OMG, NEW IDEA! Use JDN to displace date WITH NO LOOPS!!!
-	// -> date.displace(1,000,000 days);
-	// -> Take JDN of (this) date and add 1,000,000
-	// -> Convert JDN back to Gregorian date
-	// -> Set date interval positions
-	// -> (Leave .dateDisplace() code; valid trigger by single interval displace)
-	// -> (VDate::increase(size_t) / VDate::decrease(size_t))
+	std::cout << "\nSince project start: "
+		<< todayDate.daysUntil(VDate{ 2024, 6, 28 })
+		<< " days"
+		<< std::endl;
 
 	return NULL;
 }
