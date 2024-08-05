@@ -25,7 +25,7 @@ public:
 
     ~Year() = default;
 
-	static const uint16_t YEAR_MIN{ 1900 };// Standard library is limitting factor
+	static const uint16_t YEAR_MIN{ 1970 };// Standard library is limitting factor
 
     /* Returns true if year is a leap year */
     bool isLeapYear() const noexcept

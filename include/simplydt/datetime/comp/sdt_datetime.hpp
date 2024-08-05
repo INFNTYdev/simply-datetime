@@ -14,9 +14,9 @@ class Datetime {
 
 public:
     /* Datetime time unit */
-    using Unit = Date::TimeUnit;
+    using Unit = VDate::TimeUnit;
     /* Datetime type */
-    using Type = Date::DatetimeType;
+    using Type = VDate::DatetimeType;
     /* Standard library chronological time point (system clock) */
     using Chrono = std::chrono::time_point<std::chrono::system_clock>;
 
@@ -33,43 +33,43 @@ public:
         this->linkDatetime();
     }
 
-    Datetime(const Date& date, const Time& time) noexcept
+    Datetime(const VDate& date, const Time& time) noexcept
         : m_date{ date },
         m_time{ time }
     {
         this->linkDatetime();
     }
 
-    Datetime(Date&& date, Time&& time) noexcept
-        : m_date{ std::forward<Date>(date) },
+    Datetime(VDate&& date, Time&& time) noexcept
+        : m_date{ std::forward<VDate>(date) },
         m_time{ std::forward<Time>(time) }
     {
         this->linkDatetime();
     }
 
-    Datetime(const Date& date, Time&& time) noexcept
+    Datetime(const VDate& date, Time&& time) noexcept
         : m_date{ date },
         m_time{ std::forward<Time>(time) }
     {
         this->linkDatetime();
     }
 
-    Datetime(Date&& date, const Time& time) noexcept
-        : m_date{ std::forward<Date>(date) },
+    Datetime(VDate&& date, const Time& time) noexcept
+        : m_date{ std::forward<VDate>(date) },
         m_time{ time }
     {
         this->linkDatetime();
     }
 
-    Datetime(const Date& date) noexcept
+    Datetime(const VDate& date) noexcept
         : m_date{ date },
         m_time{}
     {
         this->linkDatetime();
     }
 
-    Datetime(Date&& date) noexcept
-        : m_date{ std::forward<Date>(date) },
+    Datetime(VDate&& date) noexcept
+        : m_date{ std::forward<VDate>(date) },
         m_time{}
     {
         this->linkDatetime();
@@ -256,7 +256,7 @@ public:
     }
 
     /* Datetime date object */
-    const Date& date() const noexcept
+    const VDate& date() const noexcept
     {
         return this->m_date;
     }
@@ -280,7 +280,7 @@ public:
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Layout layout, Date::Format date_format, Date::Layout date_layout,
+    std::string datetimeStr(Layout layout, VDate::Format date_format, VDate::Layout date_layout,
         Time::Format time_format, Time::Layout time_layout) const noexcept
     {
         std::string datetimeString;
@@ -303,7 +303,7 @@ public:
     }
     
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format, Date::Layout date_layout,
+    std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout,
         Time::Format time_format, Time::Layout time_layout) const noexcept
     {
         return this->datetimeStr(
@@ -316,7 +316,7 @@ public:
     }
     
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format, Date::Layout date_layout) const noexcept
+    std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
@@ -332,31 +332,31 @@ public:
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
-            Date::Format::RECORD,// Date format
-            Date::Layout::M_D_YYYY,// Date layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
             time_format,// Time format
             time_layout// Time layout
         );
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format, Time::Format time_format) const noexcept
+    std::string datetimeStr(VDate::Format date_format, Time::Format time_format) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
             date_format,// Date format
-            Date::Layout::M_D_YYYY,// Date layout
+            VDate::Layout::M_D_YYYY,// Date layout
             time_format,// Time format
             Time::Layout::H_M_S_MS// Time layout
         );
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Layout date_layout, Time::Layout time_layout) const noexcept
+    std::string datetimeStr(VDate::Layout date_layout, Time::Layout time_layout) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
-            Date::Format::RECORD,// Date format
+            VDate::Format::RECORD,// Date format
             date_layout,// Date layout
             Time::Format::MILITARY,// Time format
             time_layout// Time layout
@@ -364,23 +364,23 @@ public:
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Format date_format) const noexcept
+    std::string datetimeStr(VDate::Format date_format) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
             date_format,// Date format
-            Date::Layout::M_D_YYYY,// Date layout
+            VDate::Layout::M_D_YYYY,// Date layout
             Time::Format::MILITARY,// Time format
             Time::Layout::H_M_S_MS// Time layout
         );
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Date::Layout date_layout) const noexcept
+    std::string datetimeStr(VDate::Layout date_layout) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
-            Date::Format::RECORD,// Date format
+            VDate::Format::RECORD,// Date format
             date_layout,// Date layout
             Time::Format::MILITARY,// Time format
             Time::Layout::H_M_S_MS// Time layout
@@ -392,8 +392,8 @@ public:
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
-            Date::Format::RECORD,// Date format
-            Date::Layout::M_D_YYYY,// Date layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
             time_format,// Time format
             Time::Layout::H_M_S_MS// Time layout
         );
@@ -404,8 +404,8 @@ public:
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
-            Date::Format::RECORD,// Date format
-            Date::Layout::M_D_YYYY,// Date layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
             Time::Format::MILITARY,// Time format
             time_layout// Time layout
         );
@@ -416,8 +416,8 @@ public:
     {
         return this->datetimeStr(
             layout,// Datetime object layout
-            Date::Format::RECORD,// Date format
-            Date::Layout::M_D_YYYY,// Date layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
             Time::Format::MILITARY,// Time format
             Time::Layout::H_M_S_MS// Time layout
         );
@@ -428,8 +428,8 @@ public:
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
-            Date::Format::RECORD,// Date format
-            Date::Layout::M_D_YYYY,// Date layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
             Time::Format::MILITARY,// Time format
             Time::Layout::H_M_S_MS// Time layout
         );
@@ -463,7 +463,7 @@ public:
     }
 
     /* Returns true if provided date occurs after this datetime date */
-    bool isBefore(const Date& date) const noexcept
+    bool isBefore(const VDate& date) const noexcept
     {
         if (&this->m_date == &date || this->m_date == date)
             return false;
@@ -490,7 +490,7 @@ public:
     }
 
     /* Returns true if provided date occurs before this datetime date */
-    bool isAfter(const Date& date) const noexcept
+    bool isAfter(const VDate& date) const noexcept
     {
         if (&this->m_date == &date || this->m_date == date)
             return false;
@@ -502,7 +502,7 @@ public:
     }
 
     /* Returns pointer to datetime date */
-    Date* getDate() noexcept
+    VDate* getDate() noexcept
     {
         return &this->m_date;
     }
@@ -715,7 +715,7 @@ public:
 
 
 private:
-    Date m_date;
+    VDate m_date;
     Time m_time;
 
     void linkDatetime() noexcept

@@ -284,7 +284,7 @@ public:
     }
 
     /* Link time to date instance */
-    bool linkDate(Date& date) noexcept
+    bool linkDate(VDate& date) noexcept
     {
         return this->retrieveHour()->linkPrecedingInterval(date.getDay());
     }
