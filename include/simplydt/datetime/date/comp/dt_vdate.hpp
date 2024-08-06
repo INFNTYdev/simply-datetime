@@ -97,7 +97,7 @@ public:
         this->adjustDayThreshold();
     }
 
-    VDate(uint16_t year) noexcept
+    explicit VDate(uint16_t year) noexcept
         : DatetimeSequence<Year, Month, Day>{
             DatetimeType::DATE_DATETIME,
             Year(year),

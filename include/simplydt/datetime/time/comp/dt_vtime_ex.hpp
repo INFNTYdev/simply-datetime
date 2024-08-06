@@ -1,18 +1,23 @@
 
-#ifndef SIMPLYDTLIB_L_DATETIME_TIME_SEQUENCE_OBJ_H_
-#define SIMPLYDTLIB_L_DATETIME_TIME_SEQUENCE_OBJ_H_
+#ifndef SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_OBJ_H_
+#define SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_OBJ_H_
 
 
 
 #include<chrono>
+#include<cmath>
 
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
-#include"simplydt/duration/comp/dt_duration.hpp"
-#include"simplydt/datetime/time/comp/dt_stime.hpp"
+#include"simplydt/datetime/time/unit/dt_hour.hpp"
+#include"simplydt/datetime/time/unit/dt_minute.hpp"
+#include"simplydt/datetime/time/unit/dt_second.hpp"
+#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
+#include"simplydt/duration/comp/dt_vduration.hpp"
+//#include"simplydt/datetime/time/comp/dt_vtime.hpp"
 
 
-/* Full time ( HH:MM:SS:MS ) */
-class Time : public DatetimeSequence<Hour, Minute, Second, Millisecond> {
+/* Extended time ( HH:MM:SS:MS ) */
+class VTimeEx : public DatetimeSequence<Hour, Minute, Second, Millisecond> {
 
 public:
     /* Datetime time unit */
@@ -20,14 +25,16 @@ public:
     /* Datetime type */
     using DatetimeType = DatetimeSequence<Hour, Minute, Second, Millisecond>::DatetimeType;
     /* Standard library chronological time point (system clock) */
-    using Chrono = std::chrono::time_point<std::chrono::system_clock>;
+    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
     /* 12-hr clock time phase */
     using Phase = Hour::Phase;
+    /* Julian Day Number (JDN) */
+    using JDN = double;
 
     /* Time format */
     enum Format {
-        MILITARY,// Military time format (24-hour)
-        STANDARD,// Standard time format (12-hour)
+        MILITARY,// Military format (24-hour clock)
+        STANDARD,// Standard format (12-hour clock)
     };
 
     /* Time layout */
@@ -40,7 +47,7 @@ public:
         H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
     };
 
-    Time(Chrono chrono) noexcept
+    VTimeEx(Chrono chrono) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0U),
@@ -71,7 +78,7 @@ public:
         this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
     }
 
-    Time(uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
+    VTimeEx(uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
@@ -83,7 +90,7 @@ public:
         //
     }
 
-    Time(uint16_t hour, uint16_t minute, uint16_t second) noexcept
+    VTimeEx(uint16_t hour, uint16_t minute, uint16_t second) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
@@ -95,7 +102,7 @@ public:
         //
     }
 
-    Time(uint16_t hour, uint16_t minute) noexcept
+    VTimeEx(uint16_t hour, uint16_t minute) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
@@ -107,7 +114,7 @@ public:
         //
     }
 
-    Time(uint16_t hour) noexcept
+    explicit VTimeEx(uint16_t hour) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
@@ -119,7 +126,25 @@ public:
         //
     }
 
-    Time() noexcept
+    explicit VTimeEx(const JDN& jdn) noexcept;//    <--- INCOMPLETE!!!
+
+    // VTimeEx(const VTime& v_time) noexcept
+    //     : DatetimeSequence<Hour, Minute, Second, Millisecond>{//    <--- INCOMPLETE!!!
+    //         DatetimeType::TIME_DATETIME,
+    //         Hour(v_time.getHour()),
+    //         Minute(v_time.getMinute()),
+    //         Second(v_time.getSecond()),
+    //         Millisecond((uint16_t)0U)
+    //     }
+    // {
+    //     //
+    // }
+
+    VTimeEx(const VTimeEx& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
+
+    VTimeEx(VTimeEx&& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
+
+    VTimeEx() noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0U),
@@ -131,60 +156,30 @@ public:
         //
     }
 
-    Time(const STime& s_time) noexcept
-        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
-            DatetimeType::TIME_DATETIME,
-            Hour(s_time.getHour()),
-            Minute(s_time.getMinute()),
-            Second(s_time.getSecond()),
-            Millisecond((uint16_t)0U)
-        }
-    {
-        //
-    }
+    virtual ~VTimeEx() noexcept = default;
 
-    Time(STime&& s_time) noexcept
-        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
-            DatetimeType::TIME_DATETIME,
-            Hour(std::move(s_time.getHour())),
-            Minute(std::move(s_time.getMinute())),
-            Second(std::move(s_time.getSecond())),
-            Millisecond((uint16_t)0U)
-        }
+    friend std::ostream& operator<<(std::ostream& os, const VTimeEx& vtime_ex) noexcept
     {
-        //
-    }
-
-    virtual ~Time() noexcept = default;
-
-    friend std::ostream& operator<<(std::ostream& os, const Time& time) noexcept
-    {
-        os << time.timeStr();
+        os << vtime_ex.timeStr();
 
         return os;
     }
 
-    Time& operator=(const STime& s_time) noexcept
-    {
-        this->getInterval(HOUR_INDEX)->setPosition(s_time.hour());
-        this->getInterval(MINUTE_INDEX)->setPosition(s_time.minute());
-        this->getInterval(SECOND_INDEX)->setPosition(s_time.second());
-        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0U);
+    VTimeEx& operator=(const VTimeEx& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
 
-        return *this;
-    }
+    VTimeEx& operator=(VTimeEx&& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
 
-    Time& operator=(STime&& s_time) noexcept
-    {
-        this->getHour() = std::move(s_time.getHour());
-        this->getMinute() = std::move(s_time.getMinute());
-        this->getSecond() = std::move(s_time.getSecond());
-        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0U);
+    // VTimeEx& operator=(const VTime& v_time) noexcept//    <--- INCOMPLETE!!!
+    // {
+    //     this->getInterval(HOUR_INDEX)->setPosition(v_time.hour());
+    //     this->getInterval(MINUTE_INDEX)->setPosition(v_time.minute());
+    //     this->getInterval(SECOND_INDEX)->setPosition(v_time.second());
+    //     this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0U);
 
-        return *this;
-    }
+    //     return *this;
+    // }
 
-    Time& operator=(const Chrono& chrono) noexcept
+    VTimeEx& operator=(const Chrono& chrono) noexcept//    <--- INCOMPLETE!!! (review this)
     {
         uint16_t tmHour{ 23 };
         uint16_t tmMinute{ 59 };
@@ -210,40 +205,70 @@ public:
         return *this;
     }
 
-    Time operator+(const VDuration& duration) const noexcept
+    bool operator==(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+
+    //bool operator==(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator==(const TimePoint& sys_clock) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator<(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+
+    //bool operator<(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator<(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator>(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+
+    //bool operator>(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator>(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator<=(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+
+    //bool operator<=(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator<=(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator>=(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+
+    //bool operator>=(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+
+    bool operator>=(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+
+    VTimeEx operator+(const VDuration& v_duration) const noexcept
     {
-        Time result{ *this };
+        VTimeEx temp{ *this };
 
-        result.displace(duration);
+        temp.displace(v_duration);
 
-        return result;
+        return temp;
     }
 
-    Time operator-(const VDuration& duration) const noexcept
+    VTimeEx operator-(const VDuration& duration) const noexcept
     {
-        Time result{ *this };
+        VTimeEx temp{ *this };
 
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             // Double negative = positive
-            result.positiveDisplace(duration);
+            temp.positiveDisplace(duration);
             break;
 
         default:
-            result.negativeDisplace(duration);
+            temp.negativeDisplace(duration);
         }
 
-        return result;
+        return temp;
     }
 
-    Time& operator+=(const VDuration& duration) noexcept
+    VTimeEx& operator+=(const VDuration& duration) noexcept
     {
         this->displace(duration);
 
         return *this;
     }
 
-    Time& operator-=(const VDuration& duration) noexcept
+    VTimeEx& operator-=(const VDuration& duration) noexcept
     {
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
@@ -257,6 +282,9 @@ public:
 
         return *this;
     }
+
+    /* Returns true if time is equal to start of day (midnight) */
+    bool isZero() const noexcept;//    <--- INCOMPLETE!!!
 
     /* Returns hour of time */
     uint16_t hour() const noexcept
@@ -362,40 +390,48 @@ public:
         return this->timeStr(Format::MILITARY, Layout::H_M_S_MS);
     }
 
+    const Hour& hourRef() const noexcept;//    <--- INCOMPLETE!!!
+
+    const Minute& minuteRef() const noexcept;//    <--- INCOMPLETE!!!
+
+    const Second& secondRef() const noexcept;//    <--- INCOMPLETE!!!
+
+    const Millisecond& msRef() const noexcept;//    <--- INCOMPLETE!!!
+
     /* Returns hour in time */
-    Hour& getHour() const noexcept
+    Hour* getHour() const noexcept//    <--- INCOMPLETE!!!
     {
         return *(this->retrieveHour());
     }
 
     /* Returns minute in time */
-    Minute& getMinute() const noexcept
+    Minute* getMinute() const noexcept//    <--- INCOMPLETE!!!
     {
         return *(this->retrieveMinute());
     }
 
     /* Returns second in time */
-    Second& getSecond() const noexcept
+    Second* getSecond() const noexcept//    <--- INCOMPLETE!!!
     {
         return *(this->retrieveSecond());
     }
 
     /* Returns millisend in time */
-    Millisecond& getMillisecond() const noexcept
+    Millisecond* getMs() const noexcept//    <--- INCOMPLETE!!!
     {
         return *(this->retrieveMillisecond());
     }
 
     /* Returns copy of full time as standard time */
-    STime toSTime() const noexcept
+    STime toVTime() const noexcept//    <--- INCOMPLETE!!!
     {
         return STime{ this->hour(), this->minute(), this->second() };
     }
 
     /* Link time to date instance */
-    bool linkDate(VDate& date) noexcept
+    bool linkDate(VDate& v_date) noexcept
     {
-        return this->retrieveHour()->linkPrecedingInterval(date.getDay());
+        return this->retrieveHour()->linkPrecedingInterval(v_date.getDay());
     }
 
     /* Returns time since day start compressed into provided unit  */
@@ -433,15 +469,21 @@ public:
         return total;
     }
 
+    /* Returns total number of hours from this time until provided time */
+    uint32_t hoursUntil(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+
+    /* Returns total number of minutes from this time until provided time */
+    uint32_t minutesUntil(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+
     /* Returns total number of seconds from this time until provided time */
-    size_t secondsUntil(const Time& time) const noexcept
+    size_t secondsUntil(const VTimeEx& vtime_ex) const noexcept
     {
         size_t totalSeconds{ 0 };
 
         if (this == &time || *this == time)
             return totalSeconds;
 
-        Time temp{ *this };
+        VTimeEx temp{ *this };
 
         // Accum. seconds
         totalSeconds += (
@@ -467,24 +509,15 @@ public:
         return totalSeconds;
     }
 
-    /* Returns absolute total number of seconds from this time until provided time */
-    size_t absSecondsUntil(const Time& time) const noexcept
-    {
-        if (this->isBefore(time))
-            return this->secondsUntil(time);
-        else
-            return time.secondsUntil(*this);
-    }
-
-    /* Returns total number of milliseconds from this time until provided time */
-    size_t millisecondsUntil(const Time& time) const noexcept
+    /* Returns absolute total number of milliseconds from this time until provided time */
+    size_t msUntil(const VTimeEx& time) const noexcept
     {
         size_t totalMs{ 0 };
 
         if (this == &time || *this == time)
             return totalMs;
 
-        Time temp{ *this };
+        VTimeEx temp{ *this };
 
         // Accum. milliseconds
         totalMs += (
@@ -518,17 +551,8 @@ public:
         return totalMs;
     }
 
-    /* Returns absolute total number of milliseconds from this time until provided time */
-    size_t absMillisecondsUntil(const Time& time) const noexcept
-    {
-        if (this->isBefore(time))
-            return this->millisecondsUntil(time);
-        else
-            return time.millisecondsUntil(*this);
-    }
-
     /* Returns duration between this time and provided time */
-    VDuration until(const Time& time) const noexcept
+    VDuration until(const VTimeEx& time) const noexcept
     {
         if (this == &time || *this == time)
             return VDuration{};
@@ -561,6 +585,11 @@ private:
     static const uint8_t MINUTE_INDEX{ 1 };
     static const uint8_t SECOND_INDEX{ 2 };
     static const uint8_t MILLIS_INDEX{ 3 };
+
+    Hour* m_hour_ptr;
+    Minute* m_minute_ptr;
+    Second* m_second_ptr;
+    Millisecond* m_second_ptr;
 
     size_t timeUnitEnumToIndex(TimeUnit time_unit) noexcept
     {
@@ -642,4 +671,4 @@ private:
 
 
 
-#endif // SIMPLYDTLIB_L_DATETIME_TIME_SEQUENCE_OBJ_H_
+#endif // SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_OBJ_H_
