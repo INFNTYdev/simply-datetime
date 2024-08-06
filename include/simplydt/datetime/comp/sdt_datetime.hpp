@@ -683,7 +683,7 @@ public:
             return VDuration{};
         
         VDuration result{};
-        result.getMillisecond().largeDisplace(
+        result.getMs().largeDisplace(
             VDuration::Sign::POSITIVE,
             this->millisecondsUntil(datetime)
         );

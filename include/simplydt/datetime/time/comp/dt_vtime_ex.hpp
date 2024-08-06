@@ -179,7 +179,7 @@ public:
     //     return *this;
     // }
 
-    VTimeEx& operator=(const Chrono& chrono) noexcept//    <--- INCOMPLETE!!! (review this)
+    VTimeEx& operator=(const TimePoint& chrono) noexcept//    <--- INCOMPLETE!!! (review this)
     {
         uint16_t tmHour{ 23 };
         uint16_t tmMinute{ 59 };
@@ -187,7 +187,7 @@ public:
 
         // DEBUG: Somehow tm_hour is returning 19 on epoch hour?
         // If-statement below acknowledges
-        if (chrono != Chrono{}) {// If this is not equal to the epoch
+        if (chrono != TimePoint{}) {// If this is not equal to the epoch
             std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
             std::tm* tm_ptr{ std::localtime(&timeT) };
 
@@ -401,37 +401,37 @@ public:
     /* Returns hour in time */
     Hour* getHour() const noexcept//    <--- INCOMPLETE!!!
     {
-        return *(this->retrieveHour());
+        return this->m_hour_ptr;
     }
 
     /* Returns minute in time */
     Minute* getMinute() const noexcept//    <--- INCOMPLETE!!!
     {
-        return *(this->retrieveMinute());
+        return m_minute_ptr;
     }
 
     /* Returns second in time */
     Second* getSecond() const noexcept//    <--- INCOMPLETE!!!
     {
-        return *(this->retrieveSecond());
+        return this->m_second_ptr;
     }
 
     /* Returns millisend in time */
     Millisecond* getMs() const noexcept//    <--- INCOMPLETE!!!
     {
-        return *(this->retrieveMillisecond());
+        return this->m_millisecond_ptr;
     }
 
-    /* Returns copy of full time as standard time */
-    STime toVTime() const noexcept//    <--- INCOMPLETE!!!
-    {
-        return STime{ this->hour(), this->minute(), this->second() };
-    }
+    // /* Returns copy of full time as standard time */
+    // STime toVTime() const noexcept//    <--- INCOMPLETE!!!
+    // {
+    //     return STime{ this->hour(), this->minute(), this->second() };
+    // }
 
     /* Link time to date instance */
     bool linkDate(VDate& v_date) noexcept
     {
-        return this->retrieveHour()->linkPrecedingInterval(v_date.getDay());
+        return this->getHour()->linkPrecedingInterval(*v_date.getDay());
     }
 
     /* Returns time since day start compressed into provided unit  */
@@ -480,30 +480,30 @@ public:
     {
         size_t totalSeconds{ 0 };
 
-        if (this == &time || *this == time)
+        if (this == &vtime_ex || *this == vtime_ex)
             return totalSeconds;
 
         VTimeEx temp{ *this };
 
         // Accum. seconds
         totalSeconds += (
-            temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX))
+            temp.getInterval(SECOND_INDEX)->untilPosition(*vtime_ex.getInterval(SECOND_INDEX))
         );
         temp.getInterval(SECOND_INDEX)->increment(
-            temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX))
+            temp.getInterval(SECOND_INDEX)->untilPosition(*vtime_ex.getInterval(SECOND_INDEX))
         );
 
         // Accum. minutes
         totalSeconds += (
-            ((size_t)temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX)) * (size_t)60ULL)
+            ((size_t)temp.getInterval(MINUTE_INDEX)->untilPosition(*vtime_ex.getInterval(MINUTE_INDEX)) * (size_t)60ULL)
         );
         temp.getInterval(MINUTE_INDEX)->increment(
-            temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX))
+            temp.getInterval(MINUTE_INDEX)->untilPosition(*vtime_ex.getInterval(MINUTE_INDEX))
         );
 
         // Accum. hours
         totalSeconds += (
-            ((size_t)temp.getInterval(HOUR_INDEX)->untilPosition(*time.getInterval(HOUR_INDEX)) * (size_t)3'600ULL)
+            ((size_t)temp.getInterval(HOUR_INDEX)->untilPosition(*vtime_ex.getInterval(HOUR_INDEX)) * (size_t)3'600ULL)
         );
 
         return totalSeconds;
@@ -559,9 +559,9 @@ public:
 
         VDuration newDur{ VDuration::Sign::POSITIVE };
 
-        newDur.getMillisecond().largeDisplace(
+        newDur.getMs()->largeDisplace(
             VDuration::Sign::POSITIVE,
-            this->millisecondsUntil(time)
+            this->msUntil(time)
         );
 
         return newDur;

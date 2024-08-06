@@ -680,7 +680,7 @@ public:
     }
 
     /* Returns millisecond in duration */
-    Millisecond* getMillisecond() const noexcept
+    Millisecond* getMs() const noexcept
     {
         return this->m_millisecond_ptr;
     }
@@ -894,7 +894,7 @@ public:
     }
 
     /* Returns absolute total number of milliseconds from this duration until provided duration */
-    size_t millisecondsUntil(const VDuration& duration) const noexcept
+    size_t msUntil(const VDuration& duration) const noexcept
     {
         size_t totalMs{ 0 };
 
@@ -931,7 +931,7 @@ public:
 
             newDur.getInterval(MILLIS_INDEX)->largeDisplace(
                 Sign::POSITIVE,
-                this->millisecondsUntil(duration)
+                this->msUntil(duration)
             );
 
             return newDur;
@@ -941,7 +941,7 @@ public:
 
             newDur.getInterval(MILLIS_INDEX)->largeDisplace(
                 Sign::POSITIVE,
-                this->millisecondsUntil(duration)
+                this->msUntil(duration)
             );
 
             return newDur;

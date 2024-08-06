@@ -37,7 +37,7 @@
 #include"simplydt/datetime/date/comp/dt_vdate.hpp"
 
 // Virtual Time
-//#include"simplydt/datetime/time/comp/dt_vtime_ex.hpp"
+#include"simplydt/datetime/time/comp/dt_vtime_ex.hpp"
 //#include"simplydt/datetime/time/comp/dt_vtime.hpp"
 
 // Virtual Datetime
@@ -60,7 +60,7 @@
 * -> [X] Just fix STime classes .secondsUntil() method
 * -> [X] Start DurationInterval class (create preset type names)
 * -> [X] Plan and implement VDuration class interface
-* -> [X] Implement .millisecondsUntil() method in VTimeEx class
+* -> [X] Implement .msUntil() method in VTimeEx class
 * -> [X] Implement .until() methods in VDate, VTimeEx, and STime classes
 * -> [X] Implement VTimeEx constructor/=operators that accept STime
 * -> [X] Implement VDate/VTimeEx/STime/VDuration .displace() method
@@ -224,8 +224,6 @@ int main(size_t argc, char* argv[])
 	//	<< "\n(" << expectNeig.daysUntil(epochNeig) << " days missing)"
 	//	<< std::endl;
 
-
-	// Antipresperant Deoderant
 
 	//Start
 
