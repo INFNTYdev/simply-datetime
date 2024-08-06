@@ -47,13 +47,13 @@ public:
         H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
     };
 
-    VTimeEx(Chrono chrono) noexcept
+    VTimeEx(TimePoint chrono) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
-            Hour((uint16_t)0U),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
         uint16_t tmHour{ 23 };
@@ -61,8 +61,8 @@ public:
         uint16_t tmSecond{ 59 };
 
         // DEBUG: Somehow tm_hour is returning 19 on epoch hour?
-        // If-statement below acknowledges
-        if (chrono != Chrono{}) {// If this is not equal to the epoch
+        // New control flow acknowledges
+        if (chrono != TimePoint{}) {// If provided time point is not equal to epoch
             std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
             std::tm* tm_ptr{ std::localtime(&timeT) };
 
@@ -589,7 +589,7 @@ private:
     Hour* m_hour_ptr;
     Minute* m_minute_ptr;
     Second* m_second_ptr;
-    Millisecond* m_second_ptr;
+    Millisecond* m_millisecond_ptr;
 
     size_t timeUnitEnumToIndex(TimeUnit time_unit) noexcept
     {
@@ -622,6 +622,26 @@ private:
             return TimeUnit::ARB;
         }
     }
+
+    void interpretTimePointTime(const TimePoint& time_point,//    <--- INCOMPLETE!!!
+        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept
+    {
+        //
+    }
+
+    void interpretJDNTime(const JDN& jdn,//    <--- INCOMPLETE!!!
+        uint16_t& hr, uint16_t& min, uint16_t& sec, uint16_t& ms) const noexcept
+    {
+        // Standard JDN implementation
+        // JDN Zero time: 0.0 (00h:00m)
+        // JDN noon time: 0.5 (12h:00m)
+
+        //
+    }
+
+    void assumeTimePoint(const TimePoint& time_point) noexcept;//    <--- INCOMPLETE!!!
+
+    void assumeJDN(const JDN& jdn) noexcept;//    <--- INCOMPLETE!!!
 
     Hour* retrieveHour() const noexcept
     {
@@ -665,6 +685,14 @@ private:
             VDuration::Sign::NEGATIVE,
             duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
         );
+    }
+
+    void populateIntervalPointers() noexcept
+    {
+        this->m_hour_ptr = this->retrieveHour();
+        this->m_minute_ptr = this->retrieveMinute();
+        this->m_second_ptr = this->retrieveSecond();
+        this->m_millisecond_ptr = this->retrieveMillisecond();
     }
 
 };
