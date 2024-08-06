@@ -33,28 +33,28 @@ public:
         this->linkDatetime();
     }
 
-    Datetime(const VDate& date, const Time& time) noexcept
+    Datetime(const VDate& date, const VTimeEx& time) noexcept
         : m_date{ date },
         m_time{ time }
     {
         this->linkDatetime();
     }
 
-    Datetime(VDate&& date, Time&& time) noexcept
+    Datetime(VDate&& date, VTimeEx&& time) noexcept
         : m_date{ std::forward<VDate>(date) },
-        m_time{ std::forward<Time>(time) }
+        m_time{ std::forward<VTimeEx>(time) }
     {
         this->linkDatetime();
     }
 
-    Datetime(const VDate& date, Time&& time) noexcept
+    Datetime(const VDate& date, VTimeEx&& time) noexcept
         : m_date{ date },
-        m_time{ std::forward<Time>(time) }
+        m_time{ std::forward<VTimeEx>(time) }
     {
         this->linkDatetime();
     }
 
-    Datetime(VDate&& date, const Time& time) noexcept
+    Datetime(VDate&& date, const VTimeEx& time) noexcept
         : m_date{ std::forward<VDate>(date) },
         m_time{ time }
     {
@@ -262,7 +262,7 @@ public:
     }
 
     /* Datetime time object */
-    const Time& time() const noexcept
+    const VTimeEx& time() const noexcept
     {
         return this->m_time;
     }
@@ -281,7 +281,7 @@ public:
 
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(Layout layout, VDate::Format date_format, VDate::Layout date_layout,
-        Time::Format time_format, Time::Layout time_layout) const noexcept
+        VTimeEx::Format time_format, VTimeEx::Layout time_layout) const noexcept
     {
         std::string datetimeString;
         datetimeString.reserve((size_t)30ULL);
@@ -304,7 +304,7 @@ public:
     
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout,
-        Time::Format time_format, Time::Layout time_layout) const noexcept
+        VTimeEx::Format time_format, VTimeEx::Layout time_layout) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
@@ -322,13 +322,13 @@ public:
             Layout::DATE_TIME,// Datetime object layout
             date_format,// Date format
             date_layout,// Date layout
-            Time::Format::MILITARY,// Time format
-            Time::Layout::H_M_S_MS// Time layout
+            VTimeEx::Format::MILITARY,// Time format
+            VTimeEx::Layout::H_M_S_MS// Time layout
         );
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Time::Format time_format, Time::Layout time_layout) const noexcept
+    std::string datetimeStr(VTimeEx::Format time_format, VTimeEx::Layout time_layout) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
@@ -340,25 +340,25 @@ public:
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Format date_format, Time::Format time_format) const noexcept
+    std::string datetimeStr(VDate::Format date_format, VTimeEx::Format time_format) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
             date_format,// Date format
             VDate::Layout::M_D_YYYY,// Date layout
             time_format,// Time format
-            Time::Layout::H_M_S_MS// Time layout
+            VTimeEx::Layout::H_M_S_MS// Time layout
         );
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Layout date_layout, Time::Layout time_layout) const noexcept
+    std::string datetimeStr(VDate::Layout date_layout, VTimeEx::Layout time_layout) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
             VDate::Format::RECORD,// Date format
             date_layout,// Date layout
-            Time::Format::MILITARY,// Time format
+            VTimeEx::Format::MILITARY,// Time format
             time_layout// Time layout
         );
     }
@@ -370,8 +370,8 @@ public:
             Layout::DATE_TIME,// Datetime object layout
             date_format,// Date format
             VDate::Layout::M_D_YYYY,// Date layout
-            Time::Format::MILITARY,// Time format
-            Time::Layout::H_M_S_MS// Time layout
+            VTimeEx::Format::MILITARY,// Time format
+            VTimeEx::Layout::H_M_S_MS// Time layout
         );
     }
 
@@ -382,31 +382,31 @@ public:
             Layout::DATE_TIME,// Datetime object layout
             VDate::Format::RECORD,// Date format
             date_layout,// Date layout
-            Time::Format::MILITARY,// Time format
-            Time::Layout::H_M_S_MS// Time layout
+            VTimeEx::Format::MILITARY,// Time format
+            VTimeEx::Layout::H_M_S_MS// Time layout
         );
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Time::Format time_format) const noexcept
+    std::string datetimeStr(VTimeEx::Format time_format) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
             VDate::Format::RECORD,// Date format
             VDate::Layout::M_D_YYYY,// Date layout
             time_format,// Time format
-            Time::Layout::H_M_S_MS// Time layout
+            VTimeEx::Layout::H_M_S_MS// Time layout
         );
     }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(Time::Layout time_layout) const noexcept
+    std::string datetimeStr(VTimeEx::Layout time_layout) const noexcept
     {
         return this->datetimeStr(
             Layout::DATE_TIME,// Datetime object layout
             VDate::Format::RECORD,// Date format
             VDate::Layout::M_D_YYYY,// Date layout
-            Time::Format::MILITARY,// Time format
+            VTimeEx::Format::MILITARY,// Time format
             time_layout// Time layout
         );
     }
@@ -418,8 +418,8 @@ public:
             layout,// Datetime object layout
             VDate::Format::RECORD,// Date format
             VDate::Layout::M_D_YYYY,// Date layout
-            Time::Format::MILITARY,// Time format
-            Time::Layout::H_M_S_MS// Time layout
+            VTimeEx::Format::MILITARY,// Time format
+            VTimeEx::Layout::H_M_S_MS// Time layout
         );
     }
 
@@ -430,8 +430,8 @@ public:
             Layout::DATE_TIME,// Datetime object layout
             VDate::Format::RECORD,// Date format
             VDate::Layout::M_D_YYYY,// Date layout
-            Time::Format::MILITARY,// Time format
-            Time::Layout::H_M_S_MS// Time layout
+            VTimeEx::Format::MILITARY,// Time format
+            VTimeEx::Layout::H_M_S_MS// Time layout
         );
     }
 
@@ -508,7 +508,7 @@ public:
     }
 
     /* Returns pointer to datetime time */
-    Time* getTime() noexcept
+    VTimeEx* getTime() noexcept
     {
         return &this->m_time;
     }
@@ -716,7 +716,7 @@ public:
 
 private:
     VDate m_date;
-    Time m_time;
+    VTimeEx m_time;
 
     void linkDatetime() noexcept
     {

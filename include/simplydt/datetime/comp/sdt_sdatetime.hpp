@@ -164,7 +164,7 @@ public:
     VDate* getDate() noexcept;
 
     /* Returns pointer to datetime time */
-    Time* getTime() noexcept;
+    VTimeEx* getTime() noexcept;
 
     /* Returns standard library chronological time point copy */
     Chrono toChrono() const noexcept;
