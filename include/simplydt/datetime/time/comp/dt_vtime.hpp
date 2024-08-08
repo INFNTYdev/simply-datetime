@@ -4,8 +4,14 @@
 
 
 
+#include<chrono>
+#include<cmath>
+
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
-#include"simplydt/duration/comp/dt_duration.hpp"
+#include"simplydt/datetime/time/unit/dt_hour.hpp"
+#include"simplydt/datetime/time/unit/dt_minute.hpp"
+#include"simplydt/datetime/time/unit/dt_second.hpp"
+#include"simplydt/duration/comp/dt_vduration.hpp"
 
 
 /* Standard time (HH:MM:SS) */
