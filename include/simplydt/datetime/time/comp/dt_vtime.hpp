@@ -15,7 +15,7 @@
 
 
 /* Standard time (HH:MM:SS) */
-class STime : public DatetimeSequence<Hour, Minute, Second> {
+class VTime : public DatetimeSequence<Hour, Minute, Second> {
 
 public:
     /* Datetime time unit */
@@ -41,7 +41,7 @@ public:
         H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
     };
 
-    STime(Chrono chrono) noexcept
+    VTime(Chrono chrono) noexcept
         : DatetimeSequence<Hour, Minute, Second>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0U),
@@ -63,7 +63,7 @@ public:
         this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
     }
 
-    STime(uint16_t hour, uint16_t minute, uint16_t second) noexcept
+    VTime(uint16_t hour, uint16_t minute, uint16_t second) noexcept
         : DatetimeSequence<Hour, Minute, Second>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
@@ -74,7 +74,7 @@ public:
         //
     }
 
-    STime(uint16_t hour, uint16_t minute) noexcept
+    VTime(uint16_t hour, uint16_t minute) noexcept
         : DatetimeSequence<Hour, Minute, Second>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
@@ -85,7 +85,7 @@ public:
         //
     }
 
-    STime(uint16_t hour) noexcept
+    VTime(uint16_t hour) noexcept
         : DatetimeSequence<Hour, Minute, Second>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
@@ -96,7 +96,7 @@ public:
         //
     }
     
-    STime() noexcept
+    VTime() noexcept
         : DatetimeSequence<Hour, Minute, Second>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0U),
@@ -107,16 +107,16 @@ public:
         //
     }
 
-    virtual ~STime() noexcept = default;
+    virtual ~VTime() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const STime& s_time) noexcept
+    friend std::ostream& operator<<(std::ostream& os, const VTime& s_time) noexcept
     {
         os << s_time.timeStr();
 
         return os;
     }
 
-    STime& operator=(const Chrono& chrono) noexcept
+    VTime& operator=(const Chrono& chrono) noexcept
     {
         std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
         std::tm* tm_ptr{ std::localtime(&timeT) };
@@ -134,18 +134,18 @@ public:
         return *this;
     }
 
-    STime operator+(const VDuration& duration) const noexcept
+    VTime operator+(const VDuration& duration) const noexcept
     {
-        STime result{ *this };
+        VTime result{ *this };
 
         result.displace(duration);
 
         return result;
     }
 
-    STime operator-(const VDuration& duration) const noexcept
+    VTime operator-(const VDuration& duration) const noexcept
     {
-        STime result{ *this };
+        VTime result{ *this };
 
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
@@ -160,14 +160,14 @@ public:
         return result;
     }
 
-    STime& operator+=(const VDuration& duration) noexcept
+    VTime& operator+=(const VDuration& duration) noexcept
     {
         this->displace(duration);
 
         return *this;
     }
 
-    STime& operator-=(const VDuration& duration) noexcept
+    VTime& operator-=(const VDuration& duration) noexcept
     {
         switch (duration.sign()) {
         case VDuration::Sign::NEGATIVE:
@@ -330,14 +330,14 @@ public:
     }
 
     /* Returns total number of seconds from this time until provided time */
-    size_t secondsUntil(const STime& s_time) const noexcept
+    size_t secondsUntil(const VTime& s_time) const noexcept
     {
         size_t totalSeconds{ 0 };
 
         if (this == &s_time || *this == s_time)
             return totalSeconds;
 
-        STime temp{ *this };
+        VTime temp{ *this };
 
         // Accum. seconds
         totalSeconds += (
@@ -364,7 +364,7 @@ public:
     }
 
     /* Returns absolute total number of seconds from this time until provided time */
-    size_t absSecondsUntil(const STime& s_time) const noexcept
+    size_t absSecondsUntil(const VTime& s_time) const noexcept
     {
         if (this->isBefore(s_time))
             return this->secondsUntil(s_time);
@@ -373,7 +373,7 @@ public:
     }
 
     /* Returns duration between this time and provided time */
-    VDuration until(const STime& s_time) const noexcept
+    VDuration until(const VTime& s_time) const noexcept
     {
         if (this == &s_time || *this == s_time)
             return VDuration{};

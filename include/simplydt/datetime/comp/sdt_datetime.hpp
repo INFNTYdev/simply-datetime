@@ -518,7 +518,7 @@ public:
     {
         return SDatetime{
             this->m_date,
-            STime(
+            VTime(
                 this->hour(),
                 this->minute(),
                 this->second()

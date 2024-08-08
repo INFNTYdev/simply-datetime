@@ -56,16 +56,16 @@
 * 
 * 7/4/2024
 * 
-* -> [X] Implement .linkDate() method in VTimeEx/STime class
-* -> [X] Just fix STime classes .secondsUntil() method
+* -> [X] Implement .linkDate() method in VTimeEx/VTime class
+* -> [X] Just fix VTime classes .secondsUntil() method
 * -> [X] Start DurationInterval class (create preset type names)
 * -> [X] Plan and implement VDuration class interface
 * -> [X] Implement .msUntil() method in VTimeEx class
-* -> [X] Implement .until() methods in VDate, VTimeEx, and STime classes
-* -> [X] Implement VTimeEx constructor/=operators that accept STime
-* -> [X] Implement VDate/VTimeEx/STime/VDuration .displace() method
-* -> [X] Implement VDate/VTimeEx/STime/VDuration .operator+=()/.operator-=() methods
-* -> [X] Implement VDate/VTimeEx/STime/VDuration .operator+()/.operator-() methods
+* -> [X] Implement .until() methods in VDate, VTimeEx, and VTime classes
+* -> [X] Implement VTimeEx constructor/=operators that accept VTime
+* -> [X] Implement VDate/VTimeEx/VTime/VDuration .displace() method
+* -> [X] Implement VDate/VTimeEx/VTime/VDuration .operator+=()/.operator-=() methods
+* -> [X] Implement VDate/VTimeEx/VTime/VDuration .operator+()/.operator-() methods
 * -> [X] Implement .toSTime() method in VTimeEx class
 * -> [X] Determine highest possible number Range class can handle with an int type
 * -> [X] Implement VDate .toTimePoint() method
@@ -77,11 +77,11 @@
 * (Some future point...)
 * 
 * -> [] Plan and implement DatetimeStub class
-* -> [] Implement VDate/VTimeEx/STime class .toStub() method
-* -> [] Implement VDate/VTimeEx/STime constructor that accepts DatetimeStub
-* -> [] *Implement VDate/VTimeEx/STime .operator=() for std::chrono <- IMPORTANT
+* -> [] Implement VDate/VTimeEx/VTime class .toStub() method
+* -> [] Implement VDate/VTimeEx/VTime constructor that accepts DatetimeStub
+* -> [] *Implement VDate/VTimeEx/VTime .operator=() for std::chrono <- IMPORTANT
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
-* -> [] Implement VDate/VTimeEx/STime/VDuration string parsing capability
+* -> [] Implement VDate/VTimeEx/VTime/VDuration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
