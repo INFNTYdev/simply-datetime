@@ -208,12 +208,12 @@ public:
     //     this->getInterval(HOUR_INDEX)->setPosition(v_time.hour());
     //     this->getInterval(MINUTE_INDEX)->setPosition(v_time.minute());
     //     this->getInterval(SECOND_INDEX)->setPosition(v_time.second());
-    //     this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0U);
+    //     this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
 
     //     return *this;
     // }
 
-    VTimeEx& operator=(const TimePoint& sys_clock) noexcept//    <--- INCOMPLETE!!! (review this)
+    VTimeEx& operator=(const TimePoint& sys_clock) noexcept
     {
         uint16_t tmHour{ 23 };
         uint16_t tmMinute{ 59 };
@@ -358,11 +358,17 @@ public:
         return (this->operator<(sys_clock) || this->operator==(sys_clock));
     }
 
-    bool operator>=(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator>=(const VTimeEx& vtime_ex) const noexcept
+    {
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator>=(vtime_ex);
+    }
 
     //bool operator>=(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
 
-    bool operator>=(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator>=(const TimePoint& sys_clock) const noexcept
+    {
+        return (this->operator>(sys_clock) || this->operator==(sys_clock));
+    }
 
     VTimeEx operator+(const VDuration& v_duration) const noexcept
     {
@@ -373,47 +379,55 @@ public:
         return temp;
     }
 
-    VTimeEx operator-(const VDuration& duration) const noexcept
+    VTimeEx operator-(const VDuration& v_duration) const noexcept
     {
         VTimeEx temp{ *this };
 
-        switch (duration.sign()) {
+        switch (v_duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             // Double negative = positive
-            temp.positiveDisplace(duration);
+            temp.positiveDisplace(v_duration);
             break;
 
         default:
-            temp.negativeDisplace(duration);
+            temp.negativeDisplace(v_duration);
         }
 
         return temp;
     }
 
-    VTimeEx& operator+=(const VDuration& duration) noexcept
+    VTimeEx& operator+=(const VDuration& v_duration) noexcept
     {
-        this->displace(duration);
+        this->displace(v_duration);
 
         return *this;
     }
 
-    VTimeEx& operator-=(const VDuration& duration) noexcept
+    VTimeEx& operator-=(const VDuration& v_duration) noexcept
     {
-        switch (duration.sign()) {
+        switch (v_duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             // Double negative = positive
-            this->positiveDisplace(duration);
+            this->positiveDisplace(v_duration);
             break;
 
         default:
-            this->negativeDisplace(duration);
+            this->negativeDisplace(v_duration);
         }
 
         return *this;
     }
 
     /* Returns true if time is equal to start of day (midnight) */
-    bool isZero() const noexcept;//    <--- INCOMPLETE!!!
+    bool isZero() const noexcept
+    {
+        return (
+            this->hourRef().isAtStart()
+            && this->minuteRef().isAtStart()
+            && this->secondRef().isAtStart()
+            && this->msRef().isAtStart()
+        );
+    }
 
     /* Returns hour of time */
     uint16_t hour() const noexcept
@@ -442,13 +456,13 @@ public:
     /* Returns time phase */
     Phase phase() const noexcept
     {
-        return this->retrieveHour()->getPhase();
+        return this->hourRef().getPhase();
     }
 
     /* Returns time phase literal */
     std::string phaseStr() const noexcept
     {
-        return this->retrieveHour()->getPhaseStr();
+        return this->hourRef().getPhaseStr();
     }
 
     /* Returns time string with provided configuration */
@@ -462,30 +476,30 @@ public:
 
         switch (format) {
         case Format::STANDARD:
-            time += (this->retrieveHour()->toDoubleDigitStandardStr() + delimiter);
+            time += (this->hourRef().toDoubleDigitStandardStr() + delimiter);
             break;
         default:
-            time += (this->retrieveHour()->toDoubleDigitStr() + delimiter);
+            time += (this->hourRef().toDoubleDigitStr() + delimiter);
             break;
         }
 
-        time += this->retrieveMinute()->toDoubleDigitStr();
+        time += this->minuteRef().toDoubleDigitStr();
 
         switch (layout) {
         case Layout::H_M_S_MS:
-            time += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
-            time += (delimiter + this->retrieveMillisecond()->toTripleDigitStr());
+            time += (delimiter + this->secondRef().toDoubleDigitStr());
+            time += (delimiter + this->msRef().toTripleDigitStr());
             break;
         case Layout::H_M_S_MS_P:
-            time += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
-            time += (delimiter + this->retrieveMillisecond()->toTripleDigitStr());
+            time += (delimiter + this->secondRef().toDoubleDigitStr());
+            time += (delimiter + this->msRef().toTripleDigitStr());
             time += (' ' + this->phaseStr());
             break;
         case Layout::H_M_S:
-            time += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
+            time += (delimiter + this->secondRef().toDoubleDigitStr());
             break;
         case Layout::H_M_S_P:
-            time += (delimiter + this->retrieveSecond()->toDoubleDigitStr());
+            time += (delimiter + this->secondRef().toDoubleDigitStr());
             time += (' ' + this->phaseStr());
             break;
         case Layout::H_M_P:
@@ -520,16 +534,28 @@ public:
     }
 
     /* Returns hour in time */
-    const Hour& hourRef() const noexcept;//    <--- INCOMPLETE!!!
+    const Hour& hourRef() const noexcept
+    {
+        return *(this->m_hour_ptr);
+    }
 
     /* Returns minute in time */
-    const Minute& minuteRef() const noexcept;//    <--- INCOMPLETE!!!
+    const Minute& minuteRef() const noexcept
+    {
+        return *(this->m_minute_ptr);
+    }
 
     /* Returns second in time */
-    const Second& secondRef() const noexcept;//    <--- INCOMPLETE!!!
+    const Second& secondRef() const noexcept
+    {
+        return *(this->m_second_ptr);
+    }
 
     /* Returns millisecond in time */
-    const Millisecond& msRef() const noexcept;//    <--- INCOMPLETE!!!
+    const Millisecond& msRef() const noexcept
+    {
+        return *(this->m_millisecond_ptr);
+    }
 
     /* Returns hour in time */
     Hour* getHour() const noexcept
@@ -575,9 +601,9 @@ public:
     }
 
     // /* Returns copy of full time as standard time */
-    // STime toVTime() const noexcept//    <--- INCOMPLETE!!!
+    // VTime toVTime() const noexcept//    <--- INCOMPLETE!!!
     // {
-    //     return STime{ this->hour(), this->minute(), this->second() };
+    //     return VTime{ this->hour(), this->minute(), this->second() };
     // }
 
     /* Link time to date instance */
@@ -599,22 +625,22 @@ public:
 
         // Minute conversion
         case TimeUnit::MINUTE:
-            total += ((uint32_t)this->hour() * (uint32_t)60U);
+            total += ((uint32_t)this->hour() * (uint32_t)60Ui32);
             total += (uint32_t)this->minute();
             break;
 
         // Second conversion
         case TimeUnit::SECOND:
-            total += ((uint32_t)this->hour() * (uint32_t)3'600U);
-            total += ((uint32_t)this->minute() * (uint32_t)60U);
+            total += ((uint32_t)this->hour() * (uint32_t)3'600Ui32);
+            total += ((uint32_t)this->minute() * (uint32_t)60Ui32);
             total += (uint32_t)this->second();
             break;
 
         // Millisecond conversion
         case TimeUnit::MILLISECOND:
-            total += ((uint32_t)this->hour() * (uint32_t)3'600'000U);
-            total += ((uint32_t)this->minute() * (uint32_t)60'000U);
-            total += ((uint32_t)this->second() * (uint32_t)1'000U);
+            total += ((uint32_t)this->hour() * (uint32_t)3'600'000Ui32);
+            total += ((uint32_t)this->minute() * (uint32_t)60'000Ui32);
+            total += ((uint32_t)this->second() * (uint32_t)1'000Ui32);
             total += (uint32_t)this->millisecond();
         }
 
@@ -622,112 +648,114 @@ public:
     }
 
     /* Returns total number of hours from this time until provided time */
-    uint32_t hoursUntil(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+    uint8_t hoursUntil(const VTimeEx& vtime_ex) const noexcept
+    {
+        if (this == &vtime_ex || this->hour() == vtime_ex.hour())
+            return (uint8_t)0Ui8;
+
+        double thisHour{ this->toJulianDayNumber() * (double)24. };
+        double paramHour{ vtime_ex.toJulianDayNumber() * (double)24. };
+        double difference{ .0 };
+
+        if (this->isAfter(vtime_ex))
+            difference = std::floor(thisHour - paramHour);
+        else
+            difference = std::floor(paramHour - thisHour);
+        
+        if (difference < (double).0)
+            difference += (double)24.;
+        
+        return static_cast<uint8_t>(difference);
+    }
 
     /* Returns total number of minutes from this time until provided time */
-    uint32_t minutesUntil(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+    uint16_t minutesUntil(const VTimeEx& vtime_ex) const noexcept
+    {
+        if (this == &vtime_ex || *this == vtime_ex)
+            return (uint16_t)0Ui16;
+
+        double thisMinutes{ this->toJulianDayNumber() * (double)1'440. };
+        double paramMinutes{ vtime_ex.toJulianDayNumber() * (double)1'440. };
+        double difference{ .0 };
+
+        if (this->isAfter(vtime_ex))
+            difference = std::floor(thisMinutes - paramMinutes);
+        else
+            difference = std::floor(paramMinutes - thisMinutes);
+        
+        if (difference < (double).0)
+            difference += (double)1'440.;
+        
+        return static_cast<uint16_t>(difference);
+    }
 
     /* Returns total number of seconds from this time until provided time */
-    size_t secondsUntil(const VTimeEx& vtime_ex) const noexcept
+    uint32_t secondsUntil(const VTimeEx& vtime_ex) const noexcept
     {
-        size_t totalSeconds{ 0 };
-
         if (this == &vtime_ex || *this == vtime_ex)
-            return totalSeconds;
+            return (uint32_t)0Ui32;
 
-        VTimeEx temp{ *this };
+        double thisSeconds{ this->toJulianDayNumber() * (double)86'400. };
+        double paramSeconds{ vtime_ex.toJulianDayNumber() * (double)86'400. };
+        double difference{ .0 };
 
-        // Accum. seconds
-        totalSeconds += (
-            temp.getInterval(SECOND_INDEX)->untilPosition(*vtime_ex.getInterval(SECOND_INDEX))
-        );
-        temp.getInterval(SECOND_INDEX)->increment(
-            temp.getInterval(SECOND_INDEX)->untilPosition(*vtime_ex.getInterval(SECOND_INDEX))
-        );
-
-        // Accum. minutes
-        totalSeconds += (
-            ((size_t)temp.getInterval(MINUTE_INDEX)->untilPosition(*vtime_ex.getInterval(MINUTE_INDEX)) * (size_t)60ULL)
-        );
-        temp.getInterval(MINUTE_INDEX)->increment(
-            temp.getInterval(MINUTE_INDEX)->untilPosition(*vtime_ex.getInterval(MINUTE_INDEX))
-        );
-
-        // Accum. hours
-        totalSeconds += (
-            ((size_t)temp.getInterval(HOUR_INDEX)->untilPosition(*vtime_ex.getInterval(HOUR_INDEX)) * (size_t)3'600ULL)
-        );
-
-        return totalSeconds;
+        if (this->isAfter(vtime_ex))
+            difference = std::floor(thisSeconds - paramSeconds);
+        else
+            difference = std::floor(paramSeconds - thisSeconds);
+        
+        if (difference < (double).0)
+            difference += (double)86'400.;
+        
+        return static_cast<uint32_t>(difference);
     }
 
     /* Returns absolute total number of milliseconds from this time until provided time */
-    size_t msUntil(const VTimeEx& time) const noexcept
+    uint32_t msUntil(const VTimeEx& vtime_ex) const noexcept
     {
-        size_t totalMs{ 0 };
+        if (this == &vtime_ex || *this == vtime_ex)
+            return (uint32_t)0Ui32;
 
-        if (this == &time || *this == time)
-            return totalMs;
+        double thisMillis{ this->toJulianDayNumber() * (double)86'400'000. };
+        double paramMillis{ vtime_ex.toJulianDayNumber() * (double)86'400'000. };
+        double difference{ .0 };
 
-        VTimeEx temp{ *this };
+        if (this->isAfter(vtime_ex))
+            difference = std::floor(thisMillis - paramMillis);
+        else
+            difference = std::floor(paramMillis - thisMillis);
 
-        // Accum. milliseconds
-        totalMs += (
-            temp.getInterval(MILLIS_INDEX)->untilPosition(*time.getInterval(MILLIS_INDEX))
-        );
-        temp.getInterval(MILLIS_INDEX)->increment(
-            temp.getInterval(MILLIS_INDEX)->untilPosition(*time.getInterval(MILLIS_INDEX))
-        );
+        if (difference < (double).0)
+            difference += (double)86'400'000.;
 
-        // Accum. seconds
-        totalMs += (
-            ((size_t)temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX)) * (size_t)1'000ULL)
-        );
-        temp.getInterval(SECOND_INDEX)->increment(
-            temp.getInterval(SECOND_INDEX)->untilPosition(*time.getInterval(SECOND_INDEX))
-        );
-
-        // Accum. minutes
-        totalMs += (
-            ((size_t)temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX)) * (size_t)60'000ULL)
-        );
-        temp.getInterval(MINUTE_INDEX)->increment(
-            temp.getInterval(MINUTE_INDEX)->untilPosition(*time.getInterval(MINUTE_INDEX))
-        );
-
-        // Accum. hours
-        totalMs += (
-            ((size_t)temp.getInterval(HOUR_INDEX)->untilPosition(*time.getInterval(HOUR_INDEX)) * (size_t)3'600'000ULL)
-        );
-
-        return totalMs;
+        return static_cast<uint32_t>(difference);
     }
 
     /* Returns duration between this time and provided time */
-    VDuration until(const VTimeEx& time) const noexcept
+    VDuration until(const VTimeEx& vtime_ex) const noexcept
     {
-        if (this == &time || *this == time)
+        if (this == &vtime_ex || *this == vtime_ex)
             return VDuration{};
 
         VDuration newDur{ VDuration::Sign::POSITIVE };
 
         newDur.getMs()->largeDisplace(
             VDuration::Sign::POSITIVE,
-            this->msUntil(time)
+            this->msUntil(vtime_ex)
         );
 
         return newDur;
     }
 
     /* Displace time using provided duration */
-    void displace(const VDuration& duration) noexcept
+    void displace(const VDuration& v_duration) noexcept
     {
-        switch (duration.sign()) {
+        switch (v_duration.sign()) {
         case VDuration::Sign::NEGATIVE:
-            return this->negativeDisplace(duration);
+            return this->negativeDisplace(v_duration);
         
         default:
-            return this->positiveDisplace(duration);
+            return this->positiveDisplace(v_duration);
         }
     }
 

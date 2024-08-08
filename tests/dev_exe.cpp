@@ -226,21 +226,25 @@ int main(size_t argc, char* argv[])
 
 
 	// Ensure lossless conversion with VTime family JDN
-	VTimeEx demo{ (uint16_t)0, (uint16_t)47, (uint16_t)36 };
-	VTimeEx lossless{ (double).5208333335 };
+	VTimeEx t1{ (double).5208333335 };
+	VTimeEx t2{ (uint16_t)15Ui16, (uint16_t)30Ui16 };
 
-	std::cout
-		<< demo.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-		<< '\n' << demo.toJulianDayNumber()
+	std::cout << "\nTime 1: "
+		<< t1.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+		<< "\nJDN: " << t1.toJulianDayNumber()
 		<< std::endl;
 
-	std::cout << "\nLossless date test:\n"
-		<< lossless.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-		<< '\n' << lossless.toJulianDayNumber()
+	std::cout << "\nTime 2: "
+		<< t2.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+		<< "\nJDN: " << t2.toJulianDayNumber()
 		<< std::endl;
 
-	demo < lossless;
-	demo > lossless;
+	std::cout << "\nTests:"
+		<< "\nt1 until t2 (hrs): " << (long int)t1.hoursUntil(t2) << " hrs"
+		<< "\nt1 until t2 (mins): " << (long int)t1.minutesUntil(t2) << " mins"
+		<< "\nt1 until t2 (secs): " << (long int)t1.secondsUntil(t2) << " secs"
+		<< "\nt1 until t2 (ms): " << (long long int)t1.msUntil(t2) << " ms"
+		<< std::endl;
 
 	return NULL;
 }
