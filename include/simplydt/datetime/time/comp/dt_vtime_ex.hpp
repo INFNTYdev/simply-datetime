@@ -47,7 +47,7 @@ public:
         H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
     };
 
-    VTimeEx(TimePoint chrono) noexcept
+    VTimeEx(TimePoint sys_clock) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0Ui16),
@@ -56,26 +56,9 @@ public:
             Millisecond((uint16_t)0Ui16)
         }
     {
-        uint16_t tmHour{ 23 };
-        uint16_t tmMinute{ 59 };
-        uint16_t tmSecond{ 59 };
+        this->populateIntervalPointers();
 
-        // DEBUG: Somehow tm_hour is returning 19 on epoch hour?
-        // New control flow acknowledges
-        if (chrono != TimePoint{}) {// If provided time point is not equal to epoch
-            std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
-            std::tm* tm_ptr{ std::localtime(&timeT) };
-
-            // Retrieve time from time point
-            tmHour = static_cast<uint16_t>(tm_ptr->tm_hour);
-            tmMinute = static_cast<uint16_t>(tm_ptr->tm_min);
-            tmSecond = static_cast<uint16_t>(tm_ptr->tm_sec);
-        }
-
-        // Set time interval values
-        this->getInterval(HOUR_INDEX)->setPosition(tmHour);
-        this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
-        this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+        this->assumeTimePoint(sys_clock);
     }
 
     VTimeEx(uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
@@ -87,7 +70,7 @@ public:
             Millisecond(ms)
         }
     {
-        //
+        this->populateIntervalPointers();
     }
 
     VTimeEx(uint16_t hour, uint16_t minute, uint16_t second) noexcept
@@ -96,10 +79,10 @@ public:
             Hour(hour),
             Minute(minute),
             Second(second),
-            Millisecond((uint16_t)0U)
+            Millisecond((uint16_t)0Ui16)
         }
     {
-        //
+        this->populateIntervalPointers();
     }
 
     VTimeEx(uint16_t hour, uint16_t minute) noexcept
@@ -107,26 +90,38 @@ public:
             DatetimeType::TIME_DATETIME,
             Hour(hour),
             Minute(minute),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
-        //
+        this->populateIntervalPointers();
     }
 
     explicit VTimeEx(uint16_t hour) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
-        //
+        this->populateIntervalPointers();
     }
 
-    explicit VTimeEx(const JDN& jdn) noexcept;//    <--- INCOMPLETE!!!
+    explicit VTimeEx(const JDN& jdn) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            DatetimeType::TIME_DATETIME,
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
+        }
+    {
+        this->populateIntervalPointers();
+
+        this->assumeJDN(jdn);
+    }
 
     // VTimeEx(const VTime& v_time) noexcept
     //     : DatetimeSequence<Hour, Minute, Second, Millisecond>{//    <--- INCOMPLETE!!!
@@ -140,20 +135,36 @@ public:
     //     //
     // }
 
-    VTimeEx(const VTimeEx& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
+    VTimeEx(const VTimeEx& vtime_ex) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            DatetimeType::TIME_DATETIME,
+            Hour(vtime_ex.hour()),
+            Minute(vtime_ex.minute()),
+            Second(vtime_ex.second()),
+            Millisecond(vtime_ex.millisecond())
+        }
+    {
+        this->populateIntervalPointers();
+    }
 
-    VTimeEx(VTimeEx&& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
+    VTimeEx(VTimeEx&& vtime_ex) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            static_cast<DatetimeSequence<Hour, Minute, Second, Millisecond>&&>(vtime_ex)
+        }
+    {
+        this->populateIntervalPointers();
+    }
 
     VTimeEx() noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
-            Hour((uint16_t)0U),
-            Minute((uint16_t)0U),
-            Second((uint16_t)0U),
-            Millisecond((uint16_t)0U)
+            Hour((uint16_t)0Ui16),
+            Minute((uint16_t)0Ui16),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
-        //
+        this->populateIntervalPointers();
     }
 
     virtual ~VTimeEx() noexcept = default;
@@ -165,9 +176,32 @@ public:
         return os;
     }
 
-    VTimeEx& operator=(const VTimeEx& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
+    VTimeEx& operator=(const VTimeEx& vtime_ex) noexcept
+    {
+        if (this == &vtime_ex || *this == vtime_ex)
+            return *this;
 
-    VTimeEx& operator=(VTimeEx&& vtime_ex) noexcept;//    <--- INCOMPLETE!!!
+        this->getInterval(HOUR_INDEX)->setPosition(vtime_ex.hour());
+        this->getInterval(MINUTE_INDEX)->setPosition(vtime_ex.minute());
+        this->getInterval(SECOND_INDEX)->setPosition(vtime_ex.second());
+        this->getInterval(MILLIS_INDEX)->setPosition(vtime_ex.millisecond());
+
+        return *this;
+    }
+
+    VTimeEx& operator=(VTimeEx&& vtime_ex) noexcept
+    {
+        if (this == &vtime_ex)
+            return *this;
+        
+        DatetimeSequence<Hour, Minute, Second, Millisecond>::operator=(
+            static_cast<DatetimeSequence<Hour, Minute, Second, Millisecond>&&>(vtime_ex)
+        );
+
+        this->populateIntervalPointers();
+
+        return *this;
+    }
 
     // VTimeEx& operator=(const VTime& v_time) noexcept//    <--- INCOMPLETE!!!
     // {
@@ -179,7 +213,7 @@ public:
     //     return *this;
     // }
 
-    VTimeEx& operator=(const TimePoint& chrono) noexcept//    <--- INCOMPLETE!!! (review this)
+    VTimeEx& operator=(const TimePoint& sys_clock) noexcept//    <--- INCOMPLETE!!! (review this)
     {
         uint16_t tmHour{ 23 };
         uint16_t tmMinute{ 59 };
@@ -187,8 +221,8 @@ public:
 
         // DEBUG: Somehow tm_hour is returning 19 on epoch hour?
         // If-statement below acknowledges
-        if (chrono != TimePoint{}) {// If this is not equal to the epoch
-            std::time_t timeT{ std::chrono::system_clock::to_time_t(chrono) };
+        if (sys_clock != TimePoint{}) {// If this is not equal to the epoch
+            std::time_t timeT{ std::chrono::system_clock::to_time_t(sys_clock) };
             std::tm* tm_ptr{ std::localtime(&timeT) };
 
             // Retrieve time from time point
@@ -201,33 +235,128 @@ public:
         this->getInterval(HOUR_INDEX)->setPosition(tmHour);
         this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
         this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
 
         return *this;
     }
 
-    bool operator==(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator==(const VTimeEx& vtime_ex) const noexcept
+    {
+        if (this == &vtime_ex)
+            return true;
+        
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator==(vtime_ex);
+    }
 
     //bool operator==(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
 
-    bool operator==(const TimePoint& sys_clock) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator==(const TimePoint& sys_clock) const noexcept
+    {
+        uint16_t tpHour{ 0 };
+        uint16_t tpMinute{ 0 };
+        uint16_t tpSecond{ 0 };
 
-    bool operator<(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+        this->interpretTimePointTime(sys_clock, tpHour, tpMinute, tpSecond);
+
+        if (this->hour() != tpHour)
+            return false;
+        
+        if (this->minute() != tpMinute)
+            return false;
+        
+        if (this->second() != tpSecond)
+            return false;
+
+        if (this->millisecond() != (uint16_t)0Ui16)
+            return false;
+        
+        return true;
+    }
+
+    bool operator<(const VTimeEx& vtime_ex) const noexcept
+    {
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator<(vtime_ex);
+    }
 
     //bool operator<(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
 
-    bool operator<(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator<(const TimePoint& sys_clock) const noexcept
+    {
+        uint16_t tpHour{ 0 };
+        uint16_t tpMinute{ 0 };
+        uint16_t tpSecond{ 0 };
 
-    bool operator>(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+        this->interpretTimePointTime(sys_clock, tpHour, tpMinute, tpSecond);
+
+        if (this->hour() > tpHour)
+            return false;
+        else if (this->hour() < tpHour)
+            return true;
+        
+        if (this->minute() > tpMinute)
+            return false;
+        else if (this->minute() < tpMinute)
+            return true;
+        
+        if (this->second() > tpSecond)
+            return false;
+        else if (this->second() < tpSecond)
+            return true;
+        
+        if (!this->msRef().isAtStart())
+            return false;
+        
+        return true;
+    }
+
+    bool operator>(const VTimeEx& vtime_ex) const noexcept
+    {
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator>(vtime_ex);
+    }
 
     //bool operator>(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
 
-    bool operator>(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator>(const TimePoint& sys_clock) const noexcept
+    {
+        uint16_t tpHour{ 0 };
+        uint16_t tpMinute{ 0 };
+        uint16_t tpSecond{ 0 };
 
-    bool operator<=(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
+        this->interpretTimePointTime(sys_clock, tpHour, tpMinute, tpSecond);
+
+        if (this->hour() < tpHour)
+            return false;
+        else if (this->hour() > tpHour)
+            return true;
+        
+        if (this->minute() < tpMinute)
+            return false;
+        else if (this->minute() > tpMinute)
+            return true;
+        
+        if (this->second() < tpSecond)
+            return false;
+        else if (this->second() > tpSecond)
+            return true;
+        
+        // Indicates times are equal down to the ms
+        if (this->msRef().isAtStart())
+            return false;
+        
+        return true;
+    }
+
+    bool operator<=(const VTimeEx& vtime_ex) const noexcept
+    {
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator<=(vtime_ex);
+    }
 
     //bool operator<=(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
 
-    bool operator<=(const TimePoint& time_point) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator<=(const TimePoint& sys_clock) const noexcept
+    {
+        return (this->operator<(sys_clock) || this->operator==(sys_clock));
+    }
 
     bool operator>=(const VTimeEx& vtime_ex) const noexcept;//    <--- INCOMPLETE!!!
 
@@ -390,36 +519,59 @@ public:
         return this->timeStr(Format::MILITARY, Layout::H_M_S_MS);
     }
 
+    /* Returns hour in time */
     const Hour& hourRef() const noexcept;//    <--- INCOMPLETE!!!
 
+    /* Returns minute in time */
     const Minute& minuteRef() const noexcept;//    <--- INCOMPLETE!!!
 
+    /* Returns second in time */
     const Second& secondRef() const noexcept;//    <--- INCOMPLETE!!!
 
+    /* Returns millisecond in time */
     const Millisecond& msRef() const noexcept;//    <--- INCOMPLETE!!!
 
     /* Returns hour in time */
-    Hour* getHour() const noexcept//    <--- INCOMPLETE!!!
+    Hour* getHour() const noexcept
     {
         return this->m_hour_ptr;
     }
 
     /* Returns minute in time */
-    Minute* getMinute() const noexcept//    <--- INCOMPLETE!!!
+    Minute* getMinute() const noexcept
     {
         return m_minute_ptr;
     }
 
     /* Returns second in time */
-    Second* getSecond() const noexcept//    <--- INCOMPLETE!!!
+    Second* getSecond() const noexcept
     {
         return this->m_second_ptr;
     }
 
     /* Returns millisend in time */
-    Millisecond* getMs() const noexcept//    <--- INCOMPLETE!!!
+    Millisecond* getMs() const noexcept
     {
         return this->m_millisecond_ptr;
+    }
+
+    /* Returns time as fractional Julian Day Number (JDN) */
+    JDN toJulianDayNumber() const noexcept
+    {
+        // Calculate time as a fraction of a day
+        double timeJDN{
+            ((this->hour() / (double)24.)
+            + (this->minute() / (double)1'440.)
+            + (this->second() / (double)86'400.))
+        };
+
+        // Adjust for JDN system starting at noon
+        if (this->hour() >= (uint16_t)12Ui16)
+            timeJDN -= (double).5;
+        else if (this->hour() < (uint16_t)12Ui16)
+            timeJDN += (double).5;
+
+        return timeJDN;
     }
 
     // /* Returns copy of full time as standard time */
@@ -623,25 +775,103 @@ private:
         }
     }
 
-    void interpretTimePointTime(const TimePoint& time_point,//    <--- INCOMPLETE!!!
-        uint16_t& year, uint16_t& month, uint16_t& day) const noexcept
+    void interpretTimePointTime(const TimePoint& time_point,
+        uint16_t& hour, uint16_t& minute, uint16_t& second) const noexcept
     {
-        //
+        // DEBUG: Somehow tm_hour is returning 19 on epoch hour???
+        // (new control flow acknowledges)
+        if (time_point == TimePoint{}) {// If provided time point is equal to epoch
+            hour = (uint16_t)23Ui16;
+            minute = (uint16_t)59Ui16;
+            second = (uint16_t)59Ui16;
+
+            return;
+        }
+
+        std::time_t timeT{ std::chrono::system_clock::to_time_t(time_point) };
+        std::tm* tm_ptr{ std::localtime(&timeT) };
+        
+        // Retrieve time from time point
+        hour = static_cast<uint16_t>(tm_ptr->tm_hour);
+        minute = static_cast<uint16_t>(tm_ptr->tm_min);
+        second = static_cast<uint16_t>(tm_ptr->tm_sec);
     }
 
-    void interpretJDNTime(const JDN& jdn,//    <--- INCOMPLETE!!!
-        uint16_t& hr, uint16_t& min, uint16_t& sec, uint16_t& ms) const noexcept
+    void interpretJDNTime(JDN jdn,
+        uint16_t& hr, uint16_t& min, uint16_t& sec) const noexcept
     {
-        // Standard JDN implementation
-        // JDN Zero time: 0.0 (00h:00m)
-        // JDN noon time: 0.5 (12h:00m)
+        // Standard JDN implementation (fraction only)
+        // JDN Zero time: 0.5 (00h:00m)
+        // JDN noon time: 0.0 (12h:00m)
 
-        //
+        // Fraction portion of JDN only
+        if (jdn >= (double)1.)
+            jdn -= (std::floor(jdn));
+
+        if (jdn < (JDN)0.5)
+            jdn += (JDN)0.5;
+        else if (jdn >= (JDN)0.5)
+            jdn -= (JDN)0.5;
+
+        double totalSeconds{ (jdn * (double)86'400.) };
+
+        if (totalSeconds) {
+            hr = static_cast<uint16_t>((totalSeconds / (double)3'600.));
+            totalSeconds -= ((double)hr * (double)3'600.);
+        }
+
+        if (totalSeconds) {
+            min = static_cast<uint16_t>((totalSeconds / (double)60.));
+            totalSeconds -= ((double)min * (double)60.);
+        }
+
+        if (totalSeconds)
+            sec = static_cast<uint16_t>(std::round(totalSeconds));
+
+        // Adjustments for rounding issues
+        if (sec == (uint16_t)60Ui16) {
+            sec = (uint16_t)0Ui16;
+            min += (uint16_t)1Ui16;
+        }
+
+        if (min == (uint16_t)60Ui16) {
+            min = (uint16_t)0Ui16;
+            hr += (uint16_t)1Ui16;
+        }
+
+        if (hr == (uint16_t)24Ui16)
+            hr = (uint16_t)0Ui16;
     }
 
-    void assumeTimePoint(const TimePoint& time_point) noexcept;//    <--- INCOMPLETE!!!
+    void assumeTimePoint(const TimePoint& time_point) noexcept
+    {
+        uint16_t tmHour{ 0 };
+        uint16_t tmMinute{ 0 };
+        uint16_t tmSecond{ 0 };
 
-    void assumeJDN(const JDN& jdn) noexcept;//    <--- INCOMPLETE!!!
+        this->interpretTimePointTime(time_point, tmHour, tmMinute, tmSecond);
+
+        // Set time interval values
+        this->getInterval(HOUR_INDEX)->setPosition(tmHour);
+        this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
+        this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
+    }
+
+    void assumeJDN(const JDN& jdn) noexcept
+    {
+        uint16_t tmHour{ 0 };
+        uint16_t tmMinute{ 0 };
+        uint16_t tmSecond{ 0 };
+
+        this->interpretJDNTime(jdn, tmHour, tmMinute, tmSecond);
+
+        // Set time interval values
+        this->getInterval(HOUR_INDEX)->setPosition(tmHour);
+        this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
+        this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
+    }
 
     Hour* retrieveHour() const noexcept
     {

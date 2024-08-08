@@ -225,7 +225,22 @@ int main(size_t argc, char* argv[])
 	//	<< std::endl;
 
 
-	//Start
+	// Ensure lossless conversion with VTime family JDN
+	VTimeEx demo{ (uint16_t)0, (uint16_t)47, (uint16_t)36 };
+	VTimeEx lossless{ (double).5208333335 };
+
+	std::cout
+		<< demo.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+		<< '\n' << demo.toJulianDayNumber()
+		<< std::endl;
+
+	std::cout << "\nLossless date test:\n"
+		<< lossless.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+		<< '\n' << lossless.toJulianDayNumber()
+		<< std::endl;
+
+	demo < lossless;
+	demo > lossless;
 
 	return NULL;
 }
