@@ -2,7 +2,8 @@
 #include<iostream>
 #include<cmath>
 
-// Developer Includes:
+
+// Library Includes:
 
 // Core Functionality
 #include"simplydt/common/range/int_range.hpp"
@@ -36,18 +37,12 @@
 #include"simplydt/datetime/date/comp/dt_vdate.hpp"
 
 // Virtual Time
-// N/A
+#include"simplydt/datetime/time/comp/dt_vtime_ex.hpp"
+#include"simplydt/datetime/time/comp/dt_vtime.hpp"
 
 // Virtual Datetime
 // N/A
 
-
-
-//#include"simplydt/datetime/time/comp/dt_time.hpp"
-//#include"simplydt/datetime/time/comp/dt_stime.hpp"
-
-//#include"simplydt/datetime/comp/sdt_datetime.hpp"
-//#include"simplydt/datetime/comp/sdt_sdatetime.hpp"
 
 
 
@@ -61,17 +56,17 @@
 * 
 * 7/4/2024
 * 
-* -> [X] Implement .linkDate() method in Time/STime class
-* -> [X] Just fix STime classes .secondsUntil() method
+* -> [X] Implement .linkDate() method in VTimeEx/VTime class
+* -> [X] Just fix VTime classes .secondsUntil() method
 * -> [X] Start DurationInterval class (create preset type names)
 * -> [X] Plan and implement VDuration class interface
-* -> [X] Implement .millisecondsUntil() method in Time class
-* -> [X] Implement .until() methods in VDate, Time, and STime classes
-* -> [X] Implement Time constructor/=operators that accept STime
-* -> [X] Implement VDate/Time/STime/VDuration .displace() method
-* -> [X] Implement VDate/Time/STime/VDuration .operator+=()/.operator-=() methods
-* -> [X] Implement VDate/Time/STime/VDuration .operator+()/.operator-() methods
-* -> [X] Implement .toSTime() method in Time class
+* -> [X] Implement .msUntil() method in VTimeEx class
+* -> [X] Implement .until() methods in VDate, VTimeEx, and VTime classes
+* -> [X] Implement VTimeEx constructor/=operators that accept VTime
+* -> [X] Implement VDate/VTimeEx/VTime/VDuration .displace() method
+* -> [X] Implement VDate/VTimeEx/VTime/VDuration .operator+=()/.operator-=() methods
+* -> [X] Implement VDate/VTimeEx/VTime/VDuration .operator+()/.operator-() methods
+* -> [X] Implement .toSTime() method in VTimeEx class
 * -> [X] Determine highest possible number Range class can handle with an int type
 * -> [X] Implement VDate .toTimePoint() method
 * -> [] Plan and implement Datetime/SDatetime class interfaces
@@ -82,11 +77,11 @@
 * (Some future point...)
 * 
 * -> [] Plan and implement DatetimeStub class
-* -> [] Implement VDate/Time/STime class .toStub() method
-* -> [] Implement VDate/Time/STime constructor that accepts DatetimeStub
-* -> [] *Implement VDate/Time/STime .operator=() for std::chrono <- IMPORTANT
+* -> [] Implement VDate/VTimeEx/VTime class .toStub() method
+* -> [] Implement VDate/VTimeEx/VTime constructor that accepts DatetimeStub
+* -> [] *Implement VDate/VTimeEx/VTime .operator=() for std::chrono <- IMPORTANT
 * -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
-* -> [] Implement VDate/Time/STime/VDuration string parsing capability
+* -> [] Implement VDate/VTimeEx/VTime/VDuration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [] Find new means to displace Day class
 * -> [] Investigate why illegals are thrown in sequence classes
@@ -104,11 +99,11 @@
 //		<< " = " << date1.until(date2) << std::endl;
 //}
 //
-//void timeCompare(const Time& time1, const Time& time2) noexcept
+//void timeCompare(const VTimeEx& time1, const VTimeEx& time2) noexcept
 //{
 //	std::cout
-//		<< "\nFrom " << time1.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
-//		<< " -> " << time2.timeStr(Time::Format::STANDARD, Time::Layout::H_M_S_P)
+//		<< "\nFrom " << time1.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+//		<< " -> " << time2.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
 //		<< " = " << time1.until(time2) << std::endl;
 //}
 //
@@ -128,8 +123,8 @@
 //		<< datetime.datetimeStr(
 //			VDate::Format::STANDARD,
 //			VDate::Layout::M_D_YYYY,
-//			Time::Format::STANDARD,
-//			Time::Layout::H_M_S_P
+//			VTimeEx::Format::STANDARD,
+//			VTimeEx::Layout::H_M_S_P
 //		)
 //		<< std::endl;
 //}
@@ -145,13 +140,13 @@
 //		<< std::endl;
 //}
 //
-//void timeOut(const Time& time) noexcept
+//void timeOut(const VTimeEx& time) noexcept
 //{
 //	std::cout
 //		<< '\n'
 //		<< time.timeStr(
-//			Time::Format::STANDARD,
-//			Time::Layout::H_M_S_P
+//			VTimeEx::Format::STANDARD,
+//			VTimeEx::Layout::H_M_S_P
 //		)
 //		<< std::endl;
 //}
@@ -174,8 +169,8 @@ int main(size_t argc, char* argv[])
 	//dateOut(todayDate);
 
 
-	//// 19,916 days ago was epoch
-	//// Updated (7/11/2024)
+	//// 19,945 days ago was epoch
+	//// Updated (8/9/2024)
 
 
 	//// This stuff is correct
@@ -230,26 +225,33 @@ int main(size_t argc, char* argv[])
 	//	<< std::endl;
 
 
-	VDate::TimePoint todayChrono = std::chrono::system_clock::now();
+	// Ensure lossless conversion with VTime family JDN
+	VTimeEx t1{ (double).5208333335 };
+	VTimeEx t2{ (uint16_t)15Ui16, (uint16_t)30Ui16 };
 
-	VDate todayDate{ todayChrono };
-	VDate futureDate{ 2025, 2, 23 };
-
-	std::cout << "\nToday: "
-		<< todayDate.dateStr(VDate::Format::STANDARD)
-		<< "\nVar: " << futureDate.dateStr(VDate::Format::STANDARD)
+	std::cout << "\nTime 1: "
+		<< t1.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+		<< "\nJDN: " << t1.toJulianDayNumber()
 		<< std::endl;
 
-	std::cout << "\nToday JDN: "
-		<< todayDate.toJulianDayNumber()
-		<< "\nVar JDN: " << futureDate.toJulianDayNumber()
-		<< "\n\nToday until Var: " << todayDate.daysUntil(futureDate) << " days"
+	std::cout << "\nTime 2: "
+		<< t2.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+		<< "\nJDN: " << t2.toJulianDayNumber()
 		<< std::endl;
 
-	std::cout << "\nSince project start: "
-		<< todayDate.daysUntil(VDate{ 2024, 6, 28 })
-		<< " days"
+	std::cout << "\nTests:"
+		<< "\nt1 until t2 (hrs): " << (long int)t1.hoursUntil(t2) << " hrs"
+		<< "\nt1 until t2 (mins): " << (long int)t1.minutesUntil(t2) << " mins"
+		<< "\nt1 until t2 (secs): " << (long int)t1.secondsUntil(t2) << " secs"
+		<< "\nt1 until t2 (ms): " << (long long int)t1.msUntil(t2) << " ms"
 		<< std::endl;
+
+	VTime tester{ (double)0.5 };
+	VTimeEx tester2{ tester };
+	tester.displace(VDuration{ 0, 0, 0, 3 });
+
+	std::cout << '\n' << tester.timeStr(VTime::Layout::H_M_S_P, VTime::Format::STANDARD) << std::endl;
+	std::cout << '\n' << tester2.timeStr(VTimeEx::Layout::H_M_S_P, VTimeEx::Format::STANDARD) << std::endl;
 
 	return NULL;
 }

@@ -1,6 +1,6 @@
 
-#ifndef SIMPLYDTLIB_L_DATETIME_V_DATE_SEQUENCE_OBJ_H_
-#define SIMPLYDTLIB_L_DATETIME_V_DATE_SEQUENCE_OBJ_H_
+#ifndef SIMPLYDTLIB_L_DATETIME_V_DATE_SEQUENCE_H_
+#define SIMPLYDTLIB_L_DATETIME_V_DATE_SEQUENCE_H_
 
 
 
@@ -191,7 +191,7 @@ public:
 
     VDate& operator=(VDate&& v_date) noexcept
     {
-        if (this == &v_date || *this == v_date)
+        if (this == &v_date)
             return *this;
 
         DatetimeSequence<Year, Month, Day>::operator=(
@@ -212,6 +212,9 @@ public:
 
     bool operator==(const VDate& v_date) const noexcept
     {
+        if (this == &v_date)
+            return true;
+
         return DatetimeSequence<Year, Month, Day>::operator==(v_date);
     }
 
@@ -897,4 +900,4 @@ private:
 
 
 
-#endif // SIMPLYDTLIB_L_DATETIME_V_DATE_SEQUENCE_OBJ_H_
+#endif // SIMPLYDTLIB_L_DATETIME_V_DATE_SEQUENCE_H_

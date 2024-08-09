@@ -27,13 +27,13 @@ public:
 
     SDatetime(Chrono chrono) noexcept;
 
-    SDatetime(const VDate& date, const STime& s_time) noexcept;
+    SDatetime(const VDate& date, const VTime& s_time) noexcept;
 
-    SDatetime(VDate&& date, STime&& s_time) noexcept;
+    SDatetime(VDate&& date, VTime&& s_time) noexcept;
 
-    SDatetime(const VDate& date, STime&& s_time) noexcept;
+    SDatetime(const VDate& date, VTime&& s_time) noexcept;
 
-    SDatetime(VDate&& date, const STime& s_time) noexcept;
+    SDatetime(VDate&& date, const VTime& s_time) noexcept;
 
     SDatetime(const VDate& date) noexcept;
 
@@ -96,7 +96,7 @@ public:
     const VDate& date() const noexcept;
 
     /* Datetime time object */
-    const STime& time() const noexcept;
+    const VTime& time() const noexcept;
 
     /* Returns datetime hour of day phase */
     Hour::Phase hourPhase() const noexcept;
@@ -106,23 +106,23 @@ public:
 
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(Layout layout, VDate::Format date_format, VDate::Layout date_layout,
-        STime::Format time_format, STime::Layout time_layout) const noexcept;
+        VTime::Format time_format, VTime::Layout time_layout) const noexcept;
     
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout,
-        STime::Format time_format, STime::Layout time_layout) const noexcept;
+        VTime::Format time_format, VTime::Layout time_layout) const noexcept;
     
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(STime::Format time_format, STime::Layout time_layout) const noexcept;
+    std::string datetimeStr(VTime::Format time_format, VTime::Layout time_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Format date_format, STime::Format time_format) const noexcept;
+    std::string datetimeStr(VDate::Format date_format, VTime::Format time_format) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Layout date_layout, STime::Layout time_layout) const noexcept;
+    std::string datetimeStr(VDate::Layout date_layout, VTime::Layout time_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(VDate::Format date_format) const noexcept;
@@ -131,10 +131,10 @@ public:
     std::string datetimeStr(VDate::Layout date_layout) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(STime::Format time_format) const noexcept;
+    std::string datetimeStr(VTime::Format time_format) const noexcept;
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(STime::Layout time_layout) const noexcept;
+    std::string datetimeStr(VTime::Layout time_layout) const noexcept;
     
     /* Returns datetime string in provided layout */
     std::string datetimeStr(Layout layout) const noexcept;
@@ -164,7 +164,7 @@ public:
     VDate* getDate() noexcept;
 
     /* Returns pointer to datetime time */
-    Time* getTime() noexcept;
+    VTimeEx* getTime() noexcept;
 
     /* Returns standard library chronological time point copy */
     Chrono toChrono() const noexcept;
@@ -187,7 +187,7 @@ public:
 
 private:
     VDate m_date;
-    STime m_time;
+    VTime m_time;
 
     void linkDatetime() noexcept
     {
