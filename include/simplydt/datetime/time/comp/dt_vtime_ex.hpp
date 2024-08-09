@@ -48,7 +48,7 @@ public:
         H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
     };
 
-    VTimeEx(TimePoint sys_clock) noexcept
+    VTimeEx(const TimePoint& sys_clock) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0Ui16),
@@ -124,17 +124,17 @@ public:
         this->assumeJDN(jdn);
     }
 
-    // VTimeEx(const VTime& v_time) noexcept
-    //     : DatetimeSequence<Hour, Minute, Second, Millisecond>{//    <--- INCOMPLETE!!!
-    //         DatetimeType::TIME_DATETIME,
-    //         Hour(v_time.getHour()),
-    //         Minute(v_time.getMinute()),
-    //         Second(v_time.getSecond()),
-    //         Millisecond((uint16_t)0U)
-    //     }
-    // {
-    //     //
-    // }
+    VTimeEx(const VTime& v_time) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            DatetimeType::TIME_DATETIME,
+            Hour(v_time.hour()),
+            Minute(v_time.minute()),
+            Second(v_time.second()),
+            Millisecond((uint16_t)0Ui16)
+        }
+    {
+        this->populateIntervalPointers();
+    }
 
     VTimeEx(const VTimeEx& vtime_ex) noexcept
         : DatetimeSequence<Hour, Minute, Second, Millisecond>{
@@ -204,15 +204,15 @@ public:
         return *this;
     }
 
-    // VTimeEx& operator=(const VTime& v_time) noexcept//    <--- INCOMPLETE!!!
-    // {
-    //     this->getInterval(HOUR_INDEX)->setPosition(v_time.hour());
-    //     this->getInterval(MINUTE_INDEX)->setPosition(v_time.minute());
-    //     this->getInterval(SECOND_INDEX)->setPosition(v_time.second());
-    //     this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
+    VTimeEx& operator=(const VTime& v_time) noexcept
+    {
+        this->getInterval(HOUR_INDEX)->setPosition(v_time.hour());
+        this->getInterval(MINUTE_INDEX)->setPosition(v_time.minute());
+        this->getInterval(SECOND_INDEX)->setPosition(v_time.second());
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
 
-    //     return *this;
-    // }
+        return *this;
+    }
 
     VTimeEx& operator=(const TimePoint& sys_clock) noexcept
     {
@@ -249,7 +249,18 @@ public:
         return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator==(vtime_ex);
     }
 
-    //bool operator==(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator==(const VTime& v_time) const noexcept
+    {
+        // Discrete, but the direction of this loop is important
+        for (size_t index{ 0 }; index < v_time.linkSize(); index++) {
+
+            if (this->getInterval(index)->position() != v_time.getInterval(index)->position())
+                return false;
+
+        }
+
+        return true;
+    }
 
     bool operator==(const TimePoint& sys_clock) const noexcept
     {
@@ -282,7 +293,21 @@ public:
         return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator<(vtime_ex);
     }
 
-    //bool operator<(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator<(const VTime& v_time) const noexcept
+    {
+        // Discrete, but the direction of this loop is important
+        for (size_t index{ 0 }; index < v_time.linkSize(); index++) {
+
+            if (this->getInterval(index)->isAfter(*(v_time.getInterval(index))))
+                return false;
+
+            if (this->getInterval(index)->isBefore(*(v_time.getInterval(index))))
+                return true;
+
+        }
+
+        return false;
+    }
 
     bool operator<(const TimePoint& sys_clock) const noexcept
     {
@@ -318,7 +343,21 @@ public:
         return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator>(vtime_ex);
     }
 
-    //bool operator>(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator>(const VTime& v_time) const noexcept
+    {
+        // Discrete, but the direction of this loop is important
+        for (size_t index{ 0 }; index < v_time.linkSize(); index++) {
+
+            if (this->getInterval(index)->isBefore(*(v_time.getInterval(index))))
+                return false;
+
+            if (this->getInterval(index)->isAfter(*(v_time.getInterval(index))))
+                return true;
+
+        }
+
+        return false;
+    }
 
     bool operator>(const TimePoint& sys_clock) const noexcept
     {
@@ -355,7 +394,10 @@ public:
         return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator<=(vtime_ex);
     }
 
-    //bool operator<=(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator<=(const VTime& v_time) const noexcept
+    {
+        return (this->operator<(v_time) || this->operator==(v_time));
+    }
 
     bool operator<=(const TimePoint& sys_clock) const noexcept
     {
@@ -367,7 +409,10 @@ public:
         return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator>=(vtime_ex);
     }
 
-    //bool operator>=(const VTime& v_time) const noexcept;//    <--- INCOMPLETE!!!
+    bool operator>=(const VTime& v_time) const noexcept
+    {
+        return (this->operator>(v_time) || this->operator==(v_time));
+    }
 
     bool operator>=(const TimePoint& sys_clock) const noexcept
     {
@@ -604,11 +649,11 @@ public:
         return timeJDN;
     }
 
-    // /* Returns copy of full time as standard time */
-    // VTime toVTime() const noexcept//    <--- INCOMPLETE!!!
-    // {
-    //     return VTime{ this->hour(), this->minute(), this->second() };
-    // }
+    /* Returns copy of extended time as standard time */
+    VTime toVTime() const noexcept
+    {
+        return VTime{ this->hour(), this->minute(), this->second() };
+    }
 
     /* Link time to date instance */
     bool linkDate(VDate& v_date) noexcept
@@ -751,6 +796,12 @@ public:
         return newDur;
     }
 
+    /* Increase time by provided amount of milliseconds [INCOMPLETE] */
+    void increase(uint32_t ms) noexcept;// <--- Incomplete method!
+
+    /* Decrease time by provided amount of milliseconds [INCOMPLETE] */
+    void decrease(uint32_t ms) noexcept;// <--- Incomplete method!
+
     /* Displace time using provided duration */
     void displace(const VDuration& v_duration) noexcept
     {
@@ -761,6 +812,18 @@ public:
         default:
             return this->positiveDisplace(v_duration);
         }
+    }
+
+    /* Reset time to start of day (midnight) */
+    void reset() noexcept
+    {
+        if (this->isZero())
+            return;
+
+        this->getInterval(HOUR_INDEX)->reset();
+        this->getInterval(MINUTE_INDEX)->reset();
+        this->getInterval(SECOND_INDEX)->reset();
+        this->getInterval(MILLIS_INDEX)->reset();
     }
 
 

@@ -247,7 +247,11 @@ int main(size_t argc, char* argv[])
 		<< std::endl;
 
 	VTime tester{ (double)0.5 };
-	std::cout << '\n' << tester.timeStr(VTime::Format::STANDARD) << std::endl;
+	VTimeEx tester2{ tester };
+	tester.displace(VDuration{ 0, 0, 0, 3 });
+
+	std::cout << '\n' << tester.timeStr(VTime::Layout::H_M_S_P, VTime::Format::STANDARD) << std::endl;
+	std::cout << '\n' << tester2.timeStr(VTimeEx::Layout::H_M_S_P, VTimeEx::Format::STANDARD) << std::endl;
 
 	return NULL;
 }

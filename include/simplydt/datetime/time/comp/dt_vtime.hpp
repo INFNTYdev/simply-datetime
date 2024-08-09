@@ -44,7 +44,7 @@ public:
         H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
     };
 
-    VTime(TimePoint sys_clock) noexcept
+    VTime(const TimePoint& sys_clock) noexcept
         : DatetimeSequence<Hour, Minute, Second>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0Ui16),
@@ -619,6 +619,12 @@ public:
         return newDur;
     }
 
+    /* Increase time by provided amount of seconds [INCOMPLETE] */
+    void increase(uint32_t secs) noexcept;// <--- Incomplete method!
+
+    /* Decrease time by provided amount of seconds [INCOMPLETE] */
+    void decrease(uint32_t secs) noexcept;// <--- Incomplete method!
+
     /* Displace time using provided duration */
     void displace(const VDuration& v_duration) noexcept
     {
@@ -629,6 +635,17 @@ public:
         default:
             return this->positiveDisplace(v_duration);
         }
+    }
+
+    /* Reset time to start of day (midnight) */
+    void reset() noexcept
+    {
+        if (this->isZero())
+            return;
+
+        this->getInterval(HOUR_INDEX)->reset();
+        this->getInterval(MINUTE_INDEX)->reset();
+        this->getInterval(SECOND_INDEX)->reset();
     }
 
 
