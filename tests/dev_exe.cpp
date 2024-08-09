@@ -169,8 +169,8 @@ int main(size_t argc, char* argv[])
 	//dateOut(todayDate);
 
 
-	//// 19,916 days ago was epoch
-	//// Updated (7/11/2024)
+	//// 19,945 days ago was epoch
+	//// Updated (8/9/2024)
 
 
 	//// This stuff is correct
