@@ -796,11 +796,17 @@ public:
         return newDur;
     }
 
-    /* Increase time by provided amount of milliseconds [INCOMPLETE] */
-    void increase(uint32_t ms) noexcept;// <--- Incomplete method!
+    /* Increase time by provided amount of milliseconds */
+    void increase(uint32_t ms) noexcept;// <--- Incomplete
 
-    /* Decrease time by provided amount of milliseconds [INCOMPLETE] */
-    void decrease(uint32_t ms) noexcept;// <--- Incomplete method!
+    /* Increase time interval by provided amount of units */
+    void increase(TimeUnit interval, uint32_t units) noexcept;// <--- Incomplete
+
+    /* Decrease time by provided amount of milliseconds */
+    void decrease(uint32_t ms) noexcept;// <--- Incomplete
+
+    /* Decrease time interval by provided amount of units */
+    void decrease(TimeUnit interval, uint32_t units) noexcept;// <--- Incomplete
 
     /* Displace time using provided duration */
     void displace(const VDuration& v_duration) noexcept
