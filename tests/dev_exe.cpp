@@ -38,7 +38,7 @@
 
 // Virtual Time
 #include"simplydt/datetime/time/comp/dt_vtime_ex.hpp"
-//#include"simplydt/datetime/time/comp/dt_vtime.hpp"
+#include"simplydt/datetime/time/comp/dt_vtime.hpp"
 
 // Virtual Datetime
 // N/A
@@ -245,6 +245,9 @@ int main(size_t argc, char* argv[])
 		<< "\nt1 until t2 (secs): " << (long int)t1.secondsUntil(t2) << " secs"
 		<< "\nt1 until t2 (ms): " << (long long int)t1.msUntil(t2) << " ms"
 		<< std::endl;
+
+	VTime tester{ (double)0.5 };
+	std::cout << '\n' << tester.timeStr(VTime::Format::STANDARD) << std::endl;
 
 	return NULL;
 }

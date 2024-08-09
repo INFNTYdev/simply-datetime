@@ -13,7 +13,8 @@
 #include"simplydt/datetime/time/unit/dt_second.hpp"
 #include"simplydt/datetime/time/unit/dt_millisecond.hpp"
 #include"simplydt/duration/comp/dt_vduration.hpp"
-//#include"simplydt/datetime/time/comp/dt_vtime.hpp"
+#include"simplydt/datetime/date/comp/dt_vdate.hpp"
+#include"simplydt/datetime/time/comp/dt_vtime.hpp"
 
 
 /* Extended time ( HH:MM:SS:MS ) */
@@ -275,6 +276,9 @@ public:
 
     bool operator<(const VTimeEx& vtime_ex) const noexcept
     {
+        if (this == &vtime_ex)
+            return false;
+
         return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator<(vtime_ex);
     }
 
@@ -929,19 +933,19 @@ private:
         return static_cast<Millisecond*>(rawInterval);
     }
 
-    void positiveDisplace(const VDuration& duration) noexcept
+    void positiveDisplace(const VDuration& v_duration) noexcept
     {
         return this->getInterval(MILLIS_INDEX)->largeDisplace(
             VDuration::Sign::POSITIVE,
-            duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
+            v_duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
         );
     }
 
-    void negativeDisplace(const VDuration& duration) noexcept
+    void negativeDisplace(const VDuration& v_duration) noexcept
     {
         return this->getInterval(MILLIS_INDEX)->largeDisplace(
             VDuration::Sign::NEGATIVE,
-            duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
+            v_duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
         );
     }
 
