@@ -1,4 +1,4 @@
-﻿# Simply Datetime | Project Directory
+# Simply Datetime | Project Directory
 ###### INFINITY Systems, LLC. 2024
 
 <br/>
@@ -44,6 +44,8 @@ simply-datetime/
 │       │   ├── date/
 │       │   │   │
 │       │   │   ├── comp/
+│       │   │   │   │
+│       │   │   │   └── virtual/
 │       │   │   │
 │       │   │   └── unit/
 │       │   │
@@ -52,14 +54,19 @@ simply-datetime/
 │       │   └── time/
 │       │       │
 │       │       ├── comp/
+│       │       │   │
+│       │       │   └── virtual/
 │       │       │
 │       │       └── unit/
 │       │
 │       └── duration/
 │           │
 │           ├── comp/
+│           │   │
+│           │   └── virtual/
 │           │
 │           └── unit/
+
 │
 ├── src/
 │
