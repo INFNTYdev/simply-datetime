@@ -128,45 +128,56 @@
 //		)
 //		<< std::endl;
 //}
-//
-//void dateOut(const VDate& date) noexcept
-//{
-//	std::cout
-//		<< '\n'
-//		<< date.dateStr(
-//			VDate::Format::STANDARD,
-//			VDate::Layout::M_D_YYYY
-//		)
-//		<< std::endl;
-//}
-//
-//void timeOut(const VTimeEx& time) noexcept
-//{
-//	std::cout
-//		<< '\n'
-//		<< time.timeStr(
-//			VTimeEx::Format::STANDARD,
-//			VTimeEx::Layout::H_M_S_P
-//		)
-//		<< std::endl;
-//}
+
+void dateOut(const VDate& date) noexcept
+{
+	std::cout
+		<< '\n'
+		<< date.dateStr(
+			VDate::Format::STANDARD,
+			VDate::Layout::M_D_YYYY
+		)
+		<< std::endl;
+}
+
+void timeOut(const VTimeEx& time) noexcept
+{
+	std::cout
+		<< '\n'
+		<< time.timeStr(
+			VTimeEx::Format::STANDARD,
+			VTimeEx::Layout::H_M_S_P
+		)
+		<< std::endl;
+}
+
+void timeOut(const VTime& time) noexcept
+{
+	std::cout
+		<< '\n'
+		<< time.timeStr(
+			VTime::Format::STANDARD,
+			VTime::Layout::H_M_S_P
+		)
+		<< std::endl;
+}
 
 
 
 int main(size_t argc, char* argv[])
 {
-	//VDate epochDate{};
-	//VDate epochNeig{};
-	//VDate todayDate{ std::chrono::system_clock::now() };
+	VDate epochDate{};
+	VDate epochNeig{};
+	VDate todayDate{ std::chrono::system_clock::now() };
 
-	//std::cout << "\nEpoch:";
-	//dateOut(epochDate);
+	std::cout << "\nEpoch:";
+	dateOut(epochDate);
 
-	//std::cout << "\nEpoch neighbor:";
-	//dateOut(epochNeig);
+	std::cout << "\nEpoch neighbor:";
+	dateOut(epochNeig);
 
-	//std::cout << "\nToday:";
-	//dateOut(todayDate);
+	std::cout << "\nToday:";
+	dateOut(todayDate);
 
 
 	//// 19,945 days ago was epoch
@@ -225,33 +236,34 @@ int main(size_t argc, char* argv[])
 	//	<< std::endl;
 
 
+	// FREE UP TO HERE
 	// Ensure lossless conversion with VTime family JDN
-	VTimeEx t1{ (double).5208333335 };
-	VTimeEx t2{ (uint16_t)15Ui16, (uint16_t)30Ui16 };
+	//VTimeEx t1{ (double).5208333335 };
+	//VTimeEx t2{ (uint16_t)15Ui16, (uint16_t)30Ui16 };
 
-	std::cout << "\nTime 1: "
-		<< t1.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-		<< "\nJDN: " << t1.toJulianDayNumber()
-		<< std::endl;
+	//std::cout << "\nTime 1: "
+	//	<< t1.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+	//	<< "\nJDN: " << t1.toJulianDayNumber()
+	//	<< std::endl;
 
-	std::cout << "\nTime 2: "
-		<< t2.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-		<< "\nJDN: " << t2.toJulianDayNumber()
-		<< std::endl;
+	//std::cout << "\nTime 2: "
+	//	<< t2.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
+	//	<< "\nJDN: " << t2.toJulianDayNumber()
+	//	<< std::endl;
 
-	std::cout << "\nTests:"
-		<< "\nt1 until t2 (hrs): " << (long int)t1.hoursUntil(t2) << " hrs"
-		<< "\nt1 until t2 (mins): " << (long int)t1.minutesUntil(t2) << " mins"
-		<< "\nt1 until t2 (secs): " << (long int)t1.secondsUntil(t2) << " secs"
-		<< "\nt1 until t2 (ms): " << (long long int)t1.msUntil(t2) << " ms"
-		<< std::endl;
+	//std::cout << "\nTests:"
+	//	<< "\nt1 until t2 (hrs): " << (long int)t1.hoursUntil(t2) << " hrs"
+	//	<< "\nt1 until t2 (mins): " << (long int)t1.minutesUntil(t2) << " mins"
+	//	<< "\nt1 until t2 (secs): " << (long int)t1.secondsUntil(t2) << " secs"
+	//	<< "\nt1 until t2 (ms): " << (long long int)t1.msUntil(t2) << " ms"
+	//	<< std::endl;
 
-	VTime tester{ (double)0.5 };
-	VTimeEx tester2{ tester };
-	tester.displace(VDuration{ 0, 0, 0, 3 });
+	//VTime tester{ (double)0.5 };
+	//VTimeEx tester2{ tester };
+	//tester.displace(VDuration{ 0, 0, 0, 3 });
 
-	std::cout << '\n' << tester.timeStr(VTime::Layout::H_M_S_P, VTime::Format::STANDARD) << std::endl;
-	std::cout << '\n' << tester2.timeStr(VTimeEx::Layout::H_M_S_P, VTimeEx::Format::STANDARD) << std::endl;
+	//std::cout << '\n' << tester.timeStr(VTime::Layout::H_M_S_P, VTime::Format::STANDARD) << std::endl;
+	//std::cout << '\n' << tester2.timeStr(VTimeEx::Layout::H_M_S_P, VTimeEx::Format::STANDARD) << std::endl;
 
 	return NULL;
 }
