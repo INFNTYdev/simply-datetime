@@ -186,6 +186,13 @@ int main(size_t argc, char* argv[])
 		<< todayDate.dateStr(VDate::Format::STANDARD)
 		<< std::endl;
 
+	// Project creation date: June 28th, 2024
+	VDate creationDate{ (uint16_t)2024Ui16, (uint16_t)6Ui16, (uint16_t)28Ui16 };
+
+	std::cout << "Elapsed dev time: "
+		<< creationDate.until(todayDate)
+		<< std::endl;
+
 	// Ensure lossless conversion with VTime family JDN
 	//VTimeEx t1{ (double).5208333335 };
 	//VTimeEx t2{ (uint16_t)15Ui16, (uint16_t)30Ui16 };
