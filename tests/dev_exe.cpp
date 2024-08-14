@@ -167,6 +167,9 @@ void timeOut(const VTime& time) noexcept
 int main(size_t argc, char* argv[])
 {
 	VDate todayDate{ std::chrono::system_clock::now() };
+	std::cout << "\nToday: "
+		<< todayDate.dateStr(VDate::Format::STANDARD)
+		<< std::endl;
 
 	// Ensure lossless conversion with VTime family JDN
 	//VTimeEx t1{ (double).5208333335 };
