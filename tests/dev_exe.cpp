@@ -91,6 +91,18 @@
 
 
 
+void ProjectInfoOut() noexcept
+{
+	std::cout << '\n'
+		<< "\n\tINFINITY Systems, LLC. 2024\n"
+		<< "\n\t[ Simply Datetime Library ]"
+		<< "\n\tDeveloper executable"
+		<< "\n\tRelease: 4 Version: 0"
+		<< "\n\t-> (dev_exe.exe)\n"
+		<< "\n\tStandard: C++ 20+"
+		<< "\n\n" << std::endl;
+}
+
 //void dateCompare(const VDate& date1, const VDate& date2) noexcept
 //{
 //	std::cout
@@ -166,6 +178,9 @@ void timeOut(const VTime& time) noexcept
 
 int main(size_t argc, char* argv[])
 {
+	// Simply Datetime r4.v0
+	ProjectInfoOut();
+
 	VDate todayDate{ std::chrono::system_clock::now() };
 	std::cout << "\nToday: "
 		<< todayDate.dateStr(VDate::Format::STANDARD)
