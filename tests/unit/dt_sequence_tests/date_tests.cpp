@@ -11,7 +11,7 @@ namespace VDateCalculationTests {
 	const uint32_t MAX_TESTING_DAYS{ (VDate::MAX_JDN - VDate::EPOCH_JDN) };
 
 
-	// Tests if VDate class yeilds accurate JDN system cardinals
+	// Tests if VDate class yeilds accurate consecutive JDN cardinals
 	TEST(VDateDivergenceTestSuite, VDateJDNIntegrityTest)
 	{
 		// This test relies on an accurate JDN for January 1, 1970
