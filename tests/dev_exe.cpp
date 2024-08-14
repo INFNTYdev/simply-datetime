@@ -79,12 +79,12 @@
 * -> [] Plan and implement DatetimeStub class
 * -> [] Implement VDate/VTimeEx/VTime class .toStub() method
 * -> [] Implement VDate/VTimeEx/VTime constructor that accepts DatetimeStub
-* -> [] *Implement VDate/VTimeEx/VTime .operator=() for std::chrono <- IMPORTANT
-* -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
+* -> [X] *Implement VDate/VTimeEx/VTime .operator=() for std::chrono <- IMPORTANT
+* -> [X] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
 * -> [] Implement VDate/VTimeEx/VTime/VDuration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
-* -> [] Find new means to displace Day class
-* -> [] Investigate why illegals are thrown in sequence classes
+* -> [X] Find new means to displace Day class
+* -> [X] Investigate why illegals are thrown in sequence classes
 * -> [] Take a good look at this libraries structure and start improving
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
