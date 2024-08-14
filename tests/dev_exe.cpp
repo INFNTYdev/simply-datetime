@@ -191,7 +191,15 @@ int main(size_t argc, char* argv[])
 
 	std::cout << "Elapsed dev time: "
 		<< creationDate.until(todayDate)
-		<< std::endl;
+		<< '\n' << std::endl;
+
+	// DO NOT DELETE ABOVE
+
+
+
+	//
+
+
 
 	// Ensure lossless conversion with VTime family JDN
 	//VTimeEx t1{ (double).5208333335 };
