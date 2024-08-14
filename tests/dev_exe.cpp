@@ -31,14 +31,14 @@
 #include"simplydt/datetime/sequence/dt_sequence.hpp"
 
 // Virtual Duration
-#include"simplydt/duration/comp/dt_vduration.hpp"
+#include"simplydt/duration/comp/virtual/dt_vduration.hpp"
 
 // Virtual Date
-#include"simplydt/datetime/date/comp/dt_vdate.hpp"
+#include"simplydt/datetime/date/comp/virtual/dt_vdate.hpp"
 
 // Virtual Time
-#include"simplydt/datetime/time/comp/dt_vtime_ex.hpp"
-#include"simplydt/datetime/time/comp/dt_vtime.hpp"
+#include"simplydt/datetime/time/comp/virtual/dt_vtime_ex.hpp"
+#include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 // Virtual Datetime
 // N/A
@@ -180,8 +180,8 @@ int main(size_t argc, char* argv[])
 	dateOut(todayDate);
 
 
-	//// 19,948 days ago was epoch
-	//// Updated (8/13/2024)
+	//// 19,949 days ago was epoch
+	//// Updated (8/14/2024)
 
 
 	// This stuff is correct

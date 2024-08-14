@@ -1,6 +1,6 @@
 
-#ifndef SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_H_
-#define SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_H_
+#ifndef SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_EXTENDED_H_
+#define SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_EXTENDED_H_
 
 
 
@@ -11,18 +11,20 @@
 #include"simplydt/datetime/time/unit/dt_hour.hpp"
 #include"simplydt/datetime/time/unit/dt_minute.hpp"
 #include"simplydt/datetime/time/unit/dt_second.hpp"
-#include"simplydt/duration/comp/dt_vduration.hpp"
-#include"simplydt/datetime/date/comp/dt_vdate.hpp"
+#include"simplydt/datetime/time/unit/dt_millisecond.hpp"
+#include"simplydt/duration/comp/virtual/dt_vduration.hpp"
+#include"simplydt/datetime/date/comp/virtual/dt_vdate.hpp"
+#include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 
-/* Standard time (HH:MM:SS) */
-class VTime : public DatetimeSequence<Hour, Minute, Second> {
+/* Extended time ( HH:MM:SS:MS ) */
+class VTimeEx : public DatetimeSequence<Hour, Minute, Second, Millisecond> {
 
 public:
     /* Datetime time unit */
-    using TimeUnit = DatetimeSequence<Hour, Minute, Second>::TimeUnit;
+    using TimeUnit = DatetimeSequence<Hour, Minute, Second, Millisecond>::TimeUnit;
     /* Datetime type */
-    using DatetimeType = DatetimeSequence<Hour, Minute, Second>::DatetimeType;
+    using DatetimeType = DatetimeSequence<Hour, Minute, Second, Millisecond>::DatetimeType;
     /* Standard library chronological time point (system clock) */
     using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
     /* 12-hr clock time phase */
@@ -32,24 +34,27 @@ public:
 
     /* Time format */
     enum Format {
-        MILITARY,// Military time format (24-hour)
-        STANDARD,// Standard time format (12-hour)
+        MILITARY,// Military format (24-hour clock)
+        STANDARD,// Standard format (12-hour clock)
     };
 
     /* Time layout */
     enum Layout {
+        H_M_S_MS,// (HH:MM:SS:MS) [ Example: 08:30:00:00 ]
+        H_M_S_MS_P,// (HH:MM:SS:MS P) [ Example: 08:30:00:00 AM ]
         H_M_S,// (HH:MM:SS) [ Example: 08:30:00 ]
         H_M_S_P,// (HH:MM:SS P) [ Example: 08:30:00 AM ]
         H_M,// (HH:MM) [ Example: 08:30 ]
         H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
     };
 
-    VTime(const TimePoint& sys_clock) noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
+    VTimeEx(const TimePoint& sys_clock) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0Ui16),
             Minute((uint16_t)0Ui16),
-            Second((uint16_t)0Ui16)
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
         this->populateIntervalPointers();
@@ -57,45 +62,61 @@ public:
         this->assumeTimePoint(sys_clock);
     }
 
-    VTime(uint16_t hour, uint16_t minute, uint16_t second) noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
+    VTimeEx(uint16_t hour, uint16_t minute, uint16_t second, uint16_t ms) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
             Minute(minute),
-            Second(second)
+            Second(second),
+            Millisecond(ms)
         }
     {
         this->populateIntervalPointers();
     }
 
-    VTime(uint16_t hour, uint16_t minute) noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
+    VTimeEx(uint16_t hour, uint16_t minute, uint16_t second) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
             Minute(minute),
-            Second((uint16_t)0Ui16)
+            Second(second),
+            Millisecond((uint16_t)0Ui16)
         }
     {
         this->populateIntervalPointers();
     }
 
-    explicit VTime(uint16_t hour) noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
+    VTimeEx(uint16_t hour, uint16_t minute) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            DatetimeType::TIME_DATETIME,
+            Hour(hour),
+            Minute(minute),
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
+        }
+    {
+        this->populateIntervalPointers();
+    }
+
+    explicit VTimeEx(uint16_t hour) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(hour),
             Minute((uint16_t)0Ui16),
-            Second((uint16_t)0Ui16)
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
         this->populateIntervalPointers();
     }
 
-    explicit VTime(const JDN& jdn) noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
+    explicit VTimeEx(const JDN& jdn) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0Ui16),
             Minute((uint16_t)0Ui16),
-            Second((uint16_t)0Ui16)
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
         this->populateIntervalPointers();
@@ -103,64 +124,79 @@ public:
         this->assumeJDN(jdn);
     }
 
-    VTime(const VTime& v_time) noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
+    VTimeEx(const VTime& v_time) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour(v_time.hour()),
             Minute(v_time.minute()),
-            Second(v_time.second())
+            Second(v_time.second()),
+            Millisecond((uint16_t)0Ui16)
         }
     {
         this->populateIntervalPointers();
     }
 
-    VTime(VTime&& v_time) noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
-            static_cast<DatetimeSequence<Hour, Minute, Second>&&>(v_time)
+    VTimeEx(const VTimeEx& vtime_ex) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            DatetimeType::TIME_DATETIME,
+            Hour(vtime_ex.hour()),
+            Minute(vtime_ex.minute()),
+            Second(vtime_ex.second()),
+            Millisecond(vtime_ex.millisecond())
         }
     {
         this->populateIntervalPointers();
     }
-    
-    VTime() noexcept
-        : DatetimeSequence<Hour, Minute, Second>{
+
+    VTimeEx(VTimeEx&& vtime_ex) noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
+            static_cast<DatetimeSequence<Hour, Minute, Second, Millisecond>&&>(vtime_ex)
+        }
+    {
+        this->populateIntervalPointers();
+    }
+
+    VTimeEx() noexcept
+        : DatetimeSequence<Hour, Minute, Second, Millisecond>{
             DatetimeType::TIME_DATETIME,
             Hour((uint16_t)0Ui16),
             Minute((uint16_t)0Ui16),
-            Second((uint16_t)0Ui16)
+            Second((uint16_t)0Ui16),
+            Millisecond((uint16_t)0Ui16)
         }
     {
         this->populateIntervalPointers();
     }
 
-    virtual ~VTime() noexcept = default;
+    virtual ~VTimeEx() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const VTime& v_time) noexcept
+    friend std::ostream& operator<<(std::ostream& os, const VTimeEx& vtime_ex) noexcept
     {
-        os << v_time.timeStr();
+        os << vtime_ex.timeStr();
 
         return os;
     }
 
-    VTime& operator=(const VTime& v_time) noexcept
+    VTimeEx& operator=(const VTimeEx& vtime_ex) noexcept
     {
-        if (this == &v_time || *this == v_time)
+        if (this == &vtime_ex || *this == vtime_ex)
             return *this;
 
-        this->getInterval(HOUR_INDEX)->setPosition(v_time.hour());
-        this->getInterval(MINUTE_INDEX)->setPosition(v_time.minute());
-        this->getInterval(SECOND_INDEX)->setPosition(v_time.second());
+        this->getInterval(HOUR_INDEX)->setPosition(vtime_ex.hour());
+        this->getInterval(MINUTE_INDEX)->setPosition(vtime_ex.minute());
+        this->getInterval(SECOND_INDEX)->setPosition(vtime_ex.second());
+        this->getInterval(MILLIS_INDEX)->setPosition(vtime_ex.millisecond());
 
         return *this;
     }
 
-    VTime& operator=(VTime&& v_time) noexcept
+    VTimeEx& operator=(VTimeEx&& vtime_ex) noexcept
     {
-        if (this == &v_time)
+        if (this == &vtime_ex)
             return *this;
         
-        DatetimeSequence<Hour, Minute, Second>::operator=(
-            static_cast<DatetimeSequence<Hour, Minute, Second>&&>(v_time)
+        DatetimeSequence<Hour, Minute, Second, Millisecond>::operator=(
+            static_cast<DatetimeSequence<Hour, Minute, Second, Millisecond>&&>(vtime_ex)
         );
 
         this->populateIntervalPointers();
@@ -168,30 +204,62 @@ public:
         return *this;
     }
 
-    VTime& operator=(const TimePoint& sys_clock) noexcept
+    VTimeEx& operator=(const VTime& v_time) noexcept
     {
-        std::time_t timeT{ std::chrono::system_clock::to_time_t(sys_clock) };
-        std::tm* tm_ptr{ std::localtime(&timeT) };
+        this->getInterval(HOUR_INDEX)->setPosition(v_time.hour());
+        this->getInterval(MINUTE_INDEX)->setPosition(v_time.minute());
+        this->getInterval(SECOND_INDEX)->setPosition(v_time.second());
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
 
-        // Retrieve time from time point
-        uint16_t tmHour{ static_cast<uint16_t>(tm_ptr->tm_hour) };
-        uint16_t tmMinute{ static_cast<uint16_t>(tm_ptr->tm_min) };
-        uint16_t tmSecond{ static_cast<uint16_t>(tm_ptr->tm_sec) };
+        return *this;
+    }
+
+    VTimeEx& operator=(const TimePoint& sys_clock) noexcept
+    {
+        uint16_t tmHour{ 23 };
+        uint16_t tmMinute{ 59 };
+        uint16_t tmSecond{ 59 };
+
+        // DEBUG: Somehow tm_hour is returning 19 on epoch hour?
+        // If-statement below acknowledges
+        if (sys_clock != TimePoint{}) {// If this is not equal to the epoch
+            std::time_t timeT{ std::chrono::system_clock::to_time_t(sys_clock) };
+            std::tm* tm_ptr{ std::localtime(&timeT) };
+
+            // Retrieve time from time point
+            tmHour = static_cast<uint16_t>(tm_ptr->tm_hour);
+            tmMinute = static_cast<uint16_t>(tm_ptr->tm_min);
+            tmSecond = static_cast<uint16_t>(tm_ptr->tm_sec);
+        }
 
         // Set time interval values
         this->getInterval(HOUR_INDEX)->setPosition(tmHour);
         this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
         this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
 
         return *this;
     }
 
-    bool operator==(const VTime& v_time) const noexcept
+    bool operator==(const VTimeEx& vtime_ex) const noexcept
     {
-        if (this == &v_time)
+        if (this == &vtime_ex)
             return true;
         
-        return DatetimeSequence<Hour, Minute, Second>::operator==(v_time);
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator==(vtime_ex);
+    }
+
+    bool operator==(const VTime& v_time) const noexcept
+    {
+        // Discrete, but the direction of this loop is important
+        for (size_t index{ 0 }; index < v_time.linkSize(); index++) {
+
+            if (this->getInterval(index)->position() != v_time.getInterval(index)->position())
+                return false;
+
+        }
+
+        return true;
     }
 
     bool operator==(const TimePoint& sys_clock) const noexcept
@@ -210,16 +278,35 @@ public:
         
         if (this->second() != tpSecond)
             return false;
+
+        if (this->millisecond() != (uint16_t)0Ui16)
+            return false;
         
         return true;
     }
 
-    bool operator<(const VTime& v_time) const noexcept
+    bool operator<(const VTimeEx& vtime_ex) const noexcept
     {
-        if (this == &v_time)
+        if (this == &vtime_ex)
             return false;
 
-        return DatetimeSequence<Hour, Minute, Second>::operator<(v_time);
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator<(vtime_ex);
+    }
+
+    bool operator<(const VTime& v_time) const noexcept
+    {
+        // Discrete, but the direction of this loop is important
+        for (size_t index{ 0 }; index < v_time.linkSize(); index++) {
+
+            if (this->getInterval(index)->isAfter(*(v_time.getInterval(index))))
+                return false;
+
+            if (this->getInterval(index)->isBefore(*(v_time.getInterval(index))))
+                return true;
+
+        }
+
+        return false;
     }
 
     bool operator<(const TimePoint& sys_clock) const noexcept
@@ -240,18 +327,36 @@ public:
         else if (this->minute() < tpMinute)
             return true;
         
-        if (this->second() >= tpSecond)
+        if (this->second() > tpSecond)
+            return false;
+        else if (this->second() < tpSecond)
+            return true;
+        
+        if (!this->msRef().isAtStart())
             return false;
         
         return true;
     }
 
+    bool operator>(const VTimeEx& vtime_ex) const noexcept
+    {
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator>(vtime_ex);
+    }
+
     bool operator>(const VTime& v_time) const noexcept
     {
-        if (this == &v_time)
-            return false;
+        // Discrete, but the direction of this loop is important
+        for (size_t index{ 0 }; index < v_time.linkSize(); index++) {
 
-        return DatetimeSequence<Hour, Minute, Second>::operator>(v_time);
+            if (this->getInterval(index)->isBefore(*(v_time.getInterval(index))))
+                return false;
+
+            if (this->getInterval(index)->isAfter(*(v_time.getInterval(index))))
+                return true;
+
+        }
+
+        return false;
     }
 
     bool operator>(const TimePoint& sys_clock) const noexcept
@@ -272,15 +377,26 @@ public:
         else if (this->minute() > tpMinute)
             return true;
         
-        if (this->second() <= tpSecond)
+        if (this->second() < tpSecond)
+            return false;
+        else if (this->second() > tpSecond)
+            return true;
+        
+        // Indicates times are equal down to the ms
+        if (this->msRef().isAtStart())
             return false;
         
         return true;
     }
 
+    bool operator<=(const VTimeEx& vtime_ex) const noexcept
+    {
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator<=(vtime_ex);
+    }
+
     bool operator<=(const VTime& v_time) const noexcept
     {
-        return DatetimeSequence<Hour, Minute, Second>::operator<=(v_time);
+        return (this->operator<(v_time) || this->operator==(v_time));
     }
 
     bool operator<=(const TimePoint& sys_clock) const noexcept
@@ -288,9 +404,14 @@ public:
         return (this->operator<(sys_clock) || this->operator==(sys_clock));
     }
 
+    bool operator>=(const VTimeEx& vtime_ex) const noexcept
+    {
+        return DatetimeSequence<Hour, Minute, Second, Millisecond>::operator>=(vtime_ex);
+    }
+
     bool operator>=(const VTime& v_time) const noexcept
     {
-        return DatetimeSequence<Hour, Minute, Second>::operator>=(v_time);
+        return (this->operator>(v_time) || this->operator==(v_time));
     }
 
     bool operator>=(const TimePoint& sys_clock) const noexcept
@@ -298,40 +419,40 @@ public:
         return (this->operator>(sys_clock) || this->operator==(sys_clock));
     }
 
-    VTime operator+(const VDuration& v_duration) const noexcept
+    VTimeEx operator+(const VDuration& v_duration) const noexcept
     {
-        VTime result{ *this };
+        VTimeEx temp{ *this };
 
-        result.displace(v_duration);
+        temp.displace(v_duration);
 
-        return result;
+        return temp;
     }
 
-    VTime operator-(const VDuration& v_duration) const noexcept
+    VTimeEx operator-(const VDuration& v_duration) const noexcept
     {
-        VTime result{ *this };
+        VTimeEx temp{ *this };
 
         switch (v_duration.sign()) {
         case VDuration::Sign::NEGATIVE:
             // Double negative = positive
-            result.positiveDisplace(v_duration);
+            temp.positiveDisplace(v_duration);
             break;
 
         default:
-            result.displace(v_duration);
+            temp.negativeDisplace(v_duration);
         }
 
-        return result;
+        return temp;
     }
 
-    VTime& operator+=(const VDuration& v_duration) noexcept
+    VTimeEx& operator+=(const VDuration& v_duration) noexcept
     {
         this->displace(v_duration);
 
         return *this;
     }
 
-    VTime& operator-=(const VDuration& v_duration) noexcept
+    VTimeEx& operator-=(const VDuration& v_duration) noexcept
     {
         switch (v_duration.sign()) {
         case VDuration::Sign::NEGATIVE:
@@ -340,7 +461,7 @@ public:
             break;
 
         default:
-            this->displace(v_duration);
+            this->negativeDisplace(v_duration);
         }
 
         return *this;
@@ -353,6 +474,7 @@ public:
             this->hourRef().isAtStart()
             && this->minuteRef().isAtStart()
             && this->secondRef().isAtStart()
+            && this->msRef().isAtStart()
         );
     }
 
@@ -374,6 +496,12 @@ public:
         return this->getInterval(SECOND_INDEX)->position();
     }
 
+    /* Returns millisecond of time */
+    uint16_t millisecond() const noexcept
+    {
+        return this->getInterval(MILLIS_INDEX)->position();
+    }
+
     /* Returns time phase */
     Phase phase() const noexcept
     {
@@ -390,7 +518,7 @@ public:
     std::string timeStr(Format format, Layout layout) const noexcept
     {
         std::string time;
-        time.reserve((size_t)11ULL);
+        time.reserve((size_t)15ULL);
         time = "";
 
         char delimiter{ ':' };
@@ -407,6 +535,15 @@ public:
         time += this->minuteRef().toDoubleDigitStr();
 
         switch (layout) {
+        case Layout::H_M_S_MS:
+            time += (delimiter + this->secondRef().toDoubleDigitStr());
+            time += (delimiter + this->msRef().toTripleDigitStr());
+            break;
+        case Layout::H_M_S_MS_P:
+            time += (delimiter + this->secondRef().toDoubleDigitStr());
+            time += (delimiter + this->msRef().toTripleDigitStr());
+            time += (' ' + this->phaseStr());
+            break;
         case Layout::H_M_S:
             time += (delimiter + this->secondRef().toDoubleDigitStr());
             break;
@@ -430,7 +567,7 @@ public:
     /* Returns time string with provided format */
     std::string timeStr(Format format) const noexcept
     {
-        return this->timeStr(format, Layout::H_M_S);
+        return this->timeStr(format, Layout::H_M_S_MS);
     }
 
     /* Returns time string with provided layout */
@@ -442,7 +579,7 @@ public:
     /* Returns time string */
     std::string timeStr() const noexcept
     {
-        return this->timeStr(Format::MILITARY, Layout::H_M_S);
+        return this->timeStr(Format::MILITARY, Layout::H_M_S_MS);
     }
 
     /* Returns hour in time */
@@ -463,6 +600,12 @@ public:
         return *(this->m_second_ptr);
     }
 
+    /* Returns millisecond in time */
+    const Millisecond& msRef() const noexcept
+    {
+        return *(this->m_millisecond_ptr);
+    }
+
     /* Returns hour in time */
     Hour* getHour() const noexcept
     {
@@ -479,6 +622,12 @@ public:
     Second* getSecond() const noexcept
     {
         return this->m_second_ptr;
+    }
+
+    /* Returns millisend in time */
+    Millisecond* getMs() const noexcept
+    {
+        return this->m_millisecond_ptr;
     }
 
     /* Returns time as fractional Julian Day Number (JDN) */
@@ -498,6 +647,12 @@ public:
             timeJDN += (double).5;
 
         return timeJDN;
+    }
+
+    /* Returns copy of extended time as standard time */
+    VTime toVTime() const noexcept
+    {
+        return VTime{ this->hour(), this->minute(), this->second() };
     }
 
     /* Link time to date instance */
@@ -535,22 +690,23 @@ public:
             total += ((uint32_t)this->hour() * (uint32_t)3'600'000Ui32);
             total += ((uint32_t)this->minute() * (uint32_t)60'000Ui32);
             total += ((uint32_t)this->second() * (uint32_t)1'000Ui32);
+            total += (uint32_t)this->millisecond();
         }
 
         return total;
     }
 
     /* Returns total number of hours from this time until provided time */
-    uint8_t hoursUntil(const VTime& v_time) const noexcept
+    uint8_t hoursUntil(const VTimeEx& vtime_ex) const noexcept
     {
-        if (this == &v_time || this->hour() == v_time.hour())
+        if (this == &vtime_ex || this->hour() == vtime_ex.hour())
             return (uint8_t)0Ui8;
 
         double thisHour{ this->toJulianDayNumber() * (double)24. };
-        double paramHour{ v_time.toJulianDayNumber() * (double)24. };
+        double paramHour{ vtime_ex.toJulianDayNumber() * (double)24. };
         double difference{ .0 };
 
-        if (this->isAfter(v_time))
+        if (this->isAfter(vtime_ex))
             difference = std::floor(thisHour - paramHour);
         else
             difference = std::floor(paramHour - thisHour);
@@ -562,16 +718,16 @@ public:
     }
 
     /* Returns total number of minutes from this time until provided time */
-    uint16_t minutesUntil(const VTime& v_time) const noexcept
+    uint16_t minutesUntil(const VTimeEx& vtime_ex) const noexcept
     {
-        if (this == &v_time || *this == v_time)
+        if (this == &vtime_ex || *this == vtime_ex)
             return (uint16_t)0Ui16;
 
         double thisMinutes{ this->toJulianDayNumber() * (double)1'440. };
-        double paramMinutes{ v_time.toJulianDayNumber() * (double)1'440. };
+        double paramMinutes{ vtime_ex.toJulianDayNumber() * (double)1'440. };
         double difference{ .0 };
 
-        if (this->isAfter(v_time))
+        if (this->isAfter(vtime_ex))
             difference = std::floor(thisMinutes - paramMinutes);
         else
             difference = std::floor(paramMinutes - thisMinutes);
@@ -583,16 +739,16 @@ public:
     }
 
     /* Returns total number of seconds from this time until provided time */
-    uint32_t secondsUntil(const VTime& v_time) const noexcept
+    uint32_t secondsUntil(const VTimeEx& vtime_ex) const noexcept
     {
-        if (this == &v_time || *this == v_time)
+        if (this == &vtime_ex || *this == vtime_ex)
             return (uint32_t)0Ui32;
 
         double thisSeconds{ this->toJulianDayNumber() * (double)86'400. };
-        double paramSeconds{ v_time.toJulianDayNumber() * (double)86'400. };
+        double paramSeconds{ vtime_ex.toJulianDayNumber() * (double)86'400. };
         double difference{ .0 };
 
-        if (this->isAfter(v_time))
+        if (this->isAfter(vtime_ex))
             difference = std::floor(thisSeconds - paramSeconds);
         else
             difference = std::floor(paramSeconds - thisSeconds);
@@ -603,30 +759,51 @@ public:
         return static_cast<uint32_t>(difference);
     }
 
-    /* Returns duration between this time and provided time */
-    VDuration until(const VTime& v_time) const noexcept
+    /* Returns absolute total number of milliseconds from this time until provided time */
+    uint32_t msUntil(const VTimeEx& vtime_ex) const noexcept
     {
-        if (this == &v_time || *this == v_time)
+        if (this == &vtime_ex || *this == vtime_ex)
+            return (uint32_t)0Ui32;
+
+        double thisMillis{ this->toJulianDayNumber() * (double)86'400'000. };
+        double paramMillis{ vtime_ex.toJulianDayNumber() * (double)86'400'000. };
+        double difference{ .0 };
+
+        if (this->isAfter(vtime_ex))
+            difference = std::floor(thisMillis - paramMillis);
+        else
+            difference = std::floor(paramMillis - thisMillis);
+
+        if (difference < (double).0)
+            difference += (double)86'400'000.;
+
+        return static_cast<uint32_t>(difference);
+    }
+
+    /* Returns duration between this time and provided time */
+    VDuration until(const VTimeEx& vtime_ex) const noexcept
+    {
+        if (this == &vtime_ex || *this == vtime_ex)
             return VDuration{};
 
         VDuration newDur{ VDuration::Sign::POSITIVE };
 
-        newDur.getSecond()->largeDisplace(
+        newDur.getMs()->largeDisplace(
             VDuration::Sign::POSITIVE,
-            this->secondsUntil(v_time)
+            this->msUntil(vtime_ex)
         );
 
         return newDur;
     }
 
-    /* Increase time by provided amount of seconds */
-    void increase(uint32_t secs) noexcept;// <--- Incomplete
+    /* Increase time by provided amount of milliseconds */
+    void increase(uint32_t ms) noexcept;// <--- Incomplete
 
     /* Increase time interval by provided amount of units */
     void increase(TimeUnit interval, uint32_t units) noexcept;// <--- Incomplete
 
-    /* Decrease time by provided amount of seconds */
-    void decrease(uint32_t secs) noexcept;// <--- Incomplete
+    /* Decrease time by provided amount of milliseconds */
+    void decrease(uint32_t ms) noexcept;// <--- Incomplete
 
     /* Decrease time interval by provided amount of units */
     void decrease(TimeUnit interval, uint32_t units) noexcept;// <--- Incomplete
@@ -652,6 +829,7 @@ public:
         this->getInterval(HOUR_INDEX)->reset();
         this->getInterval(MINUTE_INDEX)->reset();
         this->getInterval(SECOND_INDEX)->reset();
+        this->getInterval(MILLIS_INDEX)->reset();
     }
 
 
@@ -659,10 +837,12 @@ private:
     static const uint8_t HOUR_INDEX{ 0 };
     static const uint8_t MINUTE_INDEX{ 1 };
     static const uint8_t SECOND_INDEX{ 2 };
+    static const uint8_t MILLIS_INDEX{ 3 };
 
     Hour* m_hour_ptr;
     Minute* m_minute_ptr;
     Second* m_second_ptr;
+    Millisecond* m_millisecond_ptr;
 
     size_t timeUnitEnumToIndex(TimeUnit time_unit) noexcept
     {
@@ -673,6 +853,8 @@ private:
             return MINUTE_INDEX;
         case TimeUnit::SECOND:
             return SECOND_INDEX;
+        case TimeUnit::MILLISECOND:
+            return MILLIS_INDEX;
         default:
             return this->linkSize();// Results in nullptr interval
         }
@@ -687,6 +869,8 @@ private:
             return TimeUnit::MINUTE;
         case SECOND_INDEX:
             return TimeUnit::SECOND;
+        case MILLIS_INDEX:
+            return TimeUnit::MILLISECOND;
         default:
             return TimeUnit::ARB;
         }
@@ -772,6 +956,7 @@ private:
         this->getInterval(HOUR_INDEX)->setPosition(tmHour);
         this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
         this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
     }
 
     void assumeJDN(const JDN& jdn) noexcept
@@ -786,6 +971,7 @@ private:
         this->getInterval(HOUR_INDEX)->setPosition(tmHour);
         this->getInterval(MINUTE_INDEX)->setPosition(tmMinute);
         this->getInterval(SECOND_INDEX)->setPosition(tmSecond);
+        this->getInterval(MILLIS_INDEX)->setPosition((uint16_t)0Ui16);
     }
 
     Hour* retrieveHour() const noexcept
@@ -809,19 +995,26 @@ private:
         return static_cast<Second*>(rawInterval);
     }
 
+    Millisecond* retrieveMillisecond() const noexcept
+    {
+        Interval<uint16_t>* rawInterval{ this->getInterval(MILLIS_INDEX) };
+
+        return static_cast<Millisecond*>(rawInterval);
+    }
+
     void positiveDisplace(const VDuration& v_duration) noexcept
     {
-        return this->getInterval(SECOND_INDEX)->largeDisplace(
+        return this->getInterval(MILLIS_INDEX)->largeDisplace(
             VDuration::Sign::POSITIVE,
-            v_duration.convertedTo(VDuration::TimeUnit::SECOND)
+            v_duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
         );
     }
 
     void negativeDisplace(const VDuration& v_duration) noexcept
     {
-        return this->getInterval(SECOND_INDEX)->largeDisplace(
+        return this->getInterval(MILLIS_INDEX)->largeDisplace(
             VDuration::Sign::NEGATIVE,
-            v_duration.convertedTo(VDuration::TimeUnit::SECOND)
+            v_duration.convertedTo(VDuration::TimeUnit::MILLISECOND)
         );
     }
 
@@ -830,10 +1023,11 @@ private:
         this->m_hour_ptr = this->retrieveHour();
         this->m_minute_ptr = this->retrieveMinute();
         this->m_second_ptr = this->retrieveSecond();
+        this->m_millisecond_ptr = this->retrieveMillisecond();
     }
 
 };
 
 
 
-#endif // SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_H_
+#endif // SIMPLYDTLIB_L_DATETIME_V_TIME_SEQUENCE_EXTENDED_H_

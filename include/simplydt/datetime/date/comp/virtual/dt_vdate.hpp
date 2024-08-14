@@ -11,7 +11,7 @@
 #include"simplydt/datetime/date/unit/dt_year.hpp"
 #include"simplydt/datetime/date/unit/dt_month.hpp"
 #include"simplydt/datetime/date/unit/dt_day.hpp"
-#include"simplydt/duration/comp/dt_vduration.hpp"
+#include"simplydt/duration/comp/virtual/dt_vduration.hpp"
 
 
 /* Full date ( YYYY-mm-dd ) */
