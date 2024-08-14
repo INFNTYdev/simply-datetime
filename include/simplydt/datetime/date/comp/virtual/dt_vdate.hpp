@@ -844,13 +844,10 @@ private:
         this->interpretJDNDate(jdn, gregorianYear, gregorianMonth, gregorianDay);
 
         // Set date interval values
-        this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
-        this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
+        // Day threshold is updated in calls below
         this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
-
-        // Set day threshold
-        // (NOTE: Should we be doing it like this in this case?)
-        this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
+        this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
+        this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
     }
 
     void assumeJDN(const double& jdn) noexcept
