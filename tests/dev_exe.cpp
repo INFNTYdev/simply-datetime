@@ -168,8 +168,6 @@ int main(size_t argc, char* argv[])
 {
 	VDate todayDate{ std::chrono::system_clock::now() };
 
-
-	// FREE UP TO HERE
 	// Ensure lossless conversion with VTime family JDN
 	//VTimeEx t1{ (double).5208333335 };
 	//VTimeEx t2{ (uint16_t)15Ui16, (uint16_t)30Ui16 };
