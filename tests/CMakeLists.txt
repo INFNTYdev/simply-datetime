@@ -12,6 +12,6 @@ include(GoogleTest)
 
 
 # Unit Tests
-add_executable(DateSequenceTests "unit/dt_sequence_tests/date_tests.cpp")
-target_link_libraries(DateSequenceTests PRIVATE gtest gtest_main)
-gtest_discover_tests(DateSequenceTests)
+add_executable(VirtualDateSequenceTests "unit/dt_sequence_tests/date_tests.cpp")
+target_link_libraries(VirtualDateSequenceTests PRIVATE gtest gtest_main)
+gtest_discover_tests(VirtualDateSequenceTests)
