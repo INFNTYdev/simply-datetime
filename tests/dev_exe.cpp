@@ -180,60 +180,78 @@ int main(size_t argc, char* argv[])
 	dateOut(todayDate);
 
 
-	//// 19,945 days ago was epoch
-	//// Updated (8/9/2024)
+	//// 19,948 days ago was epoch
+	//// Updated (8/13/2024)
 
 
-	//// This stuff is correct
-	//std::cout
-	//	<< "\n\nEpoch Date  --->  Today Date\n\n"
-	//	<< std::setw(25) << "daysUntil(today): " << epochDate.daysUntil(todayDate) << '\n'
-	//	<< std::setw(25) << "until(today): " << epochDate.until(todayDate) << '\n'
-	//	<< std::setw(25) << "until(neighbor): " << epochDate.until(epochNeig) << '\n'
-	//	<< std::endl;
+	// This stuff is correct
+	std::cout
+		<< "\n\nEpoch Date  --->  Today Date\n\n"
+		<< std::setw(25) << "daysUntil(today): " << epochDate.daysUntil(todayDate) << '\n'
+		<< std::setw(25) << "until(today): " << epochDate.until(todayDate) << '\n'
+		<< std::setw(25) << "until(neighbor): " << epochDate.until(epochNeig) << '\n'
+		<< std::endl;
 
 
-	//// This stuff is incorrect
-	//std::cout << '\n'
-	//	<< std::setw(25) << "epoch + until today: ";
-	//VDuration untilToday = epochDate.until(todayDate);
-	//VDate expectToday = (epochDate + untilToday);
-	//std::cout << expectToday << " (missing ";
-	//// Extra day becase time not accounted
-	//size_t daysMissing = expectToday.daysUntil(todayDate);
-	//std::cout << daysMissing << " days)" << std::endl;
+	// This stuff is incorrect
+	std::cout << '\n'
+		<< std::setw(25) << "epoch + until today: ";
+	VDuration untilToday = epochDate.until(todayDate);
+	VDate expectToday = (epochDate + untilToday);
+	std::cout << expectToday << " (missing ";
+	// Extra day becase time not accounted
+	size_t daysMissing = expectToday.daysUntil(todayDate);
+	std::cout << daysMissing << " days)" << std::endl;
 
-	//std::cout << std::setw(25) << "epoch + until neighb.: ";
-	//VDuration untilNeig = epochDate.until(epochNeig);
-	//VDate expectNeig = (epochDate + untilNeig);
-	//std::cout << expectNeig << " (missing ";
-	//// Extra day becase time not accounted
-	//daysMissing = expectNeig.daysUntil(epochNeig);
-	//std::cout << daysMissing << " days)" << std::endl;
+	std::cout << std::setw(25) << "epoch + until neighb.: ";
+	VDuration untilNeig = epochDate.until(epochNeig);
+	VDate expectNeig = (epochDate + untilNeig);
+	std::cout << expectNeig << " (missing ";
+	// Extra day becase time not accounted
+	daysMissing = expectNeig.daysUntil(epochNeig);
+	std::cout << daysMissing << " days)" << std::endl;
 
-	//std::cout << "\nSearching for day loss..." << std::endl;
+	std::cout << "\nSearching for day loss..." << std::endl;
+	size_t validateCount{ 0 };
 
-	//while (daysMissing == 0) {
+	while (daysMissing == 0 && validateCount < (size_t)1'000'000Ui64) {
 
-	//	epochNeig.getDay().increment();
+		epochNeig.increase((uint32_t)1Ui32);
+		std::cout << std::setw(25)
+			<< "\nValidating: "
+			<< epochNeig.dateStr(VDate::Format::STANDARD);
 
-	//	untilNeig = epochDate.until(epochNeig);
+		untilNeig = epochDate.until(epochNeig);
 
-	//	if (untilNeig.days() == 59)
-	//		std::cout << "\nNext loop" << std::endl;
+		// Issue here with JDN and month?
+		// .assumeJDN() gets 2 for month but then somehow it becomes 3???
+		if (untilNeig.days() == 30)
+			std::cout << std::endl;// Next loop is issue
 
-	//	expectNeig = (epochDate + untilNeig);
-	//	daysMissing = expectNeig.daysUntil(epochNeig);
+		expectNeig = (epochDate + untilNeig);
+		daysMissing = expectNeig.daysUntil(epochNeig);
 
-	//}
+		if (!daysMissing)
+			++validateCount;
 
-	//std::cout << "\n\nDay loss started with:";
-	//dateOut(expectNeig);
-	//std::cout << "("
-	//	<< epochDate.daysUntil(expectNeig)
-	//	<< " days from epoch)"
-	//	<< "\n(" << expectNeig.daysUntil(epochNeig) << " days missing)"
-	//	<< std::endl;
+	}
+
+	if (daysMissing) {
+		std::cout << "\n\nDay loss started with:";
+		dateOut(expectNeig);
+		std::cout << "("
+			<< epochDate.daysUntil(expectNeig)
+			<< " days from epoch)"
+			<< "\n(" << expectNeig.daysUntil(epochNeig) << " days missing)"
+			<< std::endl;
+
+		return 23;
+	}
+
+	std::cout
+		<< "\n\nNo days lost within " << validateCount
+		<< " days of validation."
+		<< std::endl;
 
 
 	// FREE UP TO HERE
