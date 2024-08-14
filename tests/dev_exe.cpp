@@ -86,6 +86,7 @@
 * -> [X] Find new means to displace Day class
 * -> [X] Investigate why illegals are thrown in sequence classes
 * -> [] Take a good look at this libraries structure and start improving
+* -> [] VDate large displace divergence test
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 

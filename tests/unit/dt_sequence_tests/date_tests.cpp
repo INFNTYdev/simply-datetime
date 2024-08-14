@@ -24,10 +24,11 @@ namespace VDateCalculationTests {
 
 		uint32_t validateCount{ 0 };
 
+		// Confirm lossless VDate JDN initialization
 		if (sampleDate != VDate{}) {
 			std::cout << std::setw(13)
 				<< "[ FAILURE  ] "
-				<< "Invalid JDN construction for January 1st, 1970 date: "
+				<< "Invalid JDN construction for January 1st, 1970 epoch date: "
 				<< sampleDate.toJulianDayNumber()
 				<< std::setw(13) << ""
 				<< "\n\t\t-> JDN expected: " << epochJDN
@@ -53,6 +54,7 @@ namespace VDateCalculationTests {
 
 			uint32_t expectedJDN{ (lastJDN + (uint32_t)1Ui32) };
 
+			// Confirm sample date JDN is just one after the previous
 			if (sampleDate.toJulianDayNumber() != expectedJDN) {
 				std::cout << std::setw(13)
 					<< "[ FAILURE  ] "
