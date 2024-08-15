@@ -6,6 +6,7 @@
 
 #include"simplydt/datetime/date/comp/virtual/dt_vdate.hpp"
 #include"simplydt/datetime/time/comp/virtual/dt_vtime_ex.hpp"
+#include"simplydt/datetime/comp/virtual/vdatetime.hpp"
 
 
 /* Extended datetime (YYYY-mm-dd-HH-MM-SS-MS) */
