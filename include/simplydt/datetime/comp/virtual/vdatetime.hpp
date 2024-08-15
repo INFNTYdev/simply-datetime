@@ -4,8 +4,8 @@
 
 
 
-#include"simplydt/datetime/date/comp/dt_date.hpp"
-#include"simplydt/datetime/time/comp/dt_stime.hpp"
+#include"simplydt/datetime/date/comp/virtual/dt_vdate.hpp"
+#include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 
 /* Standard datetime (YYYY-mm-dd-HH-MM-SS) */
@@ -164,7 +164,7 @@ public:
     VDate* getDate() noexcept;
 
     /* Returns pointer to datetime time */
-    VTimeEx* getTime() noexcept;
+    VTime* getTime() noexcept;
 
     /* Returns standard library chronological time point copy */
     TimePoint toChrono() const noexcept;

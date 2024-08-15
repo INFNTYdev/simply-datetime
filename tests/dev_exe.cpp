@@ -41,7 +41,7 @@
 #include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 // Virtual Datetime
-//#include"simplydt/datetime/comp/virtual/vdatetime_ex.hpp"
+#include"simplydt/datetime/comp/virtual/vdatetime_ex.hpp"
 //#include"simplydt/datetime/comp/virtual/vdatetime.hpp"
 
 
@@ -193,18 +193,21 @@ int main(size_t argc, char* argv[])
 	VDate creationDate{ (uint16_t)2024Ui16, (uint16_t)6Ui16, (uint16_t)28Ui16 };
 
 	std::cout << "Elapsed dev time: "
-		<< creationDate.until(todayDate)
-		<< '\n' << std::endl;
+		<< creationDate.until(todayDate) << std::endl
+		<< "\n\n\nCONSOLE DEBUG:"
+		<< std::endl;
 
 	// DO NOT DELETE ABOVE
 
 
 
-	//
-	VDate epoch{};
-	VDate max{ VDate::MAX_JDN };
+	//\\//
+	VDatetimeEx::TimePoint nowChrono{ std::chrono::system_clock::now() };
+	
+	VDatetimeEx demo{ VDate{2024, 8, 15}, VTimeEx{} };
 
-	uint32_t between{ epoch.daysUntil(max) };// 23,216,638
+	std::cout << '\n' << demo << std::endl;
+	//\\//
 
 
 

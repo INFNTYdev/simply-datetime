@@ -827,12 +827,10 @@ private:
         this->interpretTimePointDate(time_point, gregorianYear, gregorianMonth, gregorianDay);
 
         // Set date interval values
+        // Day threshold is updated in calls below
         this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
         this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
         this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
-
-        // Set day threshold
-        this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
     }
 
     void assumeJDN(const JDN& jdn) noexcept
