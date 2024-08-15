@@ -75,23 +75,23 @@ public:
         this->linkDatetime();
     }
 
-    VDatetimeEx(const VDatetimeEx& datetime) noexcept
-        : m_date{ datetime.m_date },
-        m_time{ datetime.m_time }
+    VDatetimeEx(const VDatetimeEx& vdatetime_ex) noexcept
+        : m_date{ vdatetime_ex.m_date },
+        m_time{ vdatetime_ex.m_time }
     {
         this->linkDatetime();
     }
 
-    VDatetimeEx(VDatetimeEx&& datetime) noexcept
-        : m_date{ std::move(datetime.m_date) },
-        m_time{ std::move(datetime.m_time) }
+    VDatetimeEx(VDatetimeEx&& vdatetime_ex) noexcept
+        : m_date{ std::move(vdatetime_ex.m_date) },
+        m_time{ std::move(vdatetime_ex.m_time) }
     {
         //
     }
 
-    VDatetimeEx(const SDatetime& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx(const VDatetime& v_datetime) noexcept;//   <--- Complete VDatetime first
 
-    VDatetimeEx(SDatetime&& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx(VDatetime&& v_datetime) noexcept;//   <--- Complete VDatetime first
 
     VDatetimeEx() noexcept
         : m_date{},
@@ -102,40 +102,40 @@ public:
 
     ~VDatetimeEx() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const VDatetimeEx& datetime) noexcept
+    friend std::ostream& operator<<(std::ostream& os, const VDatetimeEx& vdatetime_ex) noexcept
     {
-        os << datetime.datetimeStr();
+        os << vdatetime_ex.datetimeStr();
 
         return os;
     }
 
-    VDatetimeEx& operator=(const VDatetimeEx& datetime) noexcept
+    VDatetimeEx& operator=(const VDatetimeEx& vdatetime_ex) noexcept
     {
-        if (this == &datetime)
+        if (this == &vdatetime_ex)
             return *this;
         
-        this->m_date = datetime.m_date;
-        this->m_time = datetime.m_time;
+        this->m_date = vdatetime_ex.m_date;
+        this->m_time = vdatetime_ex.m_time;
 
         this->linkDatetime();
 
         return *this;
     }
 
-    VDatetimeEx& operator=(VDatetimeEx&& datetime) noexcept
+    VDatetimeEx& operator=(VDatetimeEx&& vdatetime_ex) noexcept
     {
-        if (this == &datetime)
+        if (this == &vdatetime_ex)
             return *this;
         
-        this->m_date = std::move(datetime.m_date);
-        this->m_time = std::move(datetime.m_time);
+        this->m_date = std::move(vdatetime_ex.m_date);
+        this->m_time = std::move(vdatetime_ex.m_time);
 
         return *this;
     }
 
-    VDatetimeEx& operator=(const SDatetime& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx& operator=(const VDatetime& v_datetime) noexcept;//   <--- Complete VDatetime first
 
-    VDatetimeEx& operator=(SDatetime&& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx& operator=(VDatetime&& v_datetime) noexcept;//   <--- Complete VDatetime first
 
     VDatetimeEx& operator=(const TimePoint& sys_clock) noexcept
     {
@@ -145,40 +145,40 @@ public:
         return *this;
     }
 
-    bool operator==(const VDatetimeEx& datetime) const noexcept
+    bool operator==(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        if (this == &datetime)
+        if (this == &vdatetime_ex)
             return true;
         
-        if (this->m_date != datetime.m_date)
+        if (this->m_date != vdatetime_ex.m_date)
             return false;
         
-        if (this->m_time != datetime.m_time)
+        if (this->m_time != vdatetime_ex.m_time)
             return false;
 
         return true;
     }
 
-    bool operator==(const SDatetime& s_datetime) const noexcept;//   <--- Complete SDatetime first
+    bool operator==(const VDatetime& v_datetime) const noexcept;//   <--- Complete VDatetime first
 
-    bool operator<(const VDatetimeEx& datetime) const noexcept
+    bool operator<(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        return this->isBefore(datetime);
+        return this->isBefore(vdatetime_ex);
     }
 
-    bool operator>(const VDatetimeEx& datetime) const noexcept
+    bool operator>(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        return this->isAfter(datetime);
+        return this->isAfter(vdatetime_ex);
     }
 
-    bool operator<=(const VDatetimeEx& datetime) const noexcept
+    bool operator<=(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        return (this->isBefore(datetime) || this->operator==(datetime));
+        return (this->isBefore(vdatetime_ex) || this->operator==(vdatetime_ex));
     }
 
-    bool operator>=(const VDatetimeEx& datetime) const noexcept
+    bool operator>=(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        return (this->isAfter(datetime) || this->operator==(datetime));
+        return (this->isAfter(vdatetime_ex) || this->operator==(vdatetime_ex));
     }
 
     VDatetimeEx operator+(const VDuration& duration) const noexcept
@@ -448,15 +448,15 @@ public:
     }
 
     /* Returns true if provided datetime occurs after this datetime */
-    bool isBefore(const VDatetimeEx& datetime) const noexcept
+    bool isBefore(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        if (this == &datetime || *this == datetime)
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
             return false;
         
-        if (this->m_date.isAfter(datetime.m_date))
+        if (this->m_date.isAfter(vdatetime_ex.m_date))
             return false;
         
-        if (this->m_time.isAfter(datetime.m_time))
+        if (this->m_time.isAfter(vdatetime_ex.m_time))
             return false;
 
         return true;
@@ -475,15 +475,15 @@ public:
     }
 
     /* Returns true if provided datetime occurs before this datetime */
-    bool isAfter(const VDatetimeEx& datetime) const noexcept
+    bool isAfter(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        if (this == &datetime || *this == datetime)
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
             return false;
         
-        if (this->m_date.isBefore(datetime.m_date))
+        if (this->m_date.isBefore(vdatetime_ex.m_date))
             return false;
         
-        if (this->m_time.isBefore(datetime.m_time))
+        if (this->m_time.isBefore(vdatetime_ex.m_time))
             return false;
 
         return true;
@@ -514,9 +514,9 @@ public:
     }
 
     /* Returns standard datetime copy of this datetime */
-    SDatetime toSDatetime() const noexcept
+    VDatetime toSDatetime() const noexcept
     {
-        return SDatetime{
+        return VDatetime{
             this->m_date,
             VTime(
                 this->hour(),
@@ -527,15 +527,15 @@ public:
     }
 
     /* Returns absolute total number of days from this datetime to provided datetime */
-    size_t daysUntil(const VDatetimeEx& datetime) const noexcept
+    size_t daysUntil(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        return this->m_date.daysUntil(datetime.m_date);
+        return this->m_date.daysUntil(vdatetime_ex.m_date);
     }
 
     /* Returns absolute total number of minutes from this datetime to provided datetime */
-    size_t minutesUntil(const VDatetimeEx& datetime) const noexcept
+    size_t minutesUntil(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        size_t dayMinutes{ (this->daysUntil(datetime) * (size_t)1'440ULL) };
+        size_t dayMinutes{ (this->daysUntil(vdatetime_ex) * (size_t)1'440ULL) };
 
         //
 
@@ -543,23 +543,23 @@ public:
     }
 
     /* Returns absolute total number of seconds from this datetime to provided datetime */
-    size_t secondsUntil(const VDatetimeEx& datetime) const noexcept
+    size_t secondsUntil(const VDatetimeEx& vdatetime_ex) const noexcept
     {
         size_t totalSeconds{ 0 };
 
-        if (this == &datetime || *this == datetime)
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
             return totalSeconds;
 
         std::pair<const VDatetimeEx*, const VDatetimeEx*> dtRef{
             nullptr, nullptr// (high, low)
         };
 
-        if (this->isAfter(datetime)) {
+        if (this->isAfter(vdatetime_ex)) {
             dtRef.first = this;
-            dtRef.second = &datetime;
+            dtRef.second = &vdatetime_ex;
         }
         else {
-            dtRef.first = &datetime;
+            dtRef.first = &vdatetime_ex;
             dtRef.second = this;
         }
 
@@ -604,23 +604,23 @@ public:
     }
 
     /* Returns absolute total number of milliseconds from this datetime to provided datetime */
-    size_t millisecondsUntil(const VDatetimeEx& datetime) const noexcept
+    size_t millisecondsUntil(const VDatetimeEx& vdatetime_ex) const noexcept
     {
         size_t totalMs{ 0 };
 
-        if (this == &datetime || *this == datetime)
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
             return totalMs;
 
         std::pair<const VDatetimeEx*, const VDatetimeEx*> dtRef{
             nullptr, nullptr// (high, low)
         };
 
-        if (this->isAfter(datetime)) {
+        if (this->isAfter(vdatetime_ex)) {
             dtRef.first = this;
-            dtRef.second = &datetime;
+            dtRef.second = &vdatetime_ex;
         }
         else {
-            dtRef.first = &datetime;
+            dtRef.first = &vdatetime_ex;
             dtRef.second = this;
         }
 
@@ -677,18 +677,18 @@ public:
     }
 
     /* Returns duration from this datetime to provided datetime */
-    VDuration until(const VDatetimeEx& datetime) const noexcept
+    VDuration until(const VDatetimeEx& vdatetime_ex) const noexcept
     {
-        if (this == &datetime || *this == datetime)
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
             return VDuration{};
         
         VDuration result{};
         result.getMs().largeDisplace(
             VDuration::Sign::POSITIVE,
-            this->millisecondsUntil(datetime)
+            this->millisecondsUntil(vdatetime_ex)
         );
 
-        if (this->isAfter(datetime) && result.sign() != VDuration::Sign::NEGATIVE)
+        if (this->isAfter(vdatetime_ex) && result.sign() != VDuration::Sign::NEGATIVE)
             result.invert();
 
         return result;

@@ -9,7 +9,7 @@
 
 
 /* Standard datetime (YYYY-mm-dd-HH-MM-SS) */
-class SDatetime {
+class VDatetime {
 
 public:
     /* Datetime time unit */
@@ -25,53 +25,53 @@ public:
         TIME_DATE,// time - date
     };
 
-    SDatetime(TimePoint chrono) noexcept;
+    VDatetime(TimePoint sys_clock) noexcept;
 
-    SDatetime(const VDate& date, const VTime& s_time) noexcept;
+    VDatetime(const VDate& v_date, const VTime& v_time) noexcept;
 
-    SDatetime(VDate&& date, VTime&& s_time) noexcept;
+    VDatetime(VDate&& v_date, VTime&& v_time) noexcept;
 
-    SDatetime(const VDate& date, VTime&& s_time) noexcept;
+    VDatetime(const VDate& v_date, VTime&& v_time) noexcept;
 
-    SDatetime(VDate&& date, const VTime& s_time) noexcept;
+    VDatetime(VDate&& v_date, const VTime& v_time) noexcept;
 
-    SDatetime(const VDate& date) noexcept;
+    VDatetime(const VDate& v_date) noexcept;
 
-    SDatetime(VDate&& date) noexcept;
+    VDatetime(VDate&& v_date) noexcept;
 
-    SDatetime(const SDatetime& s_datetime) noexcept;
+    VDatetime(const VDatetime& v_datetime) noexcept;
 
-    SDatetime(SDatetime&& s_datetime) noexcept;
+    VDatetime(VDatetime&& v_datetime) noexcept;
 
-    SDatetime() noexcept;
+    VDatetime() noexcept;
 
-    ~SDatetime() noexcept = default;
+    ~VDatetime() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const SDatetime& s_datetime) noexcept;
+    friend std::ostream& operator<<(std::ostream& os, const VDatetime& v_datetime) noexcept;
 
-    SDatetime& operator=(const SDatetime& s_datetime) noexcept;
+    VDatetime& operator=(const VDatetime& v_datetime) noexcept;
 
-    SDatetime& operator=(SDatetime&& s_datetime) noexcept;
+    VDatetime& operator=(VDatetime&& v_datetime) noexcept;
 
-    SDatetime& operator=(const TimePoint& chrono) noexcept;
+    VDatetime& operator=(const TimePoint& sys_clock) noexcept;
 
-    bool operator==(const SDatetime& s_datetime) const noexcept;
+    bool operator==(const VDatetime& v_datetime) const noexcept;
 
-    bool operator<(const SDatetime& s_datetime) const noexcept;
+    bool operator<(const VDatetime& v_datetime) const noexcept;
 
-    bool operator>(const SDatetime& s_datetime) const noexcept;
+    bool operator>(const VDatetime& v_datetime) const noexcept;
 
-    bool operator<=(const SDatetime& s_datetime) const noexcept;
+    bool operator<=(const VDatetime& v_datetime) const noexcept;
 
-    bool operator>=(const SDatetime& s_datetime) const noexcept;
+    bool operator>=(const VDatetime& v_datetime) const noexcept;
 
-    SDatetime operator+(const VDuration& duration) const noexcept;
+    VDatetime operator+(const VDuration& v_duration) const noexcept;
 
-    SDatetime operator-(const VDuration& duration) const noexcept;
+    VDatetime operator-(const VDuration& v_duration) const noexcept;
 
-    SDatetime& operator+=(const VDuration& duration) noexcept;
+    VDatetime& operator+=(const VDuration& v_duration) noexcept;
 
-    SDatetime& operator-=(const VDuration& duration) noexcept;
+    VDatetime& operator-=(const VDuration& v_duration) noexcept;
 
 
     /* Returns datetime year */
@@ -149,16 +149,16 @@ public:
     const char* monthTitle() const noexcept;
 
     /* Returns true if provided datetime occurs after this datetime */
-    bool isBefore(const SDatetime& s_datetime) const noexcept;
+    bool isBefore(const VDatetime& v_datetime) const noexcept;
 
     /* Returns true if provided date occurs after this datetime date */
-    bool isBefore(const VDate& date) const noexcept;
+    bool isBefore(const VDate& v_date) const noexcept;
 
     /* Returns true if provided datetime occurs before this datetime */
-    bool isAfter(const SDatetime& s_datetime) const noexcept;
+    bool isAfter(const VDatetime& v_datetime) const noexcept;
 
     /* Returns true if provided date occurs before this datetime date */
-    bool isAfter(const VDate& date) const noexcept;
+    bool isAfter(const VDate& v_date) const noexcept;
 
     /* Returns pointer to datetime date */
     VDate* getDate() noexcept;
@@ -170,19 +170,19 @@ public:
     TimePoint toChrono() const noexcept;
 
     /* Returns absolute total number of days from this datetime to provided datetime */
-    size_t daysUntil(const SDatetime& s_datetime) const noexcept;
+    size_t daysUntil(const VDatetime& v_datetime) const noexcept;
 
     /* Returns absolute total number of minutes from this datetime to provided datetime */
-    size_t minutesUntil(const SDatetime& s_datetime) const noexcept;
+    size_t minutesUntil(const VDatetime& v_datetime) const noexcept;
 
     /* Returns absolute total number of seconds from this datetime to provided datetime */
-    size_t secondsUntil(const SDatetime& s_datetime) const noexcept;
+    size_t secondsUntil(const VDatetime& v_datetime) const noexcept;
 
     /* Returns duration from this datetime to provided datetime */
-    VDuration until(const SDatetime& s_datetime) const noexcept;
+    VDuration until(const VDatetime& v_datetime) const noexcept;
 
     /* Displace datetime using provided duration */
-    void displace(const VDuration& duration) noexcept;
+    void displace(const VDuration& v_duration) noexcept;
 
 
 private:

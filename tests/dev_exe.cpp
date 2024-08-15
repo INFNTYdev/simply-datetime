@@ -72,7 +72,7 @@
 * -> [X] Implement VDate .toTimePoint() method
 * -> [X] Determine max number of days between two VDate's for VDatetimeEx/VDatetime class
 * -> [X] VDate large displace divergence test
-* -> [] Plan and implement VDatetimeEx/SDatetime class interfaces
+* -> [] Plan and implement VDatetimeEx/VDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
 * 
