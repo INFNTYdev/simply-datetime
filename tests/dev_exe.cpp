@@ -69,8 +69,8 @@
 * -> [X] Implement .toSTime() method in VTimeEx class
 * -> [X] Determine highest possible number Range class can handle with an int type
 * -> [X] Implement VDate .toTimePoint() method
-* -> [] Determine max number of days between two VDate's for VDatetimeEx/VDatetime class
-* -> [] VDate large displace divergence test
+* -> [X] Determine max number of days between two VDate's for VDatetimeEx/VDatetime class
+* -> [X] VDate large displace divergence test
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
@@ -200,6 +200,10 @@ int main(size_t argc, char* argv[])
 
 
 	//
+	VDate epoch{};
+	VDate max{ VDate::MAX_JDN };
+
+	uint32_t between{ epoch.daysUntil(max) };// 23,216,638
 
 
 
