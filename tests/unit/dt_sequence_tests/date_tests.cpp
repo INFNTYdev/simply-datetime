@@ -147,8 +147,11 @@ namespace VDateCalculationTests {
 	}
 
 
+	// Tests if VDate class produces accurate day-of-week indecies
 	TEST(VDateDivergenceTestSuite, VDateDayOfWeekDivergeTest)
 	{
+		// This test relies on an accurate day-of-week index for the epoch date
+
 		const VDate epochDate{};// Test anchor point
 		VDate sampleDate{ epochDate };// Test variable
 
@@ -166,50 +169,76 @@ namespace VDateCalculationTests {
 			<< VDate{ VDate::MAX_JDN }.dateStr(VDate::Format::STANDARD)
 			<< "')...\n" << std::endl;
 
+		std::string sampleDOWLiteral{ sampleDate.dayOfWeek() };
+		uint8_t expectedDOWIndex{ (uint8_t)(lastDOWIndex + (uint8_t)1Ui8) };
+		uint8_t sampleDOWIndex{
+			simplydt::getDayOfWeekIndex(
+				sampleDate.year(),
+				sampleDate.month(),
+				sampleDate.day()
+			)
+		};
+
+		// Confirm initial date is epoch date
+		if (sampleDate != epochDate) {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Initial epoch date is incorrect: '"
+				<< sampleDate.dateStr(VDate::Format::STANDARD)
+				<< '\''
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Date expected: "
+				<< epochDate.dateStr(VDate::Format::STANDARD)
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
+		// Confirm epoch date has correct initial day-of-week
+		if (sampleDate == epochDate && sampleDOWLiteral != "Thursday") {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Epoch date returns incorrect day of week: '"
+				<< sampleDOWLiteral
+				<< '\''
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Day-of-week expected: Thursday"
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
+		// Confirm epoch day-of-week is correct index
+		if (sampleDate == epochDate && sampleDOWIndex != epochDOWIndex) {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Library day-of-week index is incorrect: "
+				<< (int)sampleDOWIndex
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Day-of-week index expected: " << (int)epochDOWIndex
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
 		while (validateCount != MAX_TESTING_DAYS) {
-			
-			std::string sampleDOWLiteral{ sampleDate.dayOfWeek() };
-			uint8_t expectedDOWIndex{ (uint8_t)(lastDOWIndex + (uint8_t)1Ui8) };
-			uint8_t sampleDOWIndex{
-				simplydt::getDayOfWeekIndex(
+
+			if (validateCount) {
+				sampleDOWLiteral = sampleDate.dayOfWeek();
+				expectedDOWIndex = (uint8_t)(lastDOWIndex + (uint8_t)1Ui8);
+				sampleDOWIndex = simplydt::getDayOfWeekIndex(
 					sampleDate.year(),
 					sampleDate.month(),
 					sampleDate.day()
-				)
-			};
+				);
+			}
 
+			// Indecies are 0 (Sunday) - 6 (Saturday)
 			if (expectedDOWIndex > (uint8_t)6Ui8)
 				expectedDOWIndex = (uint8_t)0Ui8;
 
 			// Update last day-of-week index
 			lastDOWIndex = expectedDOWIndex;
-
-			// Confirm epoch date has correct initial day-of-week
-			if (sampleDate == epochDate && sampleDOWLiteral != "Thursday") {
-				std::cout << std::setw(13)
-					<< "[ FAILURE  ] "
-					<< "Epoch date returns incorrect day of week: '"
-					<< sampleDOWLiteral
-					<< '\''
-					<< std::setw(13) << ""
-					<< "\n\t\t-> Day-of-week expected: Thursday"
-					<< '\n' << std::endl;
-
-				FAIL();
-			}
-
-			// Confirm initial day-of-week has correct index
-			if (sampleDate == epochDate && sampleDOWIndex != epochDOWIndex) {
-				std::cout << std::setw(13)
-					<< "[ FAILURE  ] "
-					<< "Library day-of-week index is incorrect: "
-					<< (int)sampleDOWIndex
-					<< std::setw(13) << ""
-					<< "\n\t\t-> Day-of-week index expected: " << (int)epochDOWIndex
-					<< '\n' << std::endl;
-
-				FAIL();
-			}
 
 			// Confirm day-of-week index is just one ahead of the previous
 			if (sampleDOWIndex != expectedDOWIndex) {
@@ -236,6 +265,12 @@ namespace VDateCalculationTests {
 
 		// Number of validated days is equal to the max testable days
 		ASSERT_EQ(MAX_TESTING_DAYS, validateCount);
+	}
+
+
+	TEST(VDateDivergenceTestSuite, VDateLargeDisplaceDivergeTest)
+	{
+		//
 	}
 
 }
