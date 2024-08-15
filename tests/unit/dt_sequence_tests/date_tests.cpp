@@ -268,9 +268,12 @@ namespace VDateCalculationTests {
 	}
 
 
+	// Tests if VDate class maintains JDN integrity with large displace requests
 	TEST(VDateDivergenceTestSuite, VDateLargeDisplaceDivergeTest)
 	{
 		// This test relies on VDate class JDN integrity
+
+		// NOTE: Need another test for VDate negative displacement
 
 		const VDate epochDate{};// Test anchor point
 		VDate sampleDate{ epochDate };// Test variable
