@@ -69,6 +69,8 @@
 * -> [X] Implement .toSTime() method in VTimeEx class
 * -> [X] Determine highest possible number Range class can handle with an int type
 * -> [X] Implement VDate .toTimePoint() method
+* -> [] Determine max number of days between two VDate's for VDatetimeEx/VDatetime class
+* -> [] VDate large displace divergence test
 * -> [] Plan and implement Datetime/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
@@ -86,7 +88,6 @@
 * -> [X] Find new means to displace Day class
 * -> [X] Investigate why illegals are thrown in sequence classes
 * -> [] Take a good look at this libraries structure and start improving
-* -> [] VDate large displace divergence test
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
