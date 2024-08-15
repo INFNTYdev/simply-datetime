@@ -270,7 +270,7 @@ namespace VDateCalculationTests {
 
 	TEST(VDateDivergenceTestSuite, VDateLargeDisplaceDivergeTest)
 	{
-		//
+		// This test relies on VDate class JDN integrity
 
 		const VDate epochDate{};// Test anchor point
 		VDate sampleDate{ epochDate };// Test variable
