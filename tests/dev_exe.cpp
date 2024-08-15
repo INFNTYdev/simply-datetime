@@ -41,7 +41,7 @@
 #include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 // Virtual Datetime
-// N/A
+//#include"simplydt/datetime/comp/virtual/vdatetime_ex.hpp"
 
 
 
@@ -71,7 +71,7 @@
 * -> [X] Implement VDate .toTimePoint() method
 * -> [X] Determine max number of days between two VDate's for VDatetimeEx/VDatetime class
 * -> [X] VDate large displace divergence test
-* -> [] Plan and implement Datetime/SDatetime class interfaces
+* -> [] Plan and implement VDatetimeEx/SDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
 * 
@@ -130,7 +130,7 @@ void ProjectInfoOut() noexcept
 //	std::cout << dur1 << std::endl;
 //}
 //
-//void datetimeOut(const Datetime& datetime) noexcept
+//void datetimeOut(const VDatetimeEx& datetime) noexcept
 //{
 //	std::cout
 //		<< '\n'

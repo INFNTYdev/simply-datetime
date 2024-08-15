@@ -9,8 +9,8 @@
 #include"simplydt/datetime/comp/sdt_sdatetime.hpp"
 
 
-/* Full datetime (YYYY-mm-dd-HH-MM-SS-MS) */
-class Datetime {
+/* Extended datetime (YYYY-mm-dd-HH-MM-SS-MS) */
+class VDatetimeEx {
 
 public:
     /* Datetime time unit */
@@ -18,7 +18,7 @@ public:
     /* Datetime type */
     using Type = VDate::DatetimeType;
     /* Standard library chronological time point (system clock) */
-    using Chrono = std::chrono::time_point<std::chrono::system_clock>;
+    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
     /* Datetime layout */
     enum Layout {
@@ -26,90 +26,90 @@ public:
         TIME_DATE,// time - date
     };
 
-    Datetime(const Chrono& chrono) noexcept
-        : m_date{ chrono },
-        m_time{ chrono }
+    VDatetimeEx(const TimePoint& sys_clock) noexcept
+        : m_date{ sys_clock },
+        m_time{ sys_clock }
     {
         this->linkDatetime();
     }
 
-    Datetime(const VDate& date, const VTimeEx& time) noexcept
-        : m_date{ date },
-        m_time{ time }
+    VDatetimeEx(const VDate& v_date, const VTimeEx& vtime_ex) noexcept
+        : m_date{ v_date },
+        m_time{ vtime_ex }
     {
         this->linkDatetime();
     }
 
-    Datetime(VDate&& date, VTimeEx&& time) noexcept
-        : m_date{ std::forward<VDate>(date) },
-        m_time{ std::forward<VTimeEx>(time) }
+    VDatetimeEx(VDate&& v_date, VTimeEx&& vtime_ex) noexcept
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{ std::forward<VTimeEx>(vtime_ex) }
     {
         this->linkDatetime();
     }
 
-    Datetime(const VDate& date, VTimeEx&& time) noexcept
-        : m_date{ date },
-        m_time{ std::forward<VTimeEx>(time) }
+    VDatetimeEx(const VDate& v_date, VTimeEx&& vtime_ex) noexcept
+        : m_date{ v_date },
+        m_time{ std::forward<VTimeEx>(vtime_ex) }
     {
         this->linkDatetime();
     }
 
-    Datetime(VDate&& date, const VTimeEx& time) noexcept
-        : m_date{ std::forward<VDate>(date) },
-        m_time{ time }
+    VDatetimeEx(VDate&& v_date, const VTimeEx& vtime_ex) noexcept
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{ vtime_ex }
     {
         this->linkDatetime();
     }
 
-    Datetime(const VDate& date) noexcept
-        : m_date{ date },
+    VDatetimeEx(const VDate& v_date) noexcept
+        : m_date{ v_date },
         m_time{}
     {
         this->linkDatetime();
     }
 
-    Datetime(VDate&& date) noexcept
-        : m_date{ std::forward<VDate>(date) },
+    VDatetimeEx(VDate&& v_date) noexcept
+        : m_date{ std::forward<VDate>(v_date) },
         m_time{}
     {
         this->linkDatetime();
     }
 
-    Datetime(const Datetime& datetime) noexcept
+    VDatetimeEx(const VDatetimeEx& datetime) noexcept
         : m_date{ datetime.m_date },
         m_time{ datetime.m_time }
     {
         this->linkDatetime();
     }
 
-    Datetime(Datetime&& datetime) noexcept
+    VDatetimeEx(VDatetimeEx&& datetime) noexcept
         : m_date{ std::move(datetime.m_date) },
         m_time{ std::move(datetime.m_time) }
     {
         //
     }
 
-    Datetime(const SDatetime& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx(const SDatetime& s_datetime) noexcept;//   <--- Complete SDatetime first
 
-    Datetime(SDatetime&& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx(SDatetime&& s_datetime) noexcept;//   <--- Complete SDatetime first
 
-    Datetime() noexcept
+    VDatetimeEx() noexcept
         : m_date{},
         m_time{}
     {
         this->linkDatetime();
     }
 
-    ~Datetime() noexcept = default;
+    ~VDatetimeEx() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const Datetime& datetime) noexcept
+    friend std::ostream& operator<<(std::ostream& os, const VDatetimeEx& datetime) noexcept
     {
         os << datetime.datetimeStr();
 
         return os;
     }
 
-    Datetime& operator=(const Datetime& datetime) noexcept
+    VDatetimeEx& operator=(const VDatetimeEx& datetime) noexcept
     {
         if (this == &datetime)
             return *this;
@@ -122,7 +122,7 @@ public:
         return *this;
     }
 
-    Datetime& operator=(Datetime&& datetime) noexcept
+    VDatetimeEx& operator=(VDatetimeEx&& datetime) noexcept
     {
         if (this == &datetime)
             return *this;
@@ -133,19 +133,19 @@ public:
         return *this;
     }
 
-    Datetime& operator=(const SDatetime& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx& operator=(const SDatetime& s_datetime) noexcept;//   <--- Complete SDatetime first
 
-    Datetime& operator=(SDatetime&& s_datetime) noexcept;//   <--- Complete SDatetime first
+    VDatetimeEx& operator=(SDatetime&& s_datetime) noexcept;//   <--- Complete SDatetime first
 
-    Datetime& operator=(const Chrono& chrono) noexcept
+    VDatetimeEx& operator=(const TimePoint& sys_clock) noexcept
     {
-        this->m_date = chrono;
-        this->m_time = chrono;
+        this->m_date = sys_clock;
+        this->m_time = sys_clock;
 
         return *this;
     }
 
-    bool operator==(const Datetime& datetime) const noexcept
+    bool operator==(const VDatetimeEx& datetime) const noexcept
     {
         if (this == &datetime)
             return true;
@@ -161,52 +161,52 @@ public:
 
     bool operator==(const SDatetime& s_datetime) const noexcept;//   <--- Complete SDatetime first
 
-    bool operator<(const Datetime& datetime) const noexcept
+    bool operator<(const VDatetimeEx& datetime) const noexcept
     {
         return this->isBefore(datetime);
     }
 
-    bool operator>(const Datetime& datetime) const noexcept
+    bool operator>(const VDatetimeEx& datetime) const noexcept
     {
         return this->isAfter(datetime);
     }
 
-    bool operator<=(const Datetime& datetime) const noexcept
+    bool operator<=(const VDatetimeEx& datetime) const noexcept
     {
         return (this->isBefore(datetime) || this->operator==(datetime));
     }
 
-    bool operator>=(const Datetime& datetime) const noexcept
+    bool operator>=(const VDatetimeEx& datetime) const noexcept
     {
         return (this->isAfter(datetime) || this->operator==(datetime));
     }
 
-    Datetime operator+(const VDuration& duration) const noexcept
+    VDatetimeEx operator+(const VDuration& duration) const noexcept
     {
-        Datetime result{ *this };
+        VDatetimeEx result{ *this };
 
         result.displace(duration);
 
         return result;
     }
 
-    Datetime operator-(const VDuration& duration) const noexcept
+    VDatetimeEx operator-(const VDuration& duration) const noexcept
     {
-        Datetime result{ *this };
+        VDatetimeEx result{ *this };
 
         (*result.getTime()) -= duration;
 
         return result;
     }
 
-    Datetime& operator+=(const VDuration& duration) noexcept
+    VDatetimeEx& operator+=(const VDuration& duration) noexcept
     {
         this->m_time += duration;
 
         return *this;
     }
 
-    Datetime& operator-=(const VDuration& duration) noexcept
+    VDatetimeEx& operator-=(const VDuration& duration) noexcept
     {
         this->m_time -= duration;
 
@@ -256,13 +256,13 @@ public:
     }
 
     /* Datetime date object */
-    const VDate& date() const noexcept
+    const VDate& v_date() const noexcept
     {
         return this->m_date;
     }
 
     /* Datetime time object */
-    const VTimeEx& time() const noexcept
+    const VTimeEx& vtime_ex() const noexcept
     {
         return this->m_time;
     }
@@ -448,7 +448,7 @@ public:
     }
 
     /* Returns true if provided datetime occurs after this datetime */
-    bool isBefore(const Datetime& datetime) const noexcept
+    bool isBefore(const VDatetimeEx& datetime) const noexcept
     {
         if (this == &datetime || *this == datetime)
             return false;
@@ -463,19 +463,19 @@ public:
     }
 
     /* Returns true if provided date occurs after this datetime date */
-    bool isBefore(const VDate& date) const noexcept
+    bool isBefore(const VDate& v_date) const noexcept
     {
-        if (&this->m_date == &date || this->m_date == date)
+        if (&this->m_date == &v_date || this->m_date == v_date)
             return false;
         
-        if (this->m_date.isAfter(date))
+        if (this->m_date.isAfter(v_date))
             return false;
 
         return true;
     }
 
     /* Returns true if provided datetime occurs before this datetime */
-    bool isAfter(const Datetime& datetime) const noexcept
+    bool isAfter(const VDatetimeEx& datetime) const noexcept
     {
         if (this == &datetime || *this == datetime)
             return false;
@@ -490,12 +490,12 @@ public:
     }
 
     /* Returns true if provided date occurs before this datetime date */
-    bool isAfter(const VDate& date) const noexcept
+    bool isAfter(const VDate& v_date) const noexcept
     {
-        if (&this->m_date == &date || this->m_date == date)
+        if (&this->m_date == &v_date || this->m_date == v_date)
             return false;
         
-        if (this->m_date.isBefore(date))
+        if (this->m_date.isBefore(v_date))
             return false;
 
         return true;
@@ -527,13 +527,13 @@ public:
     }
 
     /* Returns absolute total number of days from this datetime to provided datetime */
-    size_t daysUntil(const Datetime& datetime) const noexcept
+    size_t daysUntil(const VDatetimeEx& datetime) const noexcept
     {
         return this->m_date.daysUntil(datetime.m_date);
     }
 
     /* Returns absolute total number of minutes from this datetime to provided datetime */
-    size_t minutesUntil(const Datetime& datetime) const noexcept
+    size_t minutesUntil(const VDatetimeEx& datetime) const noexcept
     {
         size_t dayMinutes{ (this->daysUntil(datetime) * (size_t)1'440ULL) };
 
@@ -543,14 +543,14 @@ public:
     }
 
     /* Returns absolute total number of seconds from this datetime to provided datetime */
-    size_t secondsUntil(const Datetime& datetime) const noexcept
+    size_t secondsUntil(const VDatetimeEx& datetime) const noexcept
     {
         size_t totalSeconds{ 0 };
 
         if (this == &datetime || *this == datetime)
             return totalSeconds;
 
-        std::pair<const Datetime*, const Datetime*> dtRef{
+        std::pair<const VDatetimeEx*, const VDatetimeEx*> dtRef{
             nullptr, nullptr// (high, low)
         };
 
@@ -563,55 +563,55 @@ public:
             dtRef.second = this;
         }
 
-        Datetime temp{ (*dtRef.second) };
+        VDatetimeEx temp{ (*dtRef.second) };
 
         // Accum. seconds
         totalSeconds += (
-            temp.time().getSecond().untilPosition(dtRef.first->time().getSecond())
+            temp.vtime_ex().getSecond().untilPosition(dtRef.first->vtime_ex().getSecond())
         );
         temp.getTime()->getSecond().increment(
-            temp.time().getSecond().untilPosition(
-                dtRef.first->time().getSecond()
+            temp.vtime_ex().getSecond().untilPosition(
+                dtRef.first->vtime_ex().getSecond()
             )
         );
 
         // Accum. minutes
         totalSeconds += (
-            ((size_t)temp.time().getMinute().untilPosition(dtRef.first->time().getMinute()) * (size_t)60ULL)
+            ((size_t)temp.vtime_ex().getMinute().untilPosition(dtRef.first->vtime_ex().getMinute()) * (size_t)60ULL)
         );
         temp.getTime()->getMinute().increment(
-            temp.time().getMinute().untilPosition(
-                dtRef.first->time().getMinute()
+            temp.vtime_ex().getMinute().untilPosition(
+                dtRef.first->vtime_ex().getMinute()
             )
         );
 
         // Accum. hours
         totalSeconds += (
-            ((size_t)temp.time().getHour().untilPosition(dtRef.first->time().getHour()) * (size_t)3'600ULL)
+            ((size_t)temp.vtime_ex().getHour().untilPosition(dtRef.first->vtime_ex().getHour()) * (size_t)3'600ULL)
         );
         temp.getTime()->getHour().increment(
-            temp.time().getHour().untilPosition(
-                dtRef.first->time().getHour()
+            temp.vtime_ex().getHour().untilPosition(
+                dtRef.first->vtime_ex().getHour()
             )
         );
 
         // Accum. days
         totalSeconds += (
-            ((size_t)temp.date().daysUntil(dtRef.first->date()) * (size_t)86'400ULL)
+            ((size_t)temp.v_date().daysUntil(dtRef.first->v_date()) * (size_t)86'400ULL)
         );
 
         return totalSeconds;
     }
 
     /* Returns absolute total number of milliseconds from this datetime to provided datetime */
-    size_t millisecondsUntil(const Datetime& datetime) const noexcept
+    size_t millisecondsUntil(const VDatetimeEx& datetime) const noexcept
     {
         size_t totalMs{ 0 };
 
         if (this == &datetime || *this == datetime)
             return totalMs;
 
-        std::pair<const Datetime*, const Datetime*> dtRef{
+        std::pair<const VDatetimeEx*, const VDatetimeEx*> dtRef{
             nullptr, nullptr// (high, low)
         };
 
@@ -624,60 +624,60 @@ public:
             dtRef.second = this;
         }
 
-        Datetime temp{ (*dtRef.second) };
+        VDatetimeEx temp{ (*dtRef.second) };
 
         // Accum. milliseconds
         totalMs += (
-            temp.time().getMillisecond().untilPosition(
-                dtRef.first->time().getMillisecond()
+            temp.vtime_ex().getMillisecond().untilPosition(
+                dtRef.first->vtime_ex().getMillisecond()
             )
         );
         temp.getTime()->getMillisecond().increment(
-            temp.time().getMillisecond().untilPosition(
-                dtRef.first->time().getMillisecond()
+            temp.vtime_ex().getMillisecond().untilPosition(
+                dtRef.first->vtime_ex().getMillisecond()
             )
         );
 
         // Accum. seconds
         totalMs += (
-            ((size_t)temp.time().getSecond().untilPosition(dtRef.first->time().getSecond()) * (size_t)1'000ULL)
+            ((size_t)temp.vtime_ex().getSecond().untilPosition(dtRef.first->vtime_ex().getSecond()) * (size_t)1'000ULL)
         );
         temp.getTime()->getSecond().increment(
-            temp.time().getSecond().untilPosition(
-                dtRef.first->time().getSecond()
+            temp.vtime_ex().getSecond().untilPosition(
+                dtRef.first->vtime_ex().getSecond()
             )
         );
 
         // Accum. minutes
         totalMs += (
-            ((size_t)temp.time().getMinute().untilPosition(dtRef.first->time().getMinute()) * (size_t)60'000ULL)
+            ((size_t)temp.vtime_ex().getMinute().untilPosition(dtRef.first->vtime_ex().getMinute()) * (size_t)60'000ULL)
         );
         temp.getTime()->getMinute().increment(
-            temp.time().getMinute().untilPosition(
-                dtRef.first->time().getMinute()
+            temp.vtime_ex().getMinute().untilPosition(
+                dtRef.first->vtime_ex().getMinute()
             )
         );
 
         // Accum. hours
         totalMs += (
-            ((size_t)temp.time().getHour().untilPosition(dtRef.first->time().getHour()) * (size_t)3'600'000ULL)
+            ((size_t)temp.vtime_ex().getHour().untilPosition(dtRef.first->vtime_ex().getHour()) * (size_t)3'600'000ULL)
         );
         temp.getTime()->getHour().increment(
-            temp.time().getHour().untilPosition(
-                dtRef.first->time().getHour()
+            temp.vtime_ex().getHour().untilPosition(
+                dtRef.first->vtime_ex().getHour()
             )
         );
 
         // Accum. days
         totalMs += (
-            ((size_t)temp.date().daysUntil(dtRef.first->date()) * (size_t)86'400'000ULL)
+            ((size_t)temp.v_date().daysUntil(dtRef.first->v_date()) * (size_t)86'400'000ULL)
         );
 
         return totalMs;
     }
 
     /* Returns duration from this datetime to provided datetime */
-    VDuration until(const Datetime& datetime) const noexcept
+    VDuration until(const VDatetimeEx& datetime) const noexcept
     {
         if (this == &datetime || *this == datetime)
             return VDuration{};
@@ -695,11 +695,11 @@ public:
     }
 
     /* Returns standard library chronological time point of this datetime */
-    Chrono toChrono() const noexcept
+    TimePoint toChrono() const noexcept
     {
-        Chrono timePoint{};
+        TimePoint timePoint{};
 
-        Datetime epoch{ Chrono{} };
+        VDatetimeEx epoch{ TimePoint{} };
         VDuration sinceEpoch{ epoch.until(*this) };
 
         timePoint = (timePoint + sinceEpoch.toChronoDuration());

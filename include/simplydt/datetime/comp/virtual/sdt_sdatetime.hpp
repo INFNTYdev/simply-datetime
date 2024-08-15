@@ -17,7 +17,7 @@ public:
     /* Datetime type */
     using Type = VDate::DatetimeType;
     /* Standard library chronological time point (system clock) */
-    using Chrono = std::chrono::time_point<std::chrono::system_clock>;
+    using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
     /* Datetime layout */
     enum Layout {
@@ -25,7 +25,7 @@ public:
         TIME_DATE,// time - date
     };
 
-    SDatetime(Chrono chrono) noexcept;
+    SDatetime(TimePoint chrono) noexcept;
 
     SDatetime(const VDate& date, const VTime& s_time) noexcept;
 
@@ -53,7 +53,7 @@ public:
 
     SDatetime& operator=(SDatetime&& s_datetime) noexcept;
 
-    SDatetime& operator=(const Chrono& chrono) noexcept;
+    SDatetime& operator=(const TimePoint& chrono) noexcept;
 
     bool operator==(const SDatetime& s_datetime) const noexcept;
 
@@ -167,7 +167,7 @@ public:
     VTimeEx* getTime() noexcept;
 
     /* Returns standard library chronological time point copy */
-    Chrono toChrono() const noexcept;
+    TimePoint toChrono() const noexcept;
 
     /* Returns absolute total number of days from this datetime to provided datetime */
     size_t daysUntil(const SDatetime& s_datetime) const noexcept;
