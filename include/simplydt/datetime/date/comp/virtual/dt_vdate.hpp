@@ -850,7 +850,10 @@ private:
 
     void assumeJDN(const double& jdn) noexcept
     {
-        this->assumeJDN((JDN)std::floor(jdn));
+        // -1 to account for VDate decimal truncation
+        this->assumeJDN(
+            (JDN)std::floor((jdn - (double)1.))
+        );
     }
 
     Year* retrieveYear() const noexcept
