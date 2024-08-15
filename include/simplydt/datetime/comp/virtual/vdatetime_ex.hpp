@@ -4,9 +4,8 @@
 
 
 
-#include"simplydt/datetime/date/comp/dt_date.hpp"
-#include"simplydt/datetime/time/comp/dt_time.hpp"
-#include"simplydt/datetime/comp/sdt_sdatetime.hpp"
+#include"simplydt/datetime/date/comp/virtual/dt_vdate.hpp"
+#include"simplydt/datetime/time/comp/virtual/dt_vtime_ex.hpp"
 
 
 /* Extended datetime (YYYY-mm-dd-HH-MM-SS-MS) */
@@ -19,6 +18,8 @@ public:
     using Type = VDate::DatetimeType;
     /* Standard library chronological time point (system clock) */
     using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+    /* Julian Day Number (JDN) */
+    using JDN = double;
 
     /* Datetime layout */
     enum Layout {
