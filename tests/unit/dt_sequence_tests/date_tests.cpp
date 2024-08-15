@@ -271,6 +271,96 @@ namespace VDateCalculationTests {
 	TEST(VDateDivergenceTestSuite, VDateLargeDisplaceDivergeTest)
 	{
 		//
+
+		const VDate epochDate{};// Test anchor point
+		VDate sampleDate{ epochDate };// Test variable
+
+		uint32_t validateCount{ 0 };
+
+		std::cout << '\n' << std::setw(13)
+			<< "[ TEST MSG ] "
+			<< "Testing from epoch date: ('"
+			<< epochDate.dateStr(VDate::Format::STANDARD)
+			<< "')...\n" << std::endl;
+
+		// Confirm initial date is epoch date
+		if (sampleDate != epochDate) {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Initial epoch date is incorrect: '"
+				<< sampleDate.dateStr(VDate::Format::STANDARD)
+				<< '\''
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Date expected: "
+				<< epochDate.dateStr(VDate::Format::STANDARD)
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
+		uint32_t expectedJDN{ (epochDate.toJulianDayNumber() + (uint32_t)1Ui32) };
+		uint32_t displaceUnits{ 1 };
+		const uint32_t displaceThreshold{ 1'000'000 };
+		const uint32_t uint32Max{ std::numeric_limits<uint32_t>::max() };
+
+		while ((uint32Max - displaceUnits) > displaceThreshold) {
+
+			sampleDate.increase(displaceUnits);
+
+			if (sampleDate.toJulianDayNumber() != expectedJDN) {
+				std::cout << std::setw(13)
+					<< "[ FAILURE  ] "
+					<< "Large displace divergence found with "
+					<< displaceUnits
+					<< " units:"
+					<< std::setw(13) << ""
+					<< "\n\t\t-> Days from epoch: " << validateCount
+					<< "\n\t\t-> Date expected: "
+					<< VDate{ expectedJDN }.dateStr(VDate::Format::STANDARD)
+					<< "\n\t\t-> Date recieved: "
+					<< sampleDate.dateStr(VDate::Format::STANDARD)
+					<< "\n\t\t-> JDN expected: " << expectedJDN
+					<< "\n\t\t-> JDN recieved: " << sampleDate.toJulianDayNumber()
+					<< "\n\t\t-> JDN divergence: "
+					<< ((int64_t)sampleDate.toJulianDayNumber() - (int64_t)expectedJDN)
+					<< " days"
+					<< '\n' << std::endl;
+
+				std::cout << std::setw(13)
+					<< "[ FAILURE  ] "
+					<< "Failed after testing " << validateCount
+					<< " dates"
+					<< '\n' << std::endl;
+
+				FAIL();
+			}
+
+			if ((uint32_t)(displaceUnits % 100) == (uint32_t)0Ui32) {
+				if ((uint32Max - displaceUnits) > (uint32_t)1'024Ui32)
+					displaceUnits += (uint32_t)1'024Ui32;
+				else
+					break;
+			}
+
+			if ((uint32Max - displaceUnits) > (uint32_t)537Ui32)
+				displaceUnits += (uint32_t)537Ui32;
+			else
+				break;
+
+			// Developer debug breakpoint
+			if (displaceUnits == (uint32_t)54'138Ui32)
+				displaceUnits = (uint32_t)54'138Ui32;// Issue starts next loop
+
+			expectedJDN += displaceUnits;
+			++validateCount;
+
+		}
+
+		std::cout << '\n' << std::setw(13)
+			<< "[ TEST MSG ] "
+			<< "PASS: Validated "
+			<< validateCount
+			<< " dates\n" << std::endl;
 	}
 
 }
