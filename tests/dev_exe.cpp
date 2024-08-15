@@ -184,16 +184,16 @@ int main(size_t argc, char* argv[])
 	// Simply Datetime r4.v0
 	ProjectInfoOut();
 
-	VDate todayDate{ std::chrono::system_clock::now() };
-	std::cout << "\nToday: "
-		<< todayDate.dateStr(VDate::Format::STANDARD)
+	VDatetimeEx nowSnapshot{ std::chrono::system_clock::now() };
+	std::cout << "\nNow: "
+		<< nowSnapshot.datetimeStr(VDate::Format::STANDARD)
 		<< std::endl;
 
 	// Project creation date: June 28th, 2024
-	VDate creationDate{ (uint16_t)2024Ui16, (uint16_t)6Ui16, (uint16_t)28Ui16 };
+	VDatetimeEx creationDate{ VDate{ 2024Ui16, 6Ui16, 28Ui16 } , VTimeEx{} };
 
 	std::cout << "Elapsed dev time: "
-		<< creationDate.until(todayDate) << std::endl
+		//<< creationDate.until(nowSnapshot) << std::endl
 		<< "\n\n\nCONSOLE DEBUG:"
 		<< std::endl;
 
@@ -202,11 +202,17 @@ int main(size_t argc, char* argv[])
 
 
 	//\\//
-	VDatetimeEx::TimePoint nowChrono{ std::chrono::system_clock::now() };
-	
-	VDatetimeEx demo{ VDate{2024, 8, 15}, VTimeEx{} };
+	//2460729.5 (February 23, 2025)
+	//2460729 (February 23, 2025)
+	VDatetimeEx::JDN dateJDN{ VDate::EPOCH_JDN };
 
-	std::cout << '\n' << demo << std::endl;
+	VDatetimeEx demo{ dateJDN };
+
+	std::cout << '\n'
+		<< demo << '\n'
+		<< "JDN used: " << std::setprecision(10) << dateJDN
+		<< "\nJDN retained: " << std::setprecision(10) << NULL// Expect: 2,440,588
+		<< std::endl;
 	//\\//
 
 

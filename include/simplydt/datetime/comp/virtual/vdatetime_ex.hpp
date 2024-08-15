@@ -28,6 +28,8 @@ public:
         TIME_DATE,// time - date
     };
 
+    inline static const JDN EPOCH_JDN = (VDate::EPOCH_JDN + (double).5);
+
     VDatetimeEx(const TimePoint& sys_clock) noexcept
         : m_date{ sys_clock },
         m_time{ sys_clock }
@@ -36,73 +38,78 @@ public:
     }
 
      VDatetimeEx(const VDate& v_date, const VTimeEx& vtime_ex) noexcept
-         : m_date{ v_date },
-         m_time{ vtime_ex }
+        : m_date{ v_date },
+        m_time{ vtime_ex }
      {
-         this->linkDatetime();
+        this->linkDatetime();
      }
 
      VDatetimeEx(VDate&& v_date, VTimeEx&& vtime_ex) noexcept
-         : m_date{ std::forward<VDate>(v_date) },
-         m_time{ std::forward<VTimeEx>(vtime_ex) }
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{ std::forward<VTimeEx>(vtime_ex) }
      {
-         this->linkDatetime();
+        this->linkDatetime();
      }
 
      VDatetimeEx(const VDate& v_date, VTimeEx&& vtime_ex) noexcept
-         : m_date{ v_date },
-         m_time{ std::forward<VTimeEx>(vtime_ex) }
+        : m_date{ v_date },
+        m_time{ std::forward<VTimeEx>(vtime_ex) }
      {
-         this->linkDatetime();
+        this->linkDatetime();
      }
 
      VDatetimeEx(VDate&& v_date, const VTimeEx& vtime_ex) noexcept
-         : m_date{ std::forward<VDate>(v_date) },
-         m_time{ vtime_ex }
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{ vtime_ex }
      {
-         this->linkDatetime();
+        this->linkDatetime();
      }
 
-    // VDatetimeEx(const VDate& v_date) noexcept
-    //     : m_date{ v_date },
-    //     m_time{}
-    // {
-    //     this->linkDatetime();
-    // }
+     VDatetimeEx(const VDate& v_date) noexcept
+        : m_date{ v_date },
+        m_time{}
+     {
+        this->linkDatetime();
+     }
 
-    // VDatetimeEx(VDate&& v_date) noexcept
-    //     : m_date{ std::forward<VDate>(v_date) },
-    //     m_time{}
-    // {
-    //     this->linkDatetime();
-    // }
+     VDatetimeEx(VDate&& v_date) noexcept
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{}
+     {
+        this->linkDatetime();
+     }
 
-    // VDatetimeEx(const VDatetimeEx& vdatetime_ex) noexcept
-    //     : m_date{ vdatetime_ex.m_date },
-    //     m_time{ vdatetime_ex.m_time }
-    // {
-    //     this->linkDatetime();
-    // }
+     VDatetimeEx(const JDN& jdn) noexcept
+        : m_date{ jdn },
+        m_time{ jdn }
+     {
+        this->linkDatetime();
+     }
 
-    // VDatetimeEx(VDatetimeEx&& vdatetime_ex) noexcept
-    //     : m_date{ std::move(vdatetime_ex.m_date) },
-    //     m_time{ std::move(vdatetime_ex.m_time) }
-    // {
-    //     //
-    // }
+     VDatetimeEx(const VDatetime& v_datetime) noexcept;//      <--- INCOMPLETE!
 
-    // VDatetimeEx(const VDatetime& v_datetime) noexcept;//   <--- Complete VDatetime first
+     VDatetimeEx(const VDatetimeEx& vdatetime_ex) noexcept
+        : m_date{ vdatetime_ex.m_date },
+        m_time{ vdatetime_ex.m_time }
+     {
+        this->linkDatetime();
+     }
 
-    // VDatetimeEx(VDatetime&& v_datetime) noexcept;//   <--- Complete VDatetime first
+     VDatetimeEx(VDatetimeEx&& vdatetime_ex) noexcept
+        : m_date{ std::move(vdatetime_ex.m_date) },
+        m_time{ std::move(vdatetime_ex.m_time) }
+     {
+        //
+     }
 
-    // VDatetimeEx() noexcept
-    //     : m_date{},
-    //     m_time{}
-    // {
-    //     this->linkDatetime();
-    // }
+     VDatetimeEx() noexcept
+        : m_date{},
+        m_time{}
+     {
+        this->linkDatetime();
+     }
 
-    // ~VDatetimeEx() noexcept = default;
+     ~VDatetimeEx() noexcept = default;
 
     friend std::ostream& operator<<(std::ostream& os, const VDatetimeEx& vdatetime_ex) noexcept
     {
@@ -135,9 +142,9 @@ public:
     //     return *this;
     // }
 
-    // VDatetimeEx& operator=(const VDatetime& v_datetime) noexcept;//   <--- Complete VDatetime first
+    // VDatetimeEx& operator=(const VDatetime& v_datetime) noexcept;//      <--- INCOMPLETE!
 
-    // VDatetimeEx& operator=(VDatetime&& v_datetime) noexcept;//   <--- Complete VDatetime first
+    // VDatetimeEx& operator=(VDatetime&& v_datetime) noexcept;//      <--- INCOMPLETE!
 
     // VDatetimeEx& operator=(const TimePoint& sys_clock) noexcept
     // {
