@@ -209,10 +209,19 @@ int main(size_t argc, char* argv[])
 	VDatetimeEx demo{ dateJDN };
 
 	std::cout << '\n'
-		<< demo.dayOfWeek() << ", " << demo << '\n'
-		<< "JDN used: "
+		<< demo.dayOfWeek() << ", "
+		<< demo.monthTitle() << " " << (int)demo.day() << ", "
+		<< demo.year() << '\n'
+		<< demo.time().timeStr(VTimeEx::STANDARD, VTimeEx::H_M_S_P) << '\n'
+		<< "Datetime: " << demo << '\n'
+		<< "Julian Day Number: " << std::setprecision(17)
+		<< demo.toJulianDayNumber() << '\n'
+		<< std::endl;
+
+	std::cout << '\n'
+		<< "JDN provided: "
 		<< std::setprecision(17) << dateJDN
-		<< "\nJDN retained: "
+		<< "\nJDN assumed: "
 		<< std::setprecision(17) << demo.toJulianDayNumber()
 		<< std::endl;
 
