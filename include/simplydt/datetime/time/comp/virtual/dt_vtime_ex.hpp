@@ -17,7 +17,7 @@
 #include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 
-/* Extended time ( HH:MM:SS:MS ) */
+/* Extended virtualized time ( HH:MM:SS:MS ) */
 class VTimeEx : public DatetimeSequence<Hour, Minute, Second, Millisecond> {
 
 public:
@@ -649,6 +649,19 @@ public:
         return timeJDN;
     }
 
+    /* Returns time as unmodified fractional Julian Day Number (JDN) */
+    JDN rawJulianDayNumber() const noexcept
+    {
+        // Calculate time as a fraction of a day
+        double timeJDN{
+            ((this->hour() / (double)24.)
+            + (this->minute() / (double)1'440.)
+            + (this->second() / (double)86'400.))
+        };
+
+        return timeJDN;
+    }
+
     /* Returns copy of extended time as standard time */
     VTime toVTime() const noexcept
     {
@@ -926,8 +939,16 @@ private:
             totalSeconds -= ((double)min * (double)60.);
         }
 
+        // NOTE: Rounding issue when dealing with 11:59:59 PM
         if (totalSeconds)
             sec = static_cast<uint16_t>(std::round(totalSeconds));
+
+        // Corrects rounding issue when dealing with 11:59:59 PM
+        // NOTE: (Temporary until precision update)
+        if (hr == (uint16_t)23Ui16 && min == (uint16_t)59Ui16) {
+            if (sec == (uint16_t)60Ui16 && jdn < (JDN)1.)
+                --sec;
+        }
 
         // Adjustments for rounding issues
         if (sec == (uint16_t)60Ui16) {

@@ -8,7 +8,7 @@
 #include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 
-/* Standard datetime (YYYY-mm-dd-HH-MM-SS) */
+/* Virtualized datetime (YYYY-mm-dd-HH-MM-SS) */
 class VDatetime {
 
 public:

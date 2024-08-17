@@ -15,7 +15,7 @@
 #include"simplydt/datetime/date/comp/virtual/dt_vdate.hpp"
 
 
-/* Standard time (HH:MM:SS) */
+/* Virtualized time (HH:MM:SS) */
 class VTime : public DatetimeSequence<Hour, Minute, Second> {
 
 public:

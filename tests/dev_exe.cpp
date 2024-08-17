@@ -84,6 +84,7 @@
 * -> [] Implement VDate/VTimeEx/VTime constructor that accepts DatetimeStub
 * -> [X] *Implement VDate/VTimeEx/VTime .operator=() for std::chrono <- IMPORTANT
 * -> [X] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
+* -> [] *Update VTimeEx class JDN system to account for milliseconds <- IMPORTANT
 * -> [] Implement VDate/VTimeEx/VTime/VDuration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
 * -> [X] Find new means to displace Day class
@@ -202,17 +203,19 @@ int main(size_t argc, char* argv[])
 
 
 	//\\//
-	//2460729.5 (February 23, 2025)
-	//2460729 (February 23, 2025)
-	VDatetimeEx::JDN dateJDN{ VDate::EPOCH_JDN };
+
+	VDatetimeEx::JDN dateJDN{ 2460729.5 };//2460729.5 (February 23, 2025)
 
 	VDatetimeEx demo{ dateJDN };
 
 	std::cout << '\n'
-		<< demo << '\n'
-		<< "JDN used: " << std::setprecision(10) << dateJDN
-		<< "\nJDN retained: " << std::setprecision(10) << NULL// Expect: 2,440,588
+		<< demo.dayOfWeek() << ", " << demo << '\n'
+		<< "JDN used: "
+		<< std::setprecision(17) << dateJDN
+		<< "\nJDN retained: "
+		<< std::setprecision(17) << demo.toJulianDayNumber()
 		<< std::endl;
+
 	//\\//
 
 

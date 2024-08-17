@@ -9,7 +9,7 @@
 #include"simplydt/datetime/comp/virtual/vdatetime.hpp"
 
 
-/* Extended datetime (YYYY-mm-dd-HH-MM-SS-MS) */
+/* Extended virtualized datetime (YYYY-mm-dd-HH-MM-SS-MS) */
 class VDatetimeEx {
 
 public:
@@ -29,6 +29,7 @@ public:
     };
 
     inline static const JDN EPOCH_JDN = (VDate::EPOCH_JDN + (double).5);
+    inline static const JDN MAX_JDN = ((VDate::MAX_JDN + (JDN)1.) + (double).49999999);
 
     VDatetimeEx(const TimePoint& sys_clock) noexcept
         : m_date{ sys_clock },
@@ -79,10 +80,22 @@ public:
         this->linkDatetime();
     }
 
-    VDatetimeEx(const JDN& jdn) noexcept
+    explicit VDatetimeEx(const JDN& jdn) noexcept
         : m_date{ jdn },
         m_time{ jdn }
     {
+        // Normalize time if invalid JDN
+        // (Date will normalize on invalid JDN)
+        if (jdn < EPOCH_JDN)
+            this->m_time.reset();
+
+        if (jdn > MAX_JDN) {
+            this->m_time.getHour()->setPosition(11);
+            this->m_time.getMinute()->setPosition(59);
+            this->m_time.getSecond()->setPosition(59);
+            this->m_time.getMs()->setPosition(999);
+        }
+
         this->linkDatetime();
     }
 
@@ -118,175 +131,272 @@ public:
         return os;
     }
 
-    // VDatetimeEx& operator=(const VDatetimeEx& vdatetime_ex) noexcept
-    // {
-    //     if (this == &vdatetime_ex)
-    //         return *this;
+    VDatetimeEx& operator=(const VDatetimeEx& vdatetime_ex) noexcept
+    {
+        if (this == &vdatetime_ex)
+            return *this;
         
-    //     this->m_date = vdatetime_ex.m_date;
-    //     this->m_time = vdatetime_ex.m_time;
+        this->m_date = vdatetime_ex.m_date;
+        this->m_time = vdatetime_ex.m_time;
 
-    //     this->linkDatetime();
+        return *this;
+    }
 
-    //     return *this;
-    // }
-
-    // VDatetimeEx& operator=(VDatetimeEx&& vdatetime_ex) noexcept
-    // {
-    //     if (this == &vdatetime_ex)
-    //         return *this;
+    VDatetimeEx& operator=(VDatetimeEx&& vdatetime_ex) noexcept
+    {
+        if (this == &vdatetime_ex)
+            return *this;
         
-    //     this->m_date = std::move(vdatetime_ex.m_date);
-    //     this->m_time = std::move(vdatetime_ex.m_time);
+        this->m_date = std::move(vdatetime_ex.m_date);
+        this->m_time = std::move(vdatetime_ex.m_time);
 
-    //     return *this;
-    // }
+        return *this;
+    }
 
-    // VDatetimeEx& operator=(const VDatetime& v_datetime) noexcept;//      <--- INCOMPLETE!
+    VDatetimeEx& operator=(const VDatetime& v_datetime) noexcept;//      <--- INCOMPLETE!
 
-    // VDatetimeEx& operator=(VDatetime&& v_datetime) noexcept;//      <--- INCOMPLETE!
+    VDatetimeEx& operator=(const TimePoint& sys_clock) noexcept
+    {
+        this->m_date = sys_clock;
+        this->m_time = sys_clock;
 
-    // VDatetimeEx& operator=(const TimePoint& sys_clock) noexcept
-    // {
-    //     this->m_date = sys_clock;
-    //     this->m_time = sys_clock;
+        return *this;
+    }
 
-    //     return *this;
-    // }
-
-    // bool operator==(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     if (this == &vdatetime_ex)
-    //         return true;
+    bool operator==(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        if (this == &vdatetime_ex)
+            return true;
         
-    //     if (this->m_date != vdatetime_ex.m_date)
-    //         return false;
+        if (this->m_date != vdatetime_ex.m_date)
+            return false;
         
-    //     if (this->m_time != vdatetime_ex.m_time)
-    //         return false;
+        if (this->m_time != vdatetime_ex.m_time)
+            return false;
 
-    //     return true;
-    // }
+        return true;
+    }
 
-    // bool operator==(const VDatetime& v_datetime) const noexcept;//   <--- Complete VDatetime first
+    bool operator==(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
-    // bool operator<(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     return this->isBefore(vdatetime_ex);
-    // }
+    bool operator==(const VDate& v_date) const noexcept
+    {
+        if (this->m_date != v_date)
+            return false;
 
-    // bool operator>(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     return this->isAfter(vdatetime_ex);
-    // }
+        return true;
+    }
 
-    // bool operator<=(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     return (this->isBefore(vdatetime_ex) || this->operator==(vdatetime_ex));
-    // }
+    bool operator==(const VTimeEx& vtime_ex) const noexcept
+    {
+        if (this->m_time != vtime_ex)
+            return false;
 
-    // bool operator>=(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     return (this->isAfter(vdatetime_ex) || this->operator==(vdatetime_ex));
-    // }
+        return true;
+    }
 
-    // VDatetimeEx operator+(const VDuration& duration) const noexcept
-    // {
-    //     VDatetimeEx result{ *this };
+    bool operator==(const TimePoint& sys_clock) const noexcept
+    {
+        if (this->m_date != sys_clock)
+            return false;
 
-    //     result.displace(duration);
+        if (this->m_time != sys_clock)
+            return false;
 
-    //     return result;
-    // }
+        return true;
+    }
 
-    // VDatetimeEx operator-(const VDuration& duration) const noexcept
-    // {
-    //     VDatetimeEx result{ *this };
+    bool operator<(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        return this->isBefore(vdatetime_ex);
+    }
 
-    //     (*result.getTime()) -= duration;
+    bool operator<(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
-    //     return result;
-    // }
+    bool operator<(const VDate& v_date) const noexcept
+    {
+        return this->isBefore(v_date);
+    }
 
-    // VDatetimeEx& operator+=(const VDuration& duration) noexcept
-    // {
-    //     this->m_time += duration;
+    bool operator<(const VTimeEx& vtime_ex) const noexcept
+    {
+        return (this->m_time < vtime_ex);
+    }
+    
+    bool operator<(const TimePoint& sys_clock) const noexcept
+    {
+        return this->isBefore(sys_clock);
+    }
 
-    //     return *this;
-    // }
+    bool operator>(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        return this->isAfter(vdatetime_ex);
+    }
 
-    // VDatetimeEx& operator-=(const VDuration& duration) noexcept
-    // {
-    //     this->m_time -= duration;
+    bool operator>(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
-    //     return *this;
-    // }
+    bool operator>(const VDate& v_date) const noexcept
+    {
+        return this->isAfter(v_date);
+    }
 
-    // /* Returns datetime year */
-    // uint16_t year() const noexcept
-    // {
-    //     return this->m_date.year();
-    // }
+    bool operator>(const VTimeEx& vtime_ex) const noexcept
+    {
+        return (this->m_time > vtime_ex);
+    }
 
-    // /* Returns datetime month */
-    // uint16_t month() const noexcept
-    // {
-    //     return this->m_date.month();
-    // }
+    bool operator>(const TimePoint& sys_clock) const noexcept
+    {
+        return this->isAfter(sys_clock);
+    }
 
-    // /* Returns datetime day */
-    // uint16_t day() const noexcept
-    // {
-    //     return this->m_date.day();
-    // }
+    bool operator<=(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        return (this->isBefore(vdatetime_ex) || this->operator==(vdatetime_ex));
+    }
 
-    // /* Returns datetime hour */
-    // uint16_t hour() const noexcept
-    // {
-    //     return this->m_time.hour();
-    // }
+    bool operator<=(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
-    // /* Returns datetime minute */
-    // uint16_t minute() const noexcept
-    // {
-    //     return this->m_time.minute();
-    // }
+    bool operator<=(const VDate& v_date) const noexcept
+    {
+        return (this->isBefore(v_date) || this->operator==(v_date));
+    }
 
-    // /* Returns datetime second */
-    // uint16_t second() const noexcept
-    // {
-    //     return this->m_time.second();
-    // }
+    bool operator<=(const VTimeEx& vtime_ex) const noexcept
+    {
+        return (this->m_time < vtime_ex || this->m_time == vtime_ex);
+    }
 
-    // /* Returns datetime millisecond */
-    // uint16_t millisecond() const noexcept
-    // {
-    //     return this->m_time.millisecond();
-    // }
+    bool operator<=(const TimePoint& sys_clock) const noexcept
+    {
+        return (this->isBefore(sys_clock) || this->operator==(sys_clock));
+    }
 
-    // /* Datetime date object */
-    // const VDate& v_date() const noexcept
-    // {
-    //     return this->m_date;
-    // }
+    bool operator>=(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        return (this->isAfter(vdatetime_ex) || this->operator==(vdatetime_ex));
+    }
 
-    // /* Datetime time object */
-    // const VTimeEx& vtime_ex() const noexcept
-    // {
-    //     return this->m_time;
-    // }
+    bool operator>=(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
-    // /* Returns datetime hour of day phase */
-    // Hour::Phase hourPhase() const noexcept
-    // {
-    //     return this->m_time.phase();
-    // }
+    bool operator>=(const VDate& v_date) const noexcept
+    {
+        return (this->isAfter(v_date) || this->operator==(v_date));
+    }
 
-    // /* Returns datetime hour of day phase literal */
-    // std::string hourPhaseStr() const noexcept
-    // {
-    //     return this->m_time.phaseStr();
-    // }
+    bool operator>=(const VTimeEx& vtime_ex) const noexcept
+    {
+        return (this->m_time > vtime_ex || this->m_time == vtime_ex);
+    }
+
+    bool operator>=(const TimePoint& sys_clock) const noexcept
+    {
+        return (this->isAfter(sys_clock) || this->operator==(sys_clock));
+    }
+
+    VDatetimeEx operator+(const VDuration& v_duration) const noexcept
+    {
+        VDatetimeEx temp{ *this };
+
+        (*temp.getTime()) += v_duration;
+
+        return temp;
+    }
+
+    VDatetimeEx operator-(const VDuration& v_duration) const noexcept
+    {
+        VDatetimeEx temp{ *this };
+
+        (*temp.getTime()) -= v_duration;
+
+        return temp;
+    }
+
+    VDatetimeEx& operator+=(const VDuration& v_duration) noexcept
+    {
+        this->m_time += v_duration;
+
+        return *this;
+    }
+
+    VDatetimeEx& operator-=(const VDuration& v_duration) noexcept
+    {
+        this->m_time -= v_duration;
+
+        return *this;
+    }
+
+    /* Returns true if datetime represents epoch datetime */
+    bool isEpoch() const noexcept
+    {
+        return (this->m_date.isEpoch() && this->m_time.isZero());
+    }
+
+    /* Returns datetime year */
+    uint16_t year() const noexcept
+    {
+        return this->m_date.year();
+    }
+
+    /* Returns datetime month */
+    uint16_t month() const noexcept
+    {
+        return this->m_date.month();
+    }
+
+    /* Returns datetime day */
+    uint16_t day() const noexcept
+    {
+        return this->m_date.day();
+    }
+
+    /* Returns datetime hour */
+    uint16_t hour() const noexcept
+    {
+        return this->m_time.hour();
+    }
+
+    /* Returns datetime minute */
+    uint16_t minute() const noexcept
+    {
+        return this->m_time.minute();
+    }
+
+    /* Returns datetime second */
+    uint16_t second() const noexcept
+    {
+        return this->m_time.second();
+    }
+
+    /* Returns datetime millisecond */
+    uint16_t millisecond() const noexcept
+    {
+        return this->m_time.millisecond();
+    }
+
+    /* Returns internal datetime date */
+    const VDate& date() const noexcept
+    {
+        return this->m_date;
+    }
+
+    /* Returns internal datetime time */
+    const VTimeEx& time() const noexcept
+    {
+        return this->m_time;
+    }
+
+    /* Returns pointer to internal datetime date */
+    VDate* getDate() noexcept
+    {
+        return &this->m_date;
+    }
+
+    /* Returns pointer to internal datetime time */
+    VTimeEx* getTime() noexcept
+    {
+        return &this->m_time;
+    }
 
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(Layout layout, VDate::Format date_format, VDate::Layout date_layout,
@@ -444,86 +554,126 @@ public:
         );
     }
 
-    // /* Returns datetime day-of-week literal */
-    // const char* dayOfWeek() const noexcept
-    // {
-    //     return this->m_date.dayOfWeek();
-    // }
+    /* Returns datetime day-of-week literal */
+    const char* dayOfWeek() const noexcept
+    {
+        return this->m_date.dayOfWeek();
+    }
 
-    // /* Returns datetime month literal */
-    // const char* monthTitle() const noexcept
-    // {
-    //     return this->m_date.monthTitle();
-    // }
+    /* Returns datetime day-of-week index */
+    uint8_t dowIndex() const noexcept;//      <--- INCOMPLETE!
 
-    // /* Returns true if provided datetime occurs after this datetime */
-    // bool isBefore(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     if (this == &vdatetime_ex || *this == vdatetime_ex)
-    //         return false;
+    /* Returns datetime month literal */
+    const char* monthTitle() const noexcept
+    {
+        return this->m_date.monthTitle();
+    }
+
+    /* Returns datetime month index */
+    uint8_t monthIndex() const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns true if provided datetime occurs after this datetime */
+    bool isBefore(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
+            return false;
         
-    //     if (this->m_date.isAfter(vdatetime_ex.m_date))
-    //         return false;
+        if (this->m_date.isAfter(vdatetime_ex.m_date))
+            return false;
+        else if (this->m_date.isBefore(vdatetime_ex.m_date))
+            return true;
         
-    //     if (this->m_time.isAfter(vdatetime_ex.m_time))
-    //         return false;
+        if (this->m_time.isAfter(vdatetime_ex.m_time))
+            return false;
 
-    //     return true;
-    // }
+        return true;
+    }
 
-    // /* Returns true if provided date occurs after this datetime date */
-    // bool isBefore(const VDate& v_date) const noexcept
-    // {
-    //     if (&this->m_date == &v_date || this->m_date == v_date)
-    //         return false;
+    /* Returns true if provided datetime occurs after this datetime */
+    bool isBefore(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns true if provided date occurs after this datetime date */
+    bool isBefore(const VDate& v_date) const noexcept
+    {
+        if (&this->m_date == &v_date || this->m_date == v_date)
+            return false;
         
-    //     if (this->m_date.isAfter(v_date))
-    //         return false;
+        if (this->m_date.isAfter(v_date))
+            return false;
 
-    //     return true;
-    // }
+        return true;
+    }
 
-    // /* Returns true if provided datetime occurs before this datetime */
-    // bool isAfter(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     if (this == &vdatetime_ex || *this == vdatetime_ex)
-    //         return false;
+    /* Returns true if provided datetime occurs after this datetime */
+    bool isBefore(const TimePoint& sys_clock) const noexcept
+    {
+        if (this->m_date > sys_clock)
+            return false;
+        else if (this->m_date < sys_clock)
+            return true;
+
+        if (this->m_time >= sys_clock)
+            return false;
+
+        return true;
+    }
+
+    /* Returns true if provided datetime occurs before this datetime */
+    bool isAfter(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
+            return false;
         
-    //     if (this->m_date.isBefore(vdatetime_ex.m_date))
-    //         return false;
+        if (this->m_date.isBefore(vdatetime_ex.m_date))
+            return false;
+        else if (this->m_date.isAfter(vdatetime_ex.m_date))
+            return true;
+
+        if (this->m_time.isBefore(vdatetime_ex.m_time))
+            return false;
+
+        return true;
+    }
+
+    /* Returns true if provided datetime occurs before this datetime */
+    bool isAfter(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns true if provided date occurs before this datetime date */
+    bool isAfter(const VDate& v_date) const noexcept
+    {
+        if (&this->m_date == &v_date || this->m_date == v_date)
+            return false;
         
-    //     if (this->m_time.isBefore(vdatetime_ex.m_time))
-    //         return false;
+        if (this->m_date.isBefore(v_date))
+            return false;
 
-    //     return true;
-    // }
+        return true;
+    }
 
-    // /* Returns true if provided date occurs before this datetime date */
-    // bool isAfter(const VDate& v_date) const noexcept
-    // {
-    //     if (&this->m_date == &v_date || this->m_date == v_date)
-    //         return false;
-        
-    //     if (this->m_date.isBefore(v_date))
-    //         return false;
+    /* Returns true if provided datetime occurs before this datetime */
+    bool isAfter(const TimePoint& sys_clock) const noexcept
+    {
+        if (this->m_date < sys_clock)
+            return false;
+        else if (this->m_date > sys_clock)
+            return true;
 
-    //     return true;
-    // }
+        if (this->m_time <= sys_clock)
+            return false;
 
-    // /* Returns pointer to datetime date */
-    // VDate* getDate() noexcept
-    // {
-    //     return &this->m_date;
-    // }
+        return true;
+    }
 
-    // /* Returns pointer to datetime time */
-    // VTimeEx* getTime() noexcept
-    // {
-    //     return &this->m_time;
-    // }
+    /* Returns datetime as Julian Day Number (JDN) */
+    JDN toJulianDayNumber() const noexcept
+    {
+        return (
+            (JDN)this->m_date.trueJulianDayNumber() + this->m_time.rawJulianDayNumber()
+        );
+    }
 
     // /* Returns standard datetime copy of this datetime */
-    // VDatetime toSDatetime() const noexcept
+    // VDatetime toVDatetime() const noexcept//      <--- INCOMPLETE!
     // {
     //     return VDatetime{
     //         this->m_date,
@@ -535,21 +685,54 @@ public:
     //     };
     // }
 
-    // /* Returns absolute total number of days from this datetime to provided datetime */
-    // size_t daysUntil(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     return this->m_date.daysUntil(vdatetime_ex.m_date);
-    // }
+    /* Returns datetime as standard library system clock time point */
+    TimePoint toTimePoint() const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of days from this datetime to provided datetime */
+    uint32_t daysUntil(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        return this->m_date.daysUntil(vdatetime_ex.m_date);
+    }
+
+    /* Returns absolute total number of days from this datetime to provided datetime */
+    uint32_t daysUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of days from this datetime to provided date */
+    uint32_t daysUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of days from this datetime to provided datetime */
+    uint32_t daysUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of hours from this datetime to provided datetime */
+    uint32_t hoursUntil(const VDatetimeEx& vdatetime_ex) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of hours from this datetime to provided datetime */
+    uint32_t hoursUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of hours from this datetime to provided date */
+    uint32_t hoursUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of hours from this datetime to provided datetime */
+    uint32_t hoursUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
 
     // /* Returns absolute total number of minutes from this datetime to provided datetime */
-    // size_t minutesUntil(const VDatetimeEx& vdatetime_ex) const noexcept
+    // size_t minutesUntil(const VDatetimeEx& vdatetime_ex) const noexcept//      <--- INCOMPLETE!
     // {
     //     size_t dayMinutes{ (this->daysUntil(vdatetime_ex) * (size_t)1'440ULL) };
 
     //     //
 
-    //     return dayMinutes;// <--- THIS IS INCOMPLETE!
+    //     return dayMinutes;
     // }
+
+    /* Returns absolute total number of minutes from this datetime to provided datetime */
+    uint32_t minutesUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of minutes from this datetime to provided date */
+    uint32_t minutesUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of minutes from this datetime to provided datetime */
+    uint32_t minutesUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
 
     // /* Returns absolute total number of seconds from this datetime to provided datetime */
     // size_t secondsUntil(const VDatetimeEx& vdatetime_ex) const noexcept
@@ -611,6 +794,15 @@ public:
 
     //     return totalSeconds;
     // }
+
+    /* Returns absolute total number of seconds from this datetime to provided datetime */
+    size_t secondsUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of seconds from this datetime to provided date */
+    size_t secondsUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of seconds from this datetime to provided datetime */
+    size_t secondsUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
 
     // /* Returns absolute total number of milliseconds from this datetime to provided datetime */
     // size_t millisecondsUntil(const VDatetimeEx& vdatetime_ex) const noexcept
@@ -685,6 +877,15 @@ public:
     //     return totalMs;
     // }
 
+    /* Returns absolute total number of milliseconds from this datetime to provided datetime */
+    size_t msUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of milliseconds from this datetime to provided date */
+    size_t msUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+
+    /* Returns absolute total number of milliseconds from this datetime to provided datetime */
+    size_t millisecondsUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
+
     // /* Returns duration from this datetime to provided datetime */
     // VDuration until(const VDatetimeEx& vdatetime_ex) const noexcept
     // {
@@ -703,24 +904,24 @@ public:
     //     return result;
     // }
 
-    // /* Returns standard library chronological time point of this datetime */
-    // TimePoint toChrono() const noexcept
-    // {
-    //     TimePoint timePoint{};
+    /* Returns duration from this datetime to provided datetime */
+    VDuration until(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
-    //     VDatetimeEx epoch{ TimePoint{} };
-    //     VDuration sinceEpoch{ epoch.until(*this) };
+    /* Returns duration from this datetime to provided date */
+    VDuration until(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
 
-    //     timePoint = (timePoint + sinceEpoch.toChronoDuration());
+    /* Returns duration from this datetime to provided datetime */
+    VDuration until(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
 
-    //     return timePoint;
-    // }
+    /* Displace datetime using provided duration */
+    void displace(const VDuration& v_duration) noexcept
+    {
+        // NOTE: Ends up using .dateDisplace() loop, fix this!
+        this->m_time.displace(v_duration);
+    }
 
-    // /* Displace datetime using provided duration */
-    // void displace(const VDuration& duration) noexcept
-    // {
-    //     this->m_time.displace(duration);
-    // }
+    /* Reset datetime to epoch */
+    void reset() noexcept;//      <--- INCOMPLETE!
 
 
 private:

@@ -317,7 +317,8 @@ namespace VDateCalculationTests {
 					<< displaceUnits
 					<< " units:"
 					<< std::setw(13) << ""
-					<< "\n\t\t-> Days from epoch: " << validateCount
+					<< "\n\t\t-> Days from epoch: "
+					<< (expectedJDN - VDate::EPOCH_JDN)
 					<< "\n\t\t-> Date expected: "
 					<< VDate{ expectedJDN }.dateStr(VDate::Format::STANDARD)
 					<< "\n\t\t-> Date recieved: "
