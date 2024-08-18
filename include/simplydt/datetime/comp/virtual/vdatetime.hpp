@@ -102,13 +102,13 @@ public:
 
     bool operator>=(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
 
-    VDatetime operator+(const VDuration& v_duration) const noexcept;
+    VDatetime operator+(const VDuration& v_duration) const noexcept;//      <--- INCOMPLETE!
 
-    VDatetime operator-(const VDuration& v_duration) const noexcept;
+    VDatetime operator-(const VDuration& v_duration) const noexcept;//      <--- INCOMPLETE!
 
-    VDatetime& operator+=(const VDuration& v_duration) noexcept;
+    VDatetime& operator+=(const VDuration& v_duration) noexcept;//      <--- INCOMPLETE!
 
-    VDatetime& operator-=(const VDuration& v_duration) noexcept;
+    VDatetime& operator-=(const VDuration& v_duration) noexcept;//      <--- INCOMPLETE!
 
     /* Returns true if datetime represents epoch datetime */
     bool isEpoch() const noexcept;//      <--- INCOMPLETE!
