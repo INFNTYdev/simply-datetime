@@ -28,8 +28,8 @@ public:
         TIME_DATE,// time - date
     };
 
-    inline static const JDN EPOCH_JDN = (VDate::EPOCH_JDN + (double).5);
-    inline static const JDN MAX_JDN = ((VDate::MAX_JDN + (JDN)1.) + (double).49999999);
+    inline static const JDN EPOCH_JDN = ((JDN)VDate::EPOCH_JDN + (JDN).5);
+    inline static const JDN MAX_JDN = ((JDN)VDate::MAX_JDN + (JDN)1.49999999);
 
     VDatetimeEx(const TimePoint& sys_clock) noexcept
         : m_date{ sys_clock },
