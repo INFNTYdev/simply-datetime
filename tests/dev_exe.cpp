@@ -170,7 +170,7 @@ int main(size_t argc, char* argv[])
 	vdtExBreakdown(next);
 
 
-	VDuration result = demo.until(std::chrono::system_clock::now());
+	VDuration result = demo.until(next);
 
 	std::cout << "Debug: " << result << std::endl;
 
