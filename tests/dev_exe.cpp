@@ -107,74 +107,31 @@ void ProjectInfoOut() noexcept
 		<< "\n\n" << std::endl;
 }
 
-//void dateCompare(const VDate& date1, const VDate& date2) noexcept
-//{
-//	std::cout
-//		<< "\nFrom " << date1.dateStr(VDate::Format::STANDARD)
-//		<< " -> " << date2.dateStr(VDate::Format::STANDARD)
-//		<< " = " << date1.until(date2) << std::endl;
-//}
-//
-//void timeCompare(const VTimeEx& time1, const VTimeEx& time2) noexcept
-//{
-//	std::cout
-//		<< "\nFrom " << time1.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-//		<< " -> " << time2.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-//		<< " = " << time1.until(time2) << std::endl;
-//}
-//
-//void durationDisplace(VDuration& dur1, const VDuration& dur2) noexcept
-//{
-//	std::cout << "\n( " << dur1 << " ) + ( " << dur2 << " ) = ";
-//
-//	dur1.displace(dur2);
-//
-//	std::cout << dur1 << std::endl;
-//}
-//
-//void datetimeOut(const VDatetimeEx& datetime) noexcept
-//{
-//	std::cout
-//		<< '\n'
-//		<< datetime.datetimeStr(
-//			VDate::Format::STANDARD,
-//			VDate::Layout::M_D_YYYY,
-//			VTimeEx::Format::STANDARD,
-//			VTimeEx::Layout::H_M_S_P
-//		)
-//		<< std::endl;
-//}
 
-void dateOut(const VDate& date) noexcept
+// DEVELOPER DEBUG METHODS
+// Print VDatetimeEx breakdown to console
+void vdtExBreakdown(const VDatetimeEx& vdatetime_ex) noexcept
 {
-	std::cout
-		<< '\n'
-		<< date.dateStr(
-			VDate::Format::STANDARD,
-			VDate::Layout::M_D_YYYY
-		)
-		<< std::endl;
-}
-
-void timeOut(const VTimeEx& time) noexcept
-{
-	std::cout
-		<< '\n'
-		<< time.timeStr(
-			VTimeEx::Format::STANDARD,
-			VTimeEx::Layout::H_M_S_P
-		)
-		<< std::endl;
-}
-
-void timeOut(const VTime& time) noexcept
-{
-	std::cout
-		<< '\n'
-		<< time.timeStr(
-			VTime::Format::STANDARD,
-			VTime::Layout::H_M_S_P
-		)
+	std::cout << '\n'
+		<< "(VDatetimeEx)\n"
+		<< "Extended virtualized datetime\n"
+		<< "[ " << vdatetime_ex.dayOfWeek() << ", "
+		<< vdatetime_ex.monthTitle() << " " << (int)vdatetime_ex.day() << ", "
+		<< vdatetime_ex.year() << " ]\n"
+		<< std::setw(14)
+		<< "Attributes\n"
+		<< std::setw(14)
+		<< "-> JDN: " << std::setprecision(17)
+		<< vdatetime_ex.toJulianDayNumber() << '\n'
+		<< std::setw(14)
+		<< "-> Date: "
+		<< vdatetime_ex.date().dateStr(VDate::STANDARD, VDate::M_D_YYYY) << '\n'
+		<< std::setw(14)
+		<< "-> Time: "
+		<< vdatetime_ex.time().timeStr(VTimeEx::STANDARD, VTimeEx::H_M_S_P) << '\n'
+		<< std::setw(14)
+		<< "-> Datetime: "
+		<< vdatetime_ex << '\n'
 		<< std::endl;
 }
 
@@ -204,34 +161,18 @@ int main(size_t argc, char* argv[])
 
 	//\\//
 
-	VDatetimeEx::JDN dateJDN{ 2460729.5 };//2460729.5 (February 23, 2025)
+	VDatetimeEx::JDN demoJDN{ 2460729.5 };//2460729.5 (February 23, 2025)
 
-	VDatetimeEx demo{ dateJDN };
+	VDatetimeEx demo{ VDate{ 2024, 8, 17 }, VTimeEx{ 22, 10 } };
+	VDatetimeEx next{ VDate{ 2024, 8, 17 }, VTimeEx{ 16, 10 } };
 
-	std::cout << '\n'
-		<< std::setw(11)
-		<< "JDN: " << std::setprecision(17)
-		<< demo.toJulianDayNumber() << '\n'
-		<< std::setw(11)
-		<< "Date: "
-		<< demo.date().dateStr(VDate::STANDARD, VDate::M_D_YYYY) << '\n'
-		<< std::setw(11)
-		<< "Time: "
-		<< demo.time().timeStr(VTimeEx::STANDARD, VTimeEx::H_M_S_P) << '\n'
-		<< std::setw(11)
-		<< "Datetime: "
-		<< demo << '\n'
-		<< "\n[ " << demo.dayOfWeek() << ", "
-		<< demo.monthTitle() << " " << (int)demo.day() << ", "
-		<< demo.year() << " ]"
-		<< std::endl;
+	vdtExBreakdown(demo);
+	vdtExBreakdown(next);
 
-	std::cout << '\n'
-		<< "JDN provided: "
-		<< std::setprecision(17) << dateJDN
-		<< "\nJDN assumed: "
-		<< std::setprecision(17) << demo.toJulianDayNumber()
-		<< std::endl;
+
+	VDuration result = demo.until(std::chrono::system_clock::now());
+
+	std::cout << "Debug: " << result << std::endl;
 
 	//\\//
 

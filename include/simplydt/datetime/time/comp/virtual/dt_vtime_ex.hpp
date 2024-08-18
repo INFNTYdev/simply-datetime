@@ -321,20 +321,20 @@ public:
             return false;
         else if (this->hour() < tpHour)
             return true;
-        
+
         if (this->minute() > tpMinute)
             return false;
         else if (this->minute() < tpMinute)
             return true;
-        
+
         if (this->second() > tpSecond)
             return false;
         else if (this->second() < tpSecond)
             return true;
-        
+
         if (!this->msRef().isAtStart())
             return false;
-        
+
         return true;
     }
 
@@ -371,21 +371,21 @@ public:
             return false;
         else if (this->hour() > tpHour)
             return true;
-        
+
         if (this->minute() < tpMinute)
             return false;
         else if (this->minute() > tpMinute)
             return true;
-        
+
         if (this->second() < tpSecond)
             return false;
         else if (this->second() > tpSecond)
             return true;
-        
+
         // Indicates times are equal down to the ms
         if (this->msRef().isAtStart())
             return false;
-        
+
         return true;
     }
 
@@ -629,6 +629,67 @@ public:
     {
         return this->m_millisecond_ptr;
     }
+
+    ////* Returns true if provided datetime time occurs after this time */
+    //bool isBefore(const TimePoint& sys_clock) const noexcept
+    //{
+    //    uint16_t tpHour{ 0 };
+    //    uint16_t tpMinute{ 0 };
+    //    uint16_t tpSecond{ 0 };
+
+    //    this->interpretTimePointTime(sys_clock, tpHour, tpMinute, tpSecond);
+
+    //    if (this->hour() > tpHour)
+    //        return false;
+    //    else if (this->hour() < tpHour)
+    //        return true;
+
+    //    if (this->minute() > tpMinute)
+    //        return false;
+    //    else if (this->minute() < tpMinute)
+    //        return true;
+
+    //    if (this->second() > tpSecond)
+    //        return false;
+    //    else if (this->second() < tpSecond)
+    //        return true;
+
+    //    if (!this->msRef().isAtStart())
+    //        return false;
+
+    //    return true;
+    //}
+
+    ////* Returns true if provided datetime time occurs before this time */
+    //bool isAfter(const TimePoint& sys_clock) const noexcept
+    //{
+    //    uint16_t tpHour{ 0 };
+    //    uint16_t tpMinute{ 0 };
+    //    uint16_t tpSecond{ 0 };
+
+    //    this->interpretTimePointTime(sys_clock, tpHour, tpMinute, tpSecond);
+
+    //    if (this->hour() < tpHour)
+    //        return false;
+    //    else if (this->hour() > tpHour)
+    //        return true;
+
+    //    if (this->minute() < tpMinute)
+    //        return false;
+    //    else if (this->minute() > tpMinute)
+    //        return true;
+
+    //    if (this->second() < tpSecond)
+    //        return false;
+    //    else if (this->second() > tpSecond)
+    //        return true;
+
+    //    // Indicates times are equal down to the ms
+    //    if (this->msRef().isAtStart())
+    //        return false;
+
+    //    return true;
+    //}
 
     /* Returns time as fractional Julian Day Number (JDN) */
     JDN toJulianDayNumber() const noexcept

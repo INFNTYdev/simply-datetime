@@ -698,211 +698,268 @@ public:
     uint32_t daysUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
     /* Returns absolute total number of days from this datetime to provided date */
-    uint32_t daysUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+    uint32_t daysUntil(const VDate& v_date) const noexcept
+    {
+        return this->m_date.daysUntil(v_date);
+    }
 
     /* Returns absolute total number of days from this datetime to provided datetime */
-    uint32_t daysUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
+    uint32_t daysUntil(const TimePoint& sys_clock) const noexcept
+    {
+        return this->m_date.daysUntil(sys_clock);
+    }
 
-    /* Returns absolute total number of hours from this datetime to provided datetime */
-    uint32_t hoursUntil(const VDatetimeEx& vdatetime_ex) const noexcept;//      <--- INCOMPLETE!
+    //* Returns absolute total number of hours from this datetime to provided datetime */
+    uint32_t hoursUntil(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        uint32_t total{ 0 };
+
+        if (this == &vdatetime_ex)
+            return total;
+
+        total += (this->daysUntil(vdatetime_ex) * (uint32_t)24Ui32);
+        
+        if (this->m_time.isBefore(vdatetime_ex.m_time) || total == (uint32_t)0Ui32)
+            total += this->m_time.hoursUntil(vdatetime_ex.m_time);
+        else if (this->m_time.isAfter(vdatetime_ex.m_time))
+            total -= this->m_time.hoursUntil(vdatetime_ex.m_time);
+
+        return total;
+    }
 
     /* Returns absolute total number of hours from this datetime to provided datetime */
     uint32_t hoursUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
     /* Returns absolute total number of hours from this datetime to provided date */
-    uint32_t hoursUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+    uint32_t hoursUntil(const VDate& v_date) const noexcept
+    {
+        uint32_t total{ 0 };
+
+        total += (this->daysUntil(v_date) * (uint32_t)24Ui32);
+
+        if (this->m_time.hour() == (uint16_t)0Ui16)
+            return total;
+
+        VTimeEx implicitTime{};// 00:00:00 AM
+
+        if (!total)
+            total += this->m_time.hoursUntil(implicitTime);
+        else
+            total -= this->m_time.hoursUntil(implicitTime);
+
+        return total;
+    }
 
     /* Returns absolute total number of hours from this datetime to provided datetime */
-    uint32_t hoursUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
+    uint32_t hoursUntil(const TimePoint& sys_clock) const noexcept
+    {
+        uint32_t total{ 0 };
 
-    // /* Returns absolute total number of minutes from this datetime to provided datetime */
-    // size_t minutesUntil(const VDatetimeEx& vdatetime_ex) const noexcept//      <--- INCOMPLETE!
-    // {
-    //     size_t dayMinutes{ (this->daysUntil(vdatetime_ex) * (size_t)1'440ULL) };
+        total += (this->daysUntil(sys_clock) * (uint32_t)24Ui32);
 
-    //     //
+        if (this->m_time < sys_clock || total == (uint32_t)0Ui32)
+            total += this->m_time.hoursUntil(sys_clock);
+        else if (this->m_time > sys_clock)
+            total -= this->m_time.hoursUntil(sys_clock);
 
-    //     return dayMinutes;
-    // }
+        return total;
+    }
+
+    /* Returns absolute total number of minutes from this datetime to provided datetime */
+    uint32_t minutesUntil(const VDatetimeEx& vdatetime_ex) const noexcept//      <--- INCOMPLETE!
+    {
+        uint32_t total{ 0 };
+
+        if (this == &vdatetime_ex)
+            return total;
+
+        total += (this->daysUntil(vdatetime_ex) * (uint32_t)1'440Ui32);
+
+        if (this->m_time.isBefore(vdatetime_ex.m_time) || total == (uint32_t)0Ui32)
+            total += this->m_time.minutesUntil(vdatetime_ex.m_time);
+        else if (this->m_time.isAfter(vdatetime_ex.m_time))
+            total -= this->m_time.minutesUntil(vdatetime_ex.m_time);
+
+        return total;
+    }
 
     /* Returns absolute total number of minutes from this datetime to provided datetime */
     uint32_t minutesUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
     /* Returns absolute total number of minutes from this datetime to provided date */
-    uint32_t minutesUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+    uint32_t minutesUntil(const VDate& v_date) const noexcept
+    {
+        uint32_t total{ 0 };
+
+        total += (this->daysUntil(v_date) * (uint32_t)1'440Ui32);
+
+        if (
+            this->m_time.hour() == (uint16_t)0Ui16
+            && this->m_time.minute() == (uint16_t)0Ui16
+        ) {
+            return total;
+        }
+
+        VTimeEx implicitTime{};// 00:00:00 AM
+
+        if (!total)
+            total += this->m_time.minutesUntil(implicitTime);
+        else
+            total -= this->m_time.minutesUntil(implicitTime);
+
+        return total;
+    }
 
     /* Returns absolute total number of minutes from this datetime to provided datetime */
-    uint32_t minutesUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
+    uint32_t minutesUntil(const TimePoint& sys_clock) const noexcept
+    {
+        uint32_t total{ 0 };
 
-    // /* Returns absolute total number of seconds from this datetime to provided datetime */
-    // size_t secondsUntil(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     size_t totalSeconds{ 0 };
+        total += (this->daysUntil(sys_clock) * (uint32_t)1'440Ui32);
 
-    //     if (this == &vdatetime_ex || *this == vdatetime_ex)
-    //         return totalSeconds;
+        if (this->m_time < sys_clock || total == (uint32_t)0Ui32)
+            total += this->m_time.minutesUntil(sys_clock);
+        else if (this->m_time > sys_clock)
+            total -= this->m_time.minutesUntil(sys_clock);
 
-    //     std::pair<const VDatetimeEx*, const VDatetimeEx*> dtRef{
-    //         nullptr, nullptr// (high, low)
-    //     };
+        return total;
+    }
 
-    //     if (this->isAfter(vdatetime_ex)) {
-    //         dtRef.first = this;
-    //         dtRef.second = &vdatetime_ex;
-    //     }
-    //     else {
-    //         dtRef.first = &vdatetime_ex;
-    //         dtRef.second = this;
-    //     }
+    /* Returns absolute total number of seconds from this datetime to provided datetime */
+    size_t secondsUntil(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        size_t total{ 0 };
 
-    //     VDatetimeEx temp{ (*dtRef.second) };
+        if (this == &vdatetime_ex)
+            return total;
 
-    //     // Accum. seconds
-    //     totalSeconds += (
-    //         temp.vtime_ex().getSecond().untilPosition(dtRef.first->vtime_ex().getSecond())
-    //     );
-    //     temp.getTime()->getSecond().increment(
-    //         temp.vtime_ex().getSecond().untilPosition(
-    //             dtRef.first->vtime_ex().getSecond()
-    //         )
-    //     );
+        total += ((size_t)this->daysUntil(vdatetime_ex) * (size_t)86'400Ui64);
 
-    //     // Accum. minutes
-    //     totalSeconds += (
-    //         ((size_t)temp.vtime_ex().getMinute().untilPosition(dtRef.first->vtime_ex().getMinute()) * (size_t)60ULL)
-    //     );
-    //     temp.getTime()->getMinute().increment(
-    //         temp.vtime_ex().getMinute().untilPosition(
-    //             dtRef.first->vtime_ex().getMinute()
-    //         )
-    //     );
+        if (this->m_time.isBefore(vdatetime_ex.m_time) || total == (size_t)0Ui64)
+            total += this->m_time.secondsUntil(vdatetime_ex.m_time);
+        else if (this->m_time.isAfter(vdatetime_ex.m_time))
+            total -= this->m_time.secondsUntil(vdatetime_ex.m_time);
 
-    //     // Accum. hours
-    //     totalSeconds += (
-    //         ((size_t)temp.vtime_ex().getHour().untilPosition(dtRef.first->vtime_ex().getHour()) * (size_t)3'600ULL)
-    //     );
-    //     temp.getTime()->getHour().increment(
-    //         temp.vtime_ex().getHour().untilPosition(
-    //             dtRef.first->vtime_ex().getHour()
-    //         )
-    //     );
-
-    //     // Accum. days
-    //     totalSeconds += (
-    //         ((size_t)temp.v_date().daysUntil(dtRef.first->v_date()) * (size_t)86'400ULL)
-    //     );
-
-    //     return totalSeconds;
-    // }
+        return total;
+    }
 
     /* Returns absolute total number of seconds from this datetime to provided datetime */
     size_t secondsUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
     /* Returns absolute total number of seconds from this datetime to provided date */
-    size_t secondsUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+    size_t secondsUntil(const VDate& v_date) const noexcept
+    {
+        size_t total{ 0 };
+
+        total += ((size_t)this->daysUntil(v_date) * (size_t)86'400Ui64);
+
+        if (
+            this->m_time.hour() == (uint16_t)0Ui16
+            && this->m_time.minute() == (uint16_t)0Ui16
+            && this->m_time.second() == (uint16_t)0Ui16
+        ) {
+            return total;
+        }
+
+        VTimeEx implicitTime{};// 00:00:00 AM
+
+        if (!total)
+            total += this->m_time.secondsUntil(implicitTime);
+        else
+            total -= this->m_time.secondsUntil(implicitTime);
+
+        return total;
+    }
 
     /* Returns absolute total number of seconds from this datetime to provided datetime */
-    size_t secondsUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
+    size_t secondsUntil(const TimePoint& sys_clock) const noexcept
+    {
+        size_t total{ 0 };
 
-    // /* Returns absolute total number of milliseconds from this datetime to provided datetime */
-    // size_t millisecondsUntil(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     size_t totalMs{ 0 };
+        total += ((size_t)this->daysUntil(sys_clock) * (size_t)86'400Ui64);
 
-    //     if (this == &vdatetime_ex || *this == vdatetime_ex)
-    //         return totalMs;
+        if (this->m_time < sys_clock || total == (size_t)0Ui64)
+            total += this->m_time.secondsUntil(sys_clock);
+        else if (this->m_time > sys_clock)
+            total -= this->m_time.secondsUntil(sys_clock);
 
-    //     std::pair<const VDatetimeEx*, const VDatetimeEx*> dtRef{
-    //         nullptr, nullptr// (high, low)
-    //     };
+        return total;
+    }
 
-    //     if (this->isAfter(vdatetime_ex)) {
-    //         dtRef.first = this;
-    //         dtRef.second = &vdatetime_ex;
-    //     }
-    //     else {
-    //         dtRef.first = &vdatetime_ex;
-    //         dtRef.second = this;
-    //     }
+    /* Returns absolute total number of milliseconds from this datetime to provided datetime */
+    size_t msUntil(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        size_t total{ 0 };
 
-    //     VDatetimeEx temp{ (*dtRef.second) };
+        if (this == &vdatetime_ex)
+            return total;
 
-    //     // Accum. milliseconds
-    //     totalMs += (
-    //         temp.vtime_ex().getMillisecond().untilPosition(
-    //             dtRef.first->vtime_ex().getMillisecond()
-    //         )
-    //     );
-    //     temp.getTime()->getMillisecond().increment(
-    //         temp.vtime_ex().getMillisecond().untilPosition(
-    //             dtRef.first->vtime_ex().getMillisecond()
-    //         )
-    //     );
+        total += ((size_t)this->daysUntil(vdatetime_ex) * (size_t)86'400'000Ui64);
 
-    //     // Accum. seconds
-    //     totalMs += (
-    //         ((size_t)temp.vtime_ex().getSecond().untilPosition(dtRef.first->vtime_ex().getSecond()) * (size_t)1'000ULL)
-    //     );
-    //     temp.getTime()->getSecond().increment(
-    //         temp.vtime_ex().getSecond().untilPosition(
-    //             dtRef.first->vtime_ex().getSecond()
-    //         )
-    //     );
+        if (this->m_time.isBefore(vdatetime_ex.m_time) || total == (size_t)0Ui64)
+            total += this->m_time.msUntil(vdatetime_ex.m_time);
+        else if (this->m_time.isAfter(vdatetime_ex.m_time))
+            total -= this->m_time.msUntil(vdatetime_ex.m_time);
 
-    //     // Accum. minutes
-    //     totalMs += (
-    //         ((size_t)temp.vtime_ex().getMinute().untilPosition(dtRef.first->vtime_ex().getMinute()) * (size_t)60'000ULL)
-    //     );
-    //     temp.getTime()->getMinute().increment(
-    //         temp.vtime_ex().getMinute().untilPosition(
-    //             dtRef.first->vtime_ex().getMinute()
-    //         )
-    //     );
-
-    //     // Accum. hours
-    //     totalMs += (
-    //         ((size_t)temp.vtime_ex().getHour().untilPosition(dtRef.first->vtime_ex().getHour()) * (size_t)3'600'000ULL)
-    //     );
-    //     temp.getTime()->getHour().increment(
-    //         temp.vtime_ex().getHour().untilPosition(
-    //             dtRef.first->vtime_ex().getHour()
-    //         )
-    //     );
-
-    //     // Accum. days
-    //     totalMs += (
-    //         ((size_t)temp.v_date().daysUntil(dtRef.first->v_date()) * (size_t)86'400'000ULL)
-    //     );
-
-    //     return totalMs;
-    // }
+        return total;
+    }
 
     /* Returns absolute total number of milliseconds from this datetime to provided datetime */
     size_t msUntil(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
     /* Returns absolute total number of milliseconds from this datetime to provided date */
-    size_t msUntil(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+    size_t msUntil(const VDate& v_date) const noexcept
+    {
+        size_t total{ 0 };
+
+        total += ((size_t)this->daysUntil(v_date) * (size_t)86'400'000Ui64);
+
+        if (this->m_time.isZero())
+            return total;
+
+        VTimeEx implicitTime{};// 00:00:00:000 AM
+
+        if (!total)
+            total += this->m_time.msUntil(implicitTime);
+        else
+            total -= this->m_time.msUntil(implicitTime);
+
+        return total;
+    }
 
     /* Returns absolute total number of milliseconds from this datetime to provided datetime */
-    size_t millisecondsUntil(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
-
-    // /* Returns duration from this datetime to provided datetime */
-    // VDuration until(const VDatetimeEx& vdatetime_ex) const noexcept
-    // {
-    //     if (this == &vdatetime_ex || *this == vdatetime_ex)
-    //         return VDuration{};
+    size_t msUntil(const TimePoint& sys_clock) const noexcept
+    {
+        size_t total{ 0 };
         
-    //     VDuration result{};
-    //     result.getMs().largeDisplace(
-    //         VDuration::Sign::POSITIVE,
-    //         this->millisecondsUntil(vdatetime_ex)
-    //     );
+        total += ((size_t)this->daysUntil(sys_clock) * (size_t)86'400'000Ui64);
 
-    //     if (this->isAfter(vdatetime_ex) && result.sign() != VDuration::Sign::NEGATIVE)
-    //         result.invert();
+        if (this->m_time < sys_clock || total == (size_t)0Ui64)
+            total += this->m_time.msUntil(sys_clock);
+        else if (this->m_time > sys_clock)
+            total -= this->m_time.msUntil(sys_clock);
 
-    //     return result;
-    // }
+        return total;
+    }
+
+    /* Returns duration from this datetime to provided datetime */
+    VDuration until(const VDatetimeEx& vdatetime_ex) const noexcept
+    {
+        if (this == &vdatetime_ex || *this == vdatetime_ex)
+            return VDuration{};
+        
+        VDuration difference{};
+
+        difference.getMs()->largeDisplace(
+            VDuration::Sign::POSITIVE,
+            this->msUntil(vdatetime_ex)
+        );
+
+        if (this->isAfter(vdatetime_ex))
+            difference.invert();
+
+        return difference;
+    }
 
     /* Returns duration from this datetime to provided datetime */
     VDuration until(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
@@ -911,7 +968,20 @@ public:
     VDuration until(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
 
     /* Returns duration from this datetime to provided datetime */
-    VDuration until(const TimePoint& sys_clock) const noexcept;//      <--- INCOMPLETE!
+    VDuration until(const TimePoint& sys_clock) const noexcept
+    {
+        VDuration difference{};
+
+        difference.getMs()->largeDisplace(
+            VDuration::Sign::POSITIVE,
+            this->msUntil(sys_clock)
+        );
+
+        if (this->isAfter(sys_clock))
+            difference.invert();
+
+        return difference;
+    }
 
     /* Displace datetime using provided duration */
     void displace(const VDuration& v_duration) noexcept
@@ -921,7 +991,11 @@ public:
     }
 
     /* Reset datetime to epoch */
-    void reset() noexcept;//      <--- INCOMPLETE!
+    void reset() noexcept
+    {
+        this->m_time.reset();
+        this->m_date.reset();
+    }
 
 
 private:
