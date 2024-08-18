@@ -151,7 +151,7 @@ int main(size_t argc, char* argv[])
 	VDatetimeEx creationDate{ VDate{ 2024Ui16, 6Ui16, 28Ui16 } , VTimeEx{} };
 
 	std::cout << "Elapsed dev time: "
-		//<< creationDate.until(nowSnapshot) << std::endl
+		<< creationDate.until(nowSnapshot) << std::endl
 		<< "\n\n\nCONSOLE DEBUG:"
 		<< std::endl;
 
