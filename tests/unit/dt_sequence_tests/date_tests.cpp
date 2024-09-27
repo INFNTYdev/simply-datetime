@@ -117,7 +117,7 @@ namespace VDateCalculationTests {
 			const uint32_t expectedJDN{ (epochJDN + validateCount) };
 			const uint32_t sampleJDN{ sampleDate.toJulianDayNumber() };
 
-			// Verify premise of sample JDN
+			// Verify premise of JDN sample
 			if (untilSample != validateCount || expectedJDN != sampleJDN) {
 				std::cout << std::setw(13)
 					<< "[ FAILURE  ] "
