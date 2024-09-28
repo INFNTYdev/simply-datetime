@@ -59,6 +59,12 @@ public:
         return true;
     }
 
+    /* Set year value with no effect to neighbors */
+    bool setPositionUnlinked(uint16_t pos) noexcept
+    {
+        return Interval<uint16_t>::setPosition(pos);
+    }
+
     /* Set year value */
     bool setYear(uint16_t year) noexcept
     {

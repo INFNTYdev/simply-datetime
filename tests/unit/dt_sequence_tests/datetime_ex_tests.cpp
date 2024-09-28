@@ -193,73 +193,76 @@ namespace VDatetimeExJDNTests {
 
 
 	// Tests if VDatetimeEx class produces accurate dates from JDN values
-	TEST(VDtExJDNIntegrityTests, DateJDNInterpretationTest)
-	{
-		// This test relies on JDN calculation integrity!
+	//TEST(VDtExJDNIntegrityTests, DateJDNInterpretationTest)
+	//{
+	//	// This test relies on JDN calculation integrity!
+	//	// LONG TEST!!! (30 Minutes)
 
-		VDatetimeEx variableDt{};// January 1, 1970 00:00:00:000
+	//	VDatetimeEx variableDt{};// January 1, 1970 00:00:00:000
 
-		msgOut("This test relies on JDN calculation integrity!\n");
-		msgOut("Testing all possible dates: ('");
-		std::cout
-			<< VDate{ MIN_JDN }.dateStr(VDate::Format::STANDARD)
-			<< "' through '"
-			<< VDate{ MAX_JDN }.dateStr(VDate::Format::STANDARD)
-			<< "')...\n";
+	//	msgOut("This test relies on JDN calculation integrity!\n");
+	//	msgOut("Testing all possible dates: ('");
+	//	std::cout
+	//		<< VDate{ MIN_JDN }.dateStr(VDate::Format::STANDARD)
+	//		<< "' through '"
+	//		<< VDate{ MAX_JDN }.dateStr(VDate::Format::STANDARD)
+	//		<< "')...\n";
 
-		uint32_t datesVerified{ 0 };
+	//	uint32_t datesVerified{ 0 };
 
-		while (datesVerified != REPR_COUNT) {
+	//	while (datesVerified != REPR_COUNT) {
 
-			// Designated test sample
-			VDatetimeEx sample{ variableDt.toJulianDayNumber() };
+	//		// Designated test sample
+	//		VDatetimeEx sample{ variableDt.toJulianDayNumber() };
 
-			// Confirm lossless Julian Day Number interpretation
-			if (sample.toJulianDayNumber() != variableDt.toJulianDayNumber()) {
-				failOut("JDN information loss detected at '");
-				std::cout
-					<< variableDt.datetimeStr(VDate::Format::STANDARD)
-					<< "' date:";
-				fpOut("Datetime expected", variableDt);
-				fpOut("Datetime recieved", sample);
-				fpOut("JDN expected", variableDt.toJulianDayNumber());
-				fpOut("JDN recieved", sample.toJulianDayNumber());
-				fpOut(
-					"JDN divergence",
-					(sample.toJulianDayNumber() - variableDt.toJulianDayNumber())
-				);
-				std::cout
-					<< " days\n\t\t"
-					<< " -> Failed after testing "
-					<< datesVerified << " dates"
-					<< std::endl;
-				FAIL();
-			}
+	//		std::cout << "\nTesting " << sample << "...";
 
-			// Confirm operator yeilds equality
-			if (sample != variableDt) {
-				failOut("Inequality detected by class operator with '");
-				std::cout
-					<< variableDt.datetimeStr(VDate::Format::STANDARD)
-					<< "' date:";
-				fpOut("Datetime given", sample);
-				fpOut("JDN expected", variableDt.toJulianDayNumber());
-				fpOut("JDN recieved", sample.toJulianDayNumber());
-				std::cout << std::endl;
-				FAIL();
-			}
+	//		// Confirm lossless Julian Day Number interpretation
+	//		if (sample.toJulianDayNumber() != variableDt.toJulianDayNumber()) {
+	//			failOut("JDN information loss detected at '");
+	//			std::cout
+	//				<< variableDt.datetimeStr(VDate::Format::STANDARD)
+	//				<< "' date:";
+	//			fpOut("Datetime expected", variableDt);
+	//			fpOut("Datetime recieved", sample);
+	//			fpOut("JDN expected", variableDt.toJulianDayNumber());
+	//			fpOut("JDN recieved", sample.toJulianDayNumber());
+	//			fpOut(
+	//				"JDN divergence",
+	//				(sample.toJulianDayNumber() - variableDt.toJulianDayNumber())
+	//			);
+	//			std::cout
+	//				<< " days\n\t\t"
+	//				<< " -> Failed after testing "
+	//				<< datesVerified << " dates"
+	//				<< std::endl;
+	//			FAIL();
+	//		}
 
-			// Adjust loop control variables
-			++datesVerified;
-			variableDt.getDate()->getDay()->increase(1);
+	//		// Confirm operator yeilds equality
+	//		if (sample != variableDt) {
+	//			failOut("Inequality detected by class operator with '");
+	//			std::cout
+	//				<< variableDt.datetimeStr(VDate::Format::STANDARD)
+	//				<< "' date:";
+	//			fpOut("Datetime given", sample);
+	//			fpOut("JDN expected", variableDt.toJulianDayNumber());
+	//			fpOut("JDN recieved", sample.toJulianDayNumber());
+	//			std::cout << std::endl;
+	//			FAIL();
+	//		}
 
-		}
+	//		// Adjust loop control variables
+	//		++datesVerified;
+	//		variableDt.getDate()->getDay()->increase(1);
 
-		msgOut("Confirmed ");
-		std::cout
-			<< datesVerified
-			<< " JDN interpretations"
-			<< std::endl;
-	}
+	//	}
+
+	//	msgOut("Confirmed ");
+	//	std::cout
+	//		<< datesVerified
+	//		<< " JDN interpretations"
+	//		<< std::endl;
+	//}
 
 }

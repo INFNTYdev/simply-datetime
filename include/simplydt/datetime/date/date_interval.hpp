@@ -187,6 +187,7 @@ public:
         uint16_t newDayMax{ 0 };
         uint16_t dayOffset{ 0 };
 
+        // NOTE: Isn't this supposed to be a pointer?
         LinkedInterval day_ptr{ nullptr };
 
         switch (this->m_unitOfMeasure) {
