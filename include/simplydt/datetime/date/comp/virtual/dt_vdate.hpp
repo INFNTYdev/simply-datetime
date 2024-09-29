@@ -871,11 +871,10 @@ private:
 
         // Set date interval values
         // Day threshold is updated in calls below
-        this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
-        //this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
+        //this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
+        this->getDay()->setPositionUnlinked(gregorianDay);
         this->getMonth()->setPositionUnlinked(gregorianMonth);
         this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
-        //this->getYear()->setPositionUnlinked(gregorianYear);
     }
 
     void assumeJDN(const double& jdn) noexcept

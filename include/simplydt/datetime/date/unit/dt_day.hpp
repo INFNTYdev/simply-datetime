@@ -39,6 +39,15 @@ public:
         );
     }
 
+    /* Set day value with no effect to neighbors */
+    bool setPositionUnlinked(uint16_t pos) noexcept
+    {
+        if (pos <= (uint16_t)31Ui16 && pos > this->threshold())
+            this->setThreshold(pos);
+
+        return Interval<uint16_t>::setPosition(pos);
+    }
+
     /* Set day value */
     bool setDay(uint16_t day) noexcept
     {
