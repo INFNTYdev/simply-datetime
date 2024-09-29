@@ -304,7 +304,7 @@ namespace VDateCalculationTests {
 		uint32_t expectedJDN{ (epochDate.toJulianDayNumber() + (uint32_t)1Ui32) };
 		uint32_t displaceUnits{ 1 };
 		const uint32_t displaceThreshold{ 1'000'000 };
-		const uint32_t uint32Max{ std::numeric_limits<uint32_t>::max() };
+		constexpr uint32_t uint32Max{ std::numeric_limits<uint32_t>::max() };
 
 		while (expectedJDN <= VDate::MAX_JDN) {
 

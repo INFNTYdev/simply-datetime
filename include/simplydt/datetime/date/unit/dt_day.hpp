@@ -42,7 +42,7 @@ public:
     /* Set day value with no effect to neighbors */
     bool setPositionUnlinked(uint16_t pos) noexcept
     {
-        if (pos <= (uint16_t)31Ui16 && pos > this->threshold())
+        if (pos <= this->getUnitMax(DAY) && pos > this->threshold())
             this->setThreshold(pos);
 
         return Interval<uint16_t>::setPosition(pos);
