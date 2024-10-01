@@ -95,7 +95,7 @@
 
 
 
-void ProjectInfoOut() noexcept
+static void ProjectInfoOut() noexcept
 {
 	std::cout << '\n'
 		<< "\n\tINFINITY Systems, LLC. 2024\n"
@@ -108,9 +108,11 @@ void ProjectInfoOut() noexcept
 }
 
 
+
 // DEVELOPER DEBUG METHODS
+
 // Print VDatetimeEx breakdown to console
-void vdtExBreakdown(const VDatetimeEx& vdatetime_ex) noexcept
+static void vdtExBreakdown(const VDatetimeEx& vdatetime_ex) noexcept
 {
 	std::cout << '\n'
 		<< "(VDatetimeEx)\n"
@@ -132,6 +134,32 @@ void vdtExBreakdown(const VDatetimeEx& vdatetime_ex) noexcept
 		<< std::setw(14)
 		<< "-> Datetime: "
 		<< vdatetime_ex << '\n'
+		<< std::endl;
+}
+
+// Print VDatetime breakdown to console
+static void vdtBreakdown(const VDatetime& v_datetime) noexcept
+{
+	std::cout << '\n'
+		<< "(VDatetime)\n"
+		<< "Virtualized datetime\n"
+		<< "[ " << v_datetime.dayOfWeek() << ", "
+		<< v_datetime.monthTitle() << " " << (int)v_datetime.day() << ", "
+		<< v_datetime.year() << " ]\n"
+		<< std::setw(14)
+		<< "Attributes\n"
+		<< std::setw(14)
+		<< "-> JDN: " << std::setprecision(17)
+		<< v_datetime.toJulianDayNumber() << '\n'
+		<< std::setw(14)
+		<< "-> Date: "
+		<< v_datetime.date().dateStr(VDate::STANDARD, VDate::M_D_YYYY) << '\n'
+		<< std::setw(14)
+		<< "-> Time: "
+		<< v_datetime.time().timeStr(VTime::STANDARD, VTime::H_M_S_P) << '\n'
+		<< std::setw(14)
+		<< "-> Datetime: "
+		<< v_datetime << '\n'
 		<< std::endl;
 }
 
@@ -169,8 +197,11 @@ int main(size_t argc, char* argv[])
 	vdtExBreakdown(demo);
 	vdtExBreakdown(next);
 
+	VDatetimeEx ggs{ nowSnapshot.toJulianDayNumber() };
+
 
 	VDuration result = demo.until(next);
+	result = ggs.until(VDate{ 2024, 10, 2 });
 
 	std::cout << "Debug: " << result << std::endl;
 

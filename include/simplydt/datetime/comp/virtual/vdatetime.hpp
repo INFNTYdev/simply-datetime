@@ -30,21 +30,72 @@ public:
     inline static const JDN EPOCH_JDN = ((JDN)VDate::EPOCH_JDN + (JDN).5);
     inline static const JDN MAX_JDN = ((JDN)VDate::MAX_JDN + (JDN)1.49999999);
 
-    VDatetime(const TimePoint& sys_clock) noexcept;//      <--- INCOMPLETE!
+    VDatetime(const TimePoint& sys_clock) noexcept
+        : m_date{ sys_clock },
+        m_time{ sys_clock }
+    {
+        this->linkDatetime();
+    }
 
-    VDatetime(const VDate& v_date, const VTime& v_time) noexcept;//      <--- INCOMPLETE!
+    VDatetime(const VDate& v_date, const VTime& v_time) noexcept
+        : m_date{ v_date },
+        m_time{ v_time }
+    {
+        this->linkDatetime();
+    }
 
-    VDatetime(VDate&& v_date, VTime&& v_time) noexcept;//      <--- INCOMPLETE!
+    VDatetime(VDate&& v_date, VTime&& v_time) noexcept
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{ std::forward<VTime>(v_time) }
+    {
+        this->linkDatetime();
+    }
 
-    VDatetime(const VDate& v_date, VTime&& v_time) noexcept;//      <--- INCOMPLETE!
+    VDatetime(const VDate& v_date, VTime&& v_time) noexcept
+        : m_date{ v_date },
+        m_time{ std::forward<VTime>(v_time) }
+    {
+        this->linkDatetime();
+    }
 
-    VDatetime(VDate&& v_date, const VTime& v_time) noexcept;//      <--- INCOMPLETE!
+    VDatetime(VDate&& v_date, const VTime& v_time) noexcept
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{ v_time }
+    {
+        this->linkDatetime();
+    }
 
-    VDatetime(const VDate& v_date) noexcept;//      <--- INCOMPLETE!
+    VDatetime(const VDate& v_date) noexcept
+        : m_date{ v_date },
+        m_time{}
+    {
+        this->linkDatetime();
+    }
 
-    VDatetime(VDate&& v_date) noexcept;//      <--- INCOMPLETE!
+    VDatetime(VDate&& v_date) noexcept
+        : m_date{ std::forward<VDate>(v_date) },
+        m_time{}
+    {
+        this->linkDatetime();
+    }
 
-    explicit VDatetime(const JDN& jdn) noexcept;//      <--- INCOMPLETE!
+    explicit VDatetime(const JDN& jdn) noexcept
+        : m_date{ jdn },
+        m_time{ jdn }
+    {
+        // Normalize time if invalid JDN
+        // (Date will normalize on invalid JDN)
+        if (jdn < EPOCH_JDN)
+            this->m_time.reset();
+
+        if (jdn > MAX_JDN) {
+            this->m_time.getHour()->setPosition(11);
+            this->m_time.getMinute()->setPosition(59);
+            this->m_time.getSecond()->setPosition(59);
+        }
+
+        this->linkDatetime();
+    }
 
     VDatetime(const VDatetime& v_datetime) noexcept;//      <--- INCOMPLETE!
 
@@ -54,7 +105,12 @@ public:
 
     ~VDatetime() noexcept = default;
 
-    friend std::ostream& operator<<(std::ostream& os, const VDatetime& v_datetime) noexcept;//      <--- INCOMPLETE!
+    friend std::ostream& operator<<(std::ostream& os, const VDatetime& v_datetime) noexcept
+    {
+        os << v_datetime.datetimeStr();
+
+        return os;
+    }
 
     VDatetime& operator=(const VDatetime& v_datetime) noexcept;//      <--- INCOMPLETE!
 
@@ -145,41 +201,159 @@ public:
 
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(Layout layout, VDate::Format date_format, VDate::Layout date_layout,
-        VTime::Format time_format, VTime::Layout time_layout) const noexcept;//      <--- INCOMPLETE!
+        VTime::Format time_format, VTime::Layout time_layout) const noexcept
+    {
+        std::string datetimeString;
+        datetimeString.reserve((size_t)30ULL);
+        datetimeString = "";
+
+        switch (layout) {
+        case Layout::TIME_DATE:
+            datetimeString += (this->m_time.timeStr(time_format, time_layout) + ' ');
+            datetimeString += this->m_date.dateStr(date_format, date_layout);
+
+            return datetimeString;
+
+        default:
+            datetimeString += (this->m_date.dateStr(date_format, date_layout) + ' ');
+            datetimeString += this->m_time.timeStr(time_format, time_layout);
+
+            return datetimeString;
+        }
+    }
     
     /* Returns datetime string in provided configuration */
     std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout,
-        VTime::Format time_format, VTime::Layout time_layout) const noexcept;//      <--- INCOMPLETE!
+        VTime::Format time_format, VTime::Layout time_layout) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            date_format,// Date format
+            date_layout,// Date layout
+            time_format,// Time format
+            time_layout// Time layout
+        );
+    }
     
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VDate::Format date_format, VDate::Layout date_layout) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            date_format,// Date format
+            date_layout,// Date layout
+            VTime::Format::MILITARY,// Time format
+            VTime::Layout::H_M_S// Time layout
+        );
+    }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VTime::Format time_format, VTime::Layout time_layout) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VTime::Format time_format, VTime::Layout time_layout) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
+            time_format,// Time format
+            time_layout// Time layout
+        );
+    }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Format date_format, VTime::Format time_format) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VDate::Format date_format, VTime::Format time_format) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            date_format,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
+            time_format,// Time format
+            VTime::Layout::H_M_S// Time layout
+        );
+    }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Layout date_layout, VTime::Layout time_layout) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VDate::Layout date_layout, VTime::Layout time_layout) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            VDate::Format::RECORD,// Date format
+            date_layout,// Date layout
+            VTime::Format::MILITARY,// Time format
+            time_layout// Time layout
+        );
+    }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Format date_format) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VDate::Format date_format) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            date_format,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
+            VTime::Format::MILITARY,// Time format
+            VTime::Layout::H_M_S// Time layout
+        );
+    }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VDate::Layout date_layout) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VDate::Layout date_layout) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            VDate::Format::RECORD,// Date format
+            date_layout,// Date layout
+            VTime::Format::MILITARY,// Time format
+            VTime::Layout::H_M_S// Time layout
+        );
+    }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VTime::Format time_format) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VTime::Format time_format) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
+            time_format,// Time format
+            VTime::Layout::H_M_S// Time layout
+        );
+    }
 
     /* Returns datetime string in provided configuration */
-    std::string datetimeStr(VTime::Layout time_layout) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(VTime::Layout time_layout) const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
+            VTime::Format::MILITARY,// Time format
+            time_layout// Time layout
+        );
+    }
     
     /* Returns datetime string in provided layout */
-    std::string datetimeStr(Layout layout) const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr(Layout layout) const noexcept
+    {
+        return this->datetimeStr(
+            layout,// Datetime object layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
+            VTime::Format::MILITARY,// Time format
+            VTime::Layout::H_M_S// Time layout
+        );
+    }
 
     /* Returns datetime string */
-    std::string datetimeStr() const noexcept;//      <--- INCOMPLETE!
+    std::string datetimeStr() const noexcept
+    {
+        return this->datetimeStr(
+            Layout::DATE_TIME,// Datetime object layout
+            VDate::Format::RECORD,// Date format
+            VDate::Layout::M_D_YYYY,// Date layout
+            VTime::Format::MILITARY,// Time format
+            VTime::Layout::H_M_S// Time layout
+        );
+    }
 
     /* Returns datetime day-of-week literal */
     const char* dayOfWeek() const noexcept;//      <--- INCOMPLETE!

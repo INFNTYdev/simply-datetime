@@ -965,7 +965,25 @@ public:
     VDuration until(const VDatetime& v_datetime) const noexcept;//      <--- INCOMPLETE!
 
     /* Returns duration from this datetime to provided date */
-    VDuration until(const VDate& v_date) const noexcept;//      <--- INCOMPLETE!
+    VDuration until(const VDate& v_date) const noexcept
+    {
+        VDuration difference{ this->m_date.until(v_date) };
+
+        if (difference.sign() == VDuration::Sign::POSITIVE) {
+            difference.getMs()->largeDisplace(
+                VDuration::Sign::NEGATIVE,
+                this->m_time.convertedTo(VTimeEx::TimeUnit::MILLISECOND)
+            );
+        }
+        else if (difference.sign() == VDuration::Sign::NEGATIVE) {
+            difference.getMs()->largeDisplace(
+                VDuration::Sign::POSITIVE,
+                this->m_time.convertedTo(VTimeEx::TimeUnit::MILLISECOND)
+            );
+        }
+
+        return difference;
+    }
 
     /* Returns duration from this datetime to provided datetime */
     VDuration until(const TimePoint& sys_clock) const noexcept

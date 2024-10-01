@@ -889,6 +889,12 @@ private:
             );
         }
 
+        if ((jdn - std::floor(jdn)) < (double).5) {
+            return this->assumeJDN(
+                (JDN)std::floor(jdn) - (JDN)1Ui32
+            );
+        }
+
         this->assumeJDN(
             (JDN)std::floor(jdn)
         );
