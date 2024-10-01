@@ -17,7 +17,7 @@
 #include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 
-/* Extended time ( HH:MM:SS:MS ) */
+/* Extended virtualized time ( HH:MM:SS:MS ) */
 class VTimeEx : public DatetimeSequence<Hour, Minute, Second, Millisecond> {
 
 public:
@@ -321,20 +321,20 @@ public:
             return false;
         else if (this->hour() < tpHour)
             return true;
-        
+
         if (this->minute() > tpMinute)
             return false;
         else if (this->minute() < tpMinute)
             return true;
-        
+
         if (this->second() > tpSecond)
             return false;
         else if (this->second() < tpSecond)
             return true;
-        
+
         if (!this->msRef().isAtStart())
             return false;
-        
+
         return true;
     }
 
@@ -371,21 +371,21 @@ public:
             return false;
         else if (this->hour() > tpHour)
             return true;
-        
+
         if (this->minute() < tpMinute)
             return false;
         else if (this->minute() > tpMinute)
             return true;
-        
+
         if (this->second() < tpSecond)
             return false;
         else if (this->second() > tpSecond)
             return true;
-        
+
         // Indicates times are equal down to the ms
         if (this->msRef().isAtStart())
             return false;
-        
+
         return true;
     }
 
@@ -630,6 +630,67 @@ public:
         return this->m_millisecond_ptr;
     }
 
+    ////* Returns true if provided datetime time occurs after this time */
+    //bool isBefore(const TimePoint& sys_clock) const noexcept
+    //{
+    //    uint16_t tpHour{ 0 };
+    //    uint16_t tpMinute{ 0 };
+    //    uint16_t tpSecond{ 0 };
+
+    //    this->interpretTimePointTime(sys_clock, tpHour, tpMinute, tpSecond);
+
+    //    if (this->hour() > tpHour)
+    //        return false;
+    //    else if (this->hour() < tpHour)
+    //        return true;
+
+    //    if (this->minute() > tpMinute)
+    //        return false;
+    //    else if (this->minute() < tpMinute)
+    //        return true;
+
+    //    if (this->second() > tpSecond)
+    //        return false;
+    //    else if (this->second() < tpSecond)
+    //        return true;
+
+    //    if (!this->msRef().isAtStart())
+    //        return false;
+
+    //    return true;
+    //}
+
+    ////* Returns true if provided datetime time occurs before this time */
+    //bool isAfter(const TimePoint& sys_clock) const noexcept
+    //{
+    //    uint16_t tpHour{ 0 };
+    //    uint16_t tpMinute{ 0 };
+    //    uint16_t tpSecond{ 0 };
+
+    //    this->interpretTimePointTime(sys_clock, tpHour, tpMinute, tpSecond);
+
+    //    if (this->hour() < tpHour)
+    //        return false;
+    //    else if (this->hour() > tpHour)
+    //        return true;
+
+    //    if (this->minute() < tpMinute)
+    //        return false;
+    //    else if (this->minute() > tpMinute)
+    //        return true;
+
+    //    if (this->second() < tpSecond)
+    //        return false;
+    //    else if (this->second() > tpSecond)
+    //        return true;
+
+    //    // Indicates times are equal down to the ms
+    //    if (this->msRef().isAtStart())
+    //        return false;
+
+    //    return true;
+    //}
+
     /* Returns time as fractional Julian Day Number (JDN) */
     JDN toJulianDayNumber() const noexcept
     {
@@ -645,6 +706,19 @@ public:
             timeJDN -= (double).5;
         else if (this->hour() < (uint16_t)12Ui16)
             timeJDN += (double).5;
+
+        return timeJDN;
+    }
+
+    /* Returns time as unmodified fractional Julian Day Number (JDN) */
+    JDN rawJulianDayNumber() const noexcept
+    {
+        // Calculate time as a fraction of a day
+        double timeJDN{
+            ((this->hour() / (double)24.)
+            + (this->minute() / (double)1'440.)
+            + (this->second() / (double)86'400.))
+        };
 
         return timeJDN;
     }
@@ -926,8 +1000,16 @@ private:
             totalSeconds -= ((double)min * (double)60.);
         }
 
+        // NOTE: Rounding issue when dealing with 11:59:59 PM
         if (totalSeconds)
             sec = static_cast<uint16_t>(std::round(totalSeconds));
+
+        // Corrects rounding issue when dealing with 11:59:59 PM
+        // NOTE: (Temporary until precision update)
+        if (hr == (uint16_t)23Ui16 && min == (uint16_t)59Ui16) {
+            if (sec == (uint16_t)60Ui16 && jdn < (JDN)1.)
+                --sec;
+        }
 
         // Adjustments for rounding issues
         if (sec == (uint16_t)60Ui16) {

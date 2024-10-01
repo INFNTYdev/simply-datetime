@@ -24,10 +24,11 @@ namespace VDateCalculationTests {
 
 		uint32_t validateCount{ 0 };
 
+		// Confirm lossless VDate JDN initialization
 		if (sampleDate != VDate{}) {
 			std::cout << std::setw(13)
 				<< "[ FAILURE  ] "
-				<< "Invalid JDN construction for January 1st, 1970 date: "
+				<< "Invalid JDN construction for January 1st, 1970 epoch date: "
 				<< sampleDate.toJulianDayNumber()
 				<< std::setw(13) << ""
 				<< "\n\t\t-> JDN expected: " << epochJDN
@@ -53,6 +54,7 @@ namespace VDateCalculationTests {
 
 			uint32_t expectedJDN{ (lastJDN + (uint32_t)1Ui32) };
 
+			// Confirm sample date JDN is just one after the previous
 			if (sampleDate.toJulianDayNumber() != expectedJDN) {
 				std::cout << std::setw(13)
 					<< "[ FAILURE  ] "
@@ -115,7 +117,7 @@ namespace VDateCalculationTests {
 			const uint32_t expectedJDN{ (epochJDN + validateCount) };
 			const uint32_t sampleJDN{ sampleDate.toJulianDayNumber() };
 
-			// Verify premise of sample JDN
+			// Verify premise of JDN sample
 			if (untilSample != validateCount || expectedJDN != sampleJDN) {
 				std::cout << std::setw(13)
 					<< "[ FAILURE  ] "
@@ -145,8 +147,11 @@ namespace VDateCalculationTests {
 	}
 
 
+	// Tests if VDate class produces accurate day-of-week indecies
 	TEST(VDateDivergenceTestSuite, VDateDayOfWeekDivergeTest)
 	{
+		// This test relies on an accurate day-of-week index for the epoch date
+
 		const VDate epochDate{};// Test anchor point
 		VDate sampleDate{ epochDate };// Test variable
 
@@ -164,50 +169,76 @@ namespace VDateCalculationTests {
 			<< VDate{ VDate::MAX_JDN }.dateStr(VDate::Format::STANDARD)
 			<< "')...\n" << std::endl;
 
+		std::string sampleDOWLiteral{ sampleDate.dayOfWeek() };
+		uint8_t expectedDOWIndex{ (uint8_t)(lastDOWIndex + (uint8_t)1Ui8) };
+		uint8_t sampleDOWIndex{
+			simplydt::getDayOfWeekIndex(
+				sampleDate.year(),
+				sampleDate.month(),
+				sampleDate.day()
+			)
+		};
+
+		// Confirm initial date is epoch date
+		if (sampleDate != epochDate) {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Initial epoch date is incorrect: '"
+				<< sampleDate.dateStr(VDate::Format::STANDARD)
+				<< '\''
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Date expected: "
+				<< epochDate.dateStr(VDate::Format::STANDARD)
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
+		// Confirm epoch date has correct initial day-of-week
+		if (sampleDate == epochDate && sampleDOWLiteral != "Thursday") {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Epoch date returns incorrect day of week: '"
+				<< sampleDOWLiteral
+				<< '\''
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Day-of-week expected: Thursday"
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
+		// Confirm epoch day-of-week is correct index
+		if (sampleDate == epochDate && sampleDOWIndex != epochDOWIndex) {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Library day-of-week index is incorrect: "
+				<< (int)sampleDOWIndex
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Day-of-week index expected: " << (int)epochDOWIndex
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
 		while (validateCount != MAX_TESTING_DAYS) {
-			
-			std::string sampleDOWLiteral{ sampleDate.dayOfWeek() };
-			uint8_t expectedDOWIndex{ (uint8_t)(lastDOWIndex + (uint8_t)1Ui8) };
-			uint8_t sampleDOWIndex{
-				simplydt::getDayOfWeekIndex(
+
+			if (validateCount) {
+				sampleDOWLiteral = sampleDate.dayOfWeek();
+				expectedDOWIndex = (uint8_t)(lastDOWIndex + (uint8_t)1Ui8);
+				sampleDOWIndex = simplydt::getDayOfWeekIndex(
 					sampleDate.year(),
 					sampleDate.month(),
 					sampleDate.day()
-				)
-			};
+				);
+			}
 
+			// Indecies are 0 (Sunday) - 6 (Saturday)
 			if (expectedDOWIndex > (uint8_t)6Ui8)
 				expectedDOWIndex = (uint8_t)0Ui8;
 
 			// Update last day-of-week index
 			lastDOWIndex = expectedDOWIndex;
-
-			// Confirm epoch date has correct initial day-of-week
-			if (sampleDate == epochDate && sampleDOWLiteral != "Thursday") {
-				std::cout << std::setw(13)
-					<< "[ FAILURE  ] "
-					<< "Epoch date returns incorrect day of week: '"
-					<< sampleDOWLiteral
-					<< '\''
-					<< std::setw(13) << ""
-					<< "\n\t\t-> Day-of-week expected: Thursday"
-					<< '\n' << std::endl;
-
-				FAIL();
-			}
-
-			// Confirm initial day-of-week has correct index
-			if (sampleDate == epochDate && sampleDOWIndex != epochDOWIndex) {
-				std::cout << std::setw(13)
-					<< "[ FAILURE  ] "
-					<< "Library day-of-week index is incorrect: "
-					<< (int)sampleDOWIndex
-					<< std::setw(13) << ""
-					<< "\n\t\t-> Day-of-week index expected: " << (int)epochDOWIndex
-					<< '\n' << std::endl;
-
-				FAIL();
-			}
 
 			// Confirm day-of-week index is just one ahead of the previous
 			if (sampleDOWIndex != expectedDOWIndex) {
@@ -234,6 +265,106 @@ namespace VDateCalculationTests {
 
 		// Number of validated days is equal to the max testable days
 		ASSERT_EQ(MAX_TESTING_DAYS, validateCount);
+	}
+
+
+	// Tests if VDate class maintains JDN integrity with large displace requests
+	TEST(VDateDivergenceTestSuite, VDateLargeDisplaceDivergeTest)
+	{
+		// This test relies on VDate class JDN integrity
+
+		// NOTE: Need another test for VDate negative displacement
+
+		const VDate epochDate{};// Test anchor point
+		VDate sampleDate{ epochDate };// Test variable
+
+		uint32_t validateCount{ 0 };
+
+		std::cout << '\n' << std::setw(13)
+			<< "[ TEST MSG ] "
+			<< "Testing from epoch date: ('"
+			<< epochDate.dateStr(VDate::Format::STANDARD)
+			<< "')...\n" << std::endl;
+
+		// Confirm initial date is epoch date
+		if (sampleDate != epochDate) {
+			std::cout << std::setw(13)
+				<< "[ FAILURE  ] "
+				<< "Initial epoch date is incorrect: '"
+				<< sampleDate.dateStr(VDate::Format::STANDARD)
+				<< '\''
+				<< std::setw(13) << ""
+				<< "\n\t\t-> Date expected: "
+				<< epochDate.dateStr(VDate::Format::STANDARD)
+				<< '\n' << std::endl;
+
+			FAIL();
+		}
+
+		uint32_t expectedJDN{ (epochDate.toJulianDayNumber() + (uint32_t)1Ui32) };
+		uint32_t displaceUnits{ 1 };
+		const uint32_t displaceThreshold{ 1'000'000 };
+		constexpr uint32_t uint32Max{ std::numeric_limits<uint32_t>::max() };
+
+		while (expectedJDN <= VDate::MAX_JDN) {
+
+			sampleDate.increase(displaceUnits);
+
+			if (sampleDate.toJulianDayNumber() != expectedJDN) {
+				std::cout << std::setw(13)
+					<< "[ FAILURE  ] "
+					<< "Large displace divergence found with "
+					<< displaceUnits
+					<< " units:"
+					<< std::setw(13) << ""
+					<< "\n\t\t-> Days from epoch: "
+					<< (expectedJDN - VDate::EPOCH_JDN)
+					<< "\n\t\t-> Date expected: "
+					<< VDate{ expectedJDN }.dateStr(VDate::Format::STANDARD)
+					<< "\n\t\t-> Date recieved: "
+					<< sampleDate.dateStr(VDate::Format::STANDARD)
+					<< "\n\t\t-> JDN expected: " << expectedJDN
+					<< "\n\t\t-> JDN recieved: " << sampleDate.toJulianDayNumber()
+					<< "\n\t\t-> JDN divergence: "
+					<< ((int64_t)sampleDate.toJulianDayNumber() - (int64_t)expectedJDN)
+					<< " days"
+					<< '\n' << std::endl;
+
+				std::cout << std::setw(13)
+					<< "[ FAILURE  ] "
+					<< "Failed after testing " << validateCount
+					<< " dates"
+					<< '\n' << std::endl;
+
+				FAIL();
+			}
+
+			if ((uint32_t)(displaceUnits % 100) == (uint32_t)0Ui32) {
+				if ((uint32Max - displaceUnits) > (uint32_t)1'024Ui32)
+					displaceUnits += (uint32_t)1'024Ui32;
+				else
+					break;
+			}
+
+			if ((uint32Max - displaceUnits) > (uint32_t)537Ui32)
+				displaceUnits += (uint32_t)537Ui32;
+			else
+				break;
+
+			// Developer debug breakpoint
+			if (displaceUnits == (uint32_t)54'138Ui32)
+				displaceUnits = (uint32_t)54'138Ui32;// Issue starts next loop
+
+			expectedJDN += displaceUnits;
+			++validateCount;
+
+		}
+
+		std::cout << '\n' << std::setw(13)
+			<< "[ TEST MSG ] "
+			<< "PASS: Validated "
+			<< validateCount
+			<< " dates\n" << std::endl;
 	}
 
 }

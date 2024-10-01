@@ -14,7 +14,7 @@
 #include"simplydt/duration/comp/virtual/dt_vduration.hpp"
 
 
-/* Full date ( YYYY-mm-dd ) */
+/* Virtualized date ( YYYY-mm-dd ) */
 class VDate : public DatetimeSequence<Year, Month, Day> {
 
 public:
@@ -560,12 +560,40 @@ public:
         double A = std::floor(dtYear / (double)100.);
         double B = std::floor(A / (double)4.);
         double C = ((double)2. - A + B);
-        double D = std::floor((double)365.25 * (dtYear + (JDN)4716Ui32));
+        double D = std::floor((double)365.25 * (dtYear + (JDN)4'716Ui32));
         double E = std::floor((double)30.6001 * (dtMonth + (JDN)1Ui32));
 
         // Calculate final Julian Day Number
         // (JDN decimal truncated here)
-        JDN dateJDN = (JDN)std::floor((C + dtDay + D + E - (double)1524.5));
+        JDN dateJDN = (JDN)std::floor((C + dtDay + D + E - (double)1'524.5));
+
+        return dateJDN;
+    }
+
+    /* Returns date as true Julian Day Number (JDN) */
+    double trueJulianDayNumber() const noexcept
+    {
+        // Does not truncates decimal
+
+        JDN dtYear{ this->year() };
+        JDN dtMonth{ this->month() };
+        JDN dtDay{ this->day() };
+
+        // Adjust for January and February
+        if (dtMonth < (JDN)3Ui32) {
+            dtYear -= (JDN)1Ui32;
+            dtMonth += (JDN)12Ui32;
+        }
+
+        // Calculate intermediate values
+        double A = std::floor(dtYear / (double)100.);
+        double B = std::floor(A / (double)4.);
+        double C = ((double)2. - A + B);
+        double D = std::floor((double)365.25 * (dtYear + (JDN)4'716Ui32));
+        double E = std::floor((double)30.6001 * (dtMonth + (JDN)1Ui32));
+
+        // Calculate final Julian Day Number
+        double dateJDN = (C + dtDay + D + E - (double)1'524.5);
 
         return dateJDN;
     }
@@ -628,7 +656,7 @@ public:
         }
     }
 
-    /* Returns date as standard library system time point */
+    /* Returns date as standard library system clock time point */
     TimePoint toTimePoint() const noexcept
     {
         TimePoint timePoint{};
@@ -827,12 +855,10 @@ private:
         this->interpretTimePointDate(time_point, gregorianYear, gregorianMonth, gregorianDay);
 
         // Set date interval values
+        // Day threshold is updated in calls below
         this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
         this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
         this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
-
-        // Set day threshold
-        this->m_day_ptr->setThreshold(this->m_month_ptr->getTotalDays());
     }
 
     void assumeJDN(const JDN& jdn) noexcept
@@ -845,14 +871,33 @@ private:
 
         // Set date interval values
         // Day threshold is updated in calls below
-        this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
-        this->getInterval(MONTH_INDEX)->setPosition(gregorianMonth);
+        //this->getInterval(DAY_INDEX)->setPosition(gregorianDay);
+        this->getDay()->setPositionUnlinked(gregorianDay);
+        this->getMonth()->setPositionUnlinked(gregorianMonth);
         this->getInterval(YEAR_INDEX)->setPosition(gregorianYear);
     }
 
     void assumeJDN(const double& jdn) noexcept
     {
-        this->assumeJDN((JDN)std::floor(jdn));
+        const double minJDN{ (double)EPOCH_JDN + (double).5 };
+
+        // Handle edge case JDN
+        if (jdn <= minJDN || jdn >= (double)MAX_JDN) {
+            // -1 to account for VDate decimal truncation
+            return this->assumeJDN(
+                (JDN)std::floor((jdn - (double)1.))
+            );
+        }
+
+        if ((jdn - std::floor(jdn)) < (double).5) {
+            return this->assumeJDN(
+                (JDN)std::floor(jdn) - (JDN)1Ui32
+            );
+        }
+
+        this->assumeJDN(
+            (JDN)std::floor(jdn)
+        );
     }
 
     Year* retrieveYear() const noexcept

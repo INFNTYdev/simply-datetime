@@ -41,7 +41,8 @@
 #include"simplydt/datetime/time/comp/virtual/dt_vtime.hpp"
 
 // Virtual Datetime
-// N/A
+#include"simplydt/datetime/comp/virtual/vdatetime_ex.hpp"
+//#include"simplydt/datetime/comp/virtual/vdatetime.hpp"
 
 
 
@@ -69,7 +70,9 @@
 * -> [X] Implement .toSTime() method in VTimeEx class
 * -> [X] Determine highest possible number Range class can handle with an int type
 * -> [X] Implement VDate .toTimePoint() method
-* -> [] Plan and implement Datetime/SDatetime class interfaces
+* -> [X] Determine max number of days between two VDate's for VDatetimeEx/VDatetime class
+* -> [X] VDate large displace divergence test
+* -> [] Plan and implement VDatetimeEx/VDatetime class interfaces
 * -> [] Plan and implement library main header
 * -> [] Test main library header
 * 
@@ -79,19 +82,20 @@
 * -> [] Plan and implement DatetimeStub class
 * -> [] Implement VDate/VTimeEx/VTime class .toStub() method
 * -> [] Implement VDate/VTimeEx/VTime constructor that accepts DatetimeStub
-* -> [] *Implement VDate/VTimeEx/VTime .operator=() for std::chrono <- IMPORTANT
-* -> [] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
+* -> [X] *Implement VDate/VTimeEx/VTime .operator=() for std::chrono <- IMPORTANT
+* -> [X] *Provide all datetime sequence classes with pointers to intervals <- IMPORTANT
+* -> [] *Update VTimeEx class JDN system to account for milliseconds <- IMPORTANT
 * -> [] Implement VDate/VTimeEx/VTime/VDuration string parsing capability
 * -> [] Implement iterator for Range class (for use with for-loops)
-* -> [] Find new means to displace Day class
-* -> [] Investigate why illegals are thrown in sequence classes
+* -> [X] Find new means to displace Day class
+* -> [X] Investigate why illegals are thrown in sequence classes
 * -> [] Take a good look at this libraries structure and start improving
 * 
 \* /// \\\ /// \\\ ///  | END |  \\\ /// \\\ /// \\\ */
 
 
 
-void ProjectInfoOut() noexcept
+static void ProjectInfoOut() noexcept
 {
 	std::cout << '\n'
 		<< "\n\tINFINITY Systems, LLC. 2024\n"
@@ -103,74 +107,59 @@ void ProjectInfoOut() noexcept
 		<< "\n\n" << std::endl;
 }
 
-//void dateCompare(const VDate& date1, const VDate& date2) noexcept
-//{
-//	std::cout
-//		<< "\nFrom " << date1.dateStr(VDate::Format::STANDARD)
-//		<< " -> " << date2.dateStr(VDate::Format::STANDARD)
-//		<< " = " << date1.until(date2) << std::endl;
-//}
-//
-//void timeCompare(const VTimeEx& time1, const VTimeEx& time2) noexcept
-//{
-//	std::cout
-//		<< "\nFrom " << time1.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-//		<< " -> " << time2.timeStr(VTimeEx::Format::STANDARD, VTimeEx::Layout::H_M_S_P)
-//		<< " = " << time1.until(time2) << std::endl;
-//}
-//
-//void durationDisplace(VDuration& dur1, const VDuration& dur2) noexcept
-//{
-//	std::cout << "\n( " << dur1 << " ) + ( " << dur2 << " ) = ";
-//
-//	dur1.displace(dur2);
-//
-//	std::cout << dur1 << std::endl;
-//}
-//
-//void datetimeOut(const Datetime& datetime) noexcept
-//{
-//	std::cout
-//		<< '\n'
-//		<< datetime.datetimeStr(
-//			VDate::Format::STANDARD,
-//			VDate::Layout::M_D_YYYY,
-//			VTimeEx::Format::STANDARD,
-//			VTimeEx::Layout::H_M_S_P
-//		)
-//		<< std::endl;
-//}
 
-void dateOut(const VDate& date) noexcept
+
+// DEVELOPER DEBUG METHODS
+
+// Print VDatetimeEx breakdown to console
+static void vdtExBreakdown(const VDatetimeEx& vdatetime_ex) noexcept
 {
-	std::cout
-		<< '\n'
-		<< date.dateStr(
-			VDate::Format::STANDARD,
-			VDate::Layout::M_D_YYYY
-		)
+	std::cout << '\n'
+		<< "(VDatetimeEx)\n"
+		<< "Extended virtualized datetime\n"
+		<< "[ " << vdatetime_ex.dayOfWeek() << ", "
+		<< vdatetime_ex.monthTitle() << " " << (int)vdatetime_ex.day() << ", "
+		<< vdatetime_ex.year() << " ]\n"
+		<< std::setw(14)
+		<< "Attributes\n"
+		<< std::setw(14)
+		<< "-> JDN: " << std::setprecision(17)
+		<< vdatetime_ex.toJulianDayNumber() << '\n'
+		<< std::setw(14)
+		<< "-> Date: "
+		<< vdatetime_ex.date().dateStr(VDate::STANDARD, VDate::M_D_YYYY) << '\n'
+		<< std::setw(14)
+		<< "-> Time: "
+		<< vdatetime_ex.time().timeStr(VTimeEx::STANDARD, VTimeEx::H_M_S_P) << '\n'
+		<< std::setw(14)
+		<< "-> Datetime: "
+		<< vdatetime_ex << '\n'
 		<< std::endl;
 }
 
-void timeOut(const VTimeEx& time) noexcept
+// Print VDatetime breakdown to console
+static void vdtBreakdown(const VDatetime& v_datetime) noexcept
 {
-	std::cout
-		<< '\n'
-		<< time.timeStr(
-			VTimeEx::Format::STANDARD,
-			VTimeEx::Layout::H_M_S_P
-		)
-		<< std::endl;
-}
-
-void timeOut(const VTime& time) noexcept
-{
-	std::cout
-		<< '\n'
-		<< time.timeStr(
-			VTime::Format::STANDARD,
-			VTime::Layout::H_M_S_P
-		)
+	std::cout << '\n'
+		<< "(VDatetime)\n"
+		<< "Virtualized datetime\n"
+		<< "[ " << v_datetime.dayOfWeek() << ", "
+		<< v_datetime.monthTitle() << " " << (int)v_datetime.day() << ", "
+		<< v_datetime.year() << " ]\n"
+		<< std::setw(14)
+		<< "Attributes\n"
+		<< std::setw(14)
+		<< "-> JDN: " << std::setprecision(17)
+		<< v_datetime.toJulianDayNumber() << '\n'
+		<< std::setw(14)
+		<< "-> Date: "
+		<< v_datetime.date().dateStr(VDate::STANDARD, VDate::M_D_YYYY) << '\n'
+		<< std::setw(14)
+		<< "-> Time: "
+		<< v_datetime.time().timeStr(VTime::STANDARD, VTime::H_M_S_P) << '\n'
+		<< std::setw(14)
+		<< "-> Datetime: "
+		<< v_datetime << '\n'
 		<< std::endl;
 }
 
@@ -181,17 +170,44 @@ int main(size_t argc, char* argv[])
 	// Simply Datetime r4.v0
 	ProjectInfoOut();
 
-	VDate todayDate{ std::chrono::system_clock::now() };
-	std::cout << "\nToday: "
-		<< todayDate.dateStr(VDate::Format::STANDARD)
+	VDatetimeEx nowSnapshot{ std::chrono::system_clock::now() };
+	std::cout << "\nNow: "
+		<< nowSnapshot.datetimeStr(VDate::Format::STANDARD)
 		<< std::endl;
 
 	// Project creation date: June 28th, 2024
-	VDate creationDate{ (uint16_t)2024Ui16, (uint16_t)6Ui16, (uint16_t)28Ui16 };
+	VDatetimeEx creationDate{ VDate{ 2024Ui16, 6Ui16, 28Ui16 } , VTimeEx{} };
 
 	std::cout << "Elapsed dev time: "
-		<< creationDate.until(todayDate)
+		<< creationDate.until(nowSnapshot) << std::endl
+		<< "\n\n\nCONSOLE DEBUG:"
 		<< std::endl;
+
+	// DO NOT DELETE ABOVE
+
+
+
+	//\\//
+
+	VDatetimeEx::JDN demoJDN{ 2460729.5 };//2460729.5 (February 23, 2025)
+
+	VDatetimeEx demo{ VDate{ 2024, 8, 17 }, VTimeEx{ 22, 10 } };
+	VDatetimeEx next{ VDate{ 2024, 8, 17 }, VTimeEx{ 16, 10 } };
+
+	vdtExBreakdown(demo);
+	vdtExBreakdown(next);
+
+	VDatetimeEx ggs{ nowSnapshot.toJulianDayNumber() };
+
+
+	VDuration result = demo.until(next);
+	result = ggs.until(VDate{ 2024, 10, 2 });
+
+	std::cout << "Debug: " << result << std::endl;
+
+	//\\//
+
+
 
 	// Ensure lossless conversion with VTime family JDN
 	//VTimeEx t1{ (double).5208333335 };

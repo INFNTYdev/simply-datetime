@@ -53,6 +53,12 @@ public:
         return true;
     }
 
+    /* Set month value with no effect to neighbors */
+    bool setPositionUnlinked(uint16_t pos) noexcept
+    {
+        return Interval<uint16_t>::setPosition(pos);
+    }
+
     /* Set month value */
     bool setMonth(uint16_t month) noexcept
     {
