@@ -3,7 +3,7 @@
 
 
 // Library Includes:
-// #include
+#include"simplydt/common/julian_date_system/jdn_util.hpp"
 
 
 
@@ -53,6 +53,9 @@ int main(size_t argc, char* argv[])
 	//\\//
 
 	// Start
+	uint16_t nowYear{ 2024 };
+	uint8_t nowMonth{ 10 };
+	uint8_t nowDay{ 1 };
 
 	//\\//
 
