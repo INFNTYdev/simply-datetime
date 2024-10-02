@@ -4,6 +4,7 @@
 
 // Library Includes:
 #include"simplydt/common/gregorian_calendar/gregorian_util.hpp"
+#include"simplydt/common/coord_universal_time/utc_util.hpp"
 
 
 
@@ -57,7 +58,17 @@ int main(size_t argc, char* argv[])
 	uint8_t nowMonth{ 10 };
 	uint8_t nowDay{ 1 };
 
-	std::cout << (int)GregorianCalendar::interpretJDNDay(2460584.5) << std::endl;
+	CoordinatedUniversalTime::UTCTime test{
+		CoordinatedUniversalTime::interpretJDNTime(.4549)
+	};
+
+	std::cout
+		<< "Time: "
+		<< (int)test.hour << ':'
+		<< (int)test.minute << ':'
+		<< (int)test.second << ' '
+		<< CoordinatedUniversalTime::getPhaseStr(test)
+		<< std::endl;
 
 	//\\//
 
