@@ -3,8 +3,7 @@
 
 
 // Library Includes:
-#include"simplydt/common/gregorian_calendar/gregorian_util.hpp"
-#include"simplydt/common/coord_universal_time/utc_util.hpp"
+#include"simplydt/datetime/datetime.hpp"
 
 
 
@@ -35,6 +34,16 @@ static void ProjectInfoOut() noexcept
 
 // DEVELOPER DEBUG METHODS
 
+void dtOut(const Datetime& dt) noexcept
+{
+	std::cout
+		<< "\n--> Datetime Object Analysis <--"
+		<< "\n\tMonth: " << dt.monthTitle()
+		<< " (" << (int)dt.month() << ")"
+		<< "\n\tYear: " << dt.year()
+		<< std::endl;
+}
+
 
 
 int main(size_t argc, char* argv[])
@@ -54,21 +63,9 @@ int main(size_t argc, char* argv[])
 	//\\//
 
 	// Start
-	uint16_t nowYear{ 2024 };
-	uint8_t nowMonth{ 10 };
-	uint8_t nowDay{ 1 };
+	Datetime demo{};
 
-	CoordinatedUniversalTime::UTCTime test{
-		CoordinatedUniversalTime::interpretJDNTime(.4549)
-	};
-
-	std::cout
-		<< "Time: "
-		<< (int)test.hour << ':'
-		<< (int)test.minute << ':'
-		<< (int)test.second << ' '
-		<< CoordinatedUniversalTime::getPhaseStr(test)
-		<< std::endl;
+	dtOut(demo);
 
 	//\\//
 

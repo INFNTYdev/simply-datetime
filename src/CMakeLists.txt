@@ -8,4 +8,5 @@ add_library(
 	"common/julian_date_system/jdn_util.cpp"
 	"common/gregorian_calendar/gregorian_util.cpp"
 	"common/coord_universal_time/utc_util.cpp"
+	"datetime/datetime.cpp"
 )
