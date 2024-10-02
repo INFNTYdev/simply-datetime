@@ -55,14 +55,23 @@ namespace GregorianCalendar {
 	/* Returns total number of days in provided year-month combination */
 	uint8_t getTotalDaysInMonth(const uint16_t& year, const uint8_t& month) noexcept;
 
+	/* Returns total number of days in provided year-month combination */
+	uint8_t getTotalDaysInMonth(const GregorianDate& date) noexcept;
+
 	/* Returns total number of days in provided year */
 	uint16_t getTotalDaysInYear(const uint16_t& year) noexcept;
 
 	/* Returns day of week index of provided date */
 	uint8_t getDayOfWeekIndex(uint16_t year, uint8_t month, uint8_t day) noexcept;
 
+	/* Returns day of week index of provided date */
+	uint8_t getDayOfWeekIndex(const GregorianDate& date) noexcept;
+
 	/* Returns day of week literal from provided date */
 	const char* getDayOfWeek(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;
+
+	/* Returns day of week literal from provided date */
+	const char* getDayOfWeek(const GregorianDate& date) noexcept;
 
 	/* Returns month index of provided month */
 	uint8_t getMonthIndex(const uint8_t& month) noexcept;

@@ -35,6 +35,11 @@ uint8_t GregorianCalendar::getTotalDaysInMonth(const uint16_t& year, const uint8
 
 }
 
+uint8_t GregorianCalendar::getTotalDaysInMonth(const GregorianDate& date) noexcept
+{
+	return getTotalDaysInMonth(date.year, date.month);
+}
+
 uint16_t GregorianCalendar::getTotalDaysInYear(const uint16_t& year) noexcept
 {
 	uint16_t totalDays{ 0 };
@@ -103,9 +108,19 @@ uint8_t GregorianCalendar::getDayOfWeekIndex(uint16_t year, uint8_t month, uint8
 
 }
 
+uint8_t GregorianCalendar::getDayOfWeekIndex(const GregorianDate& date) noexcept
+{
+	return getDayOfWeekIndex(date.year, date.month, date.day);
+}
+
 const char* GregorianCalendar::getDayOfWeek(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept
 {
 	return DaysOfWeek[getDayOfWeekIndex(year, month, day)];
+}
+
+const char* GregorianCalendar::getDayOfWeek(const GregorianDate& date) noexcept
+{
+	return getDayOfWeek(date.year, date.month, date.day);
 }
 
 uint8_t GregorianCalendar::getMonthIndex(const uint8_t& month) noexcept
@@ -137,6 +152,7 @@ GregorianCalendar::GregorianDate GregorianCalendar::interpretJDNDate(const JDN& 
 	JDN hSub2 = (std::floor(h / 153.) + (JDN)2.);
 	hSub2 = hSub2 - (std::floor(hSub2 / (JDN)12.) * (JDN)12.);
 
+	// Calculate Gregorian date values
 	JDN gregorianDay{ (std::floor(hSub / (JDN)5.) + (JDN)1.) };
 	JDN gregorianMonth{ (hSub2 + (JDN)1.) };
 	JDN gregorianYear{
@@ -152,21 +168,15 @@ GregorianCalendar::GregorianDate GregorianCalendar::interpretJDNDate(const JDN& 
  
 uint16_t GregorianCalendar::interpretJDNYear(const JDN& jdn) noexcept
 {
-	GregorianDate date{ interpretJDNDate(jdn) };
-
-	return date.year;
+	return interpretJDNDate(jdn).year;
 }
 
 uint8_t GregorianCalendar::interpretJDNMonth(const JDN& jdn) noexcept
 {
-	GregorianDate date{ interpretJDNDate(jdn) };
-
-	return date.month;
+	return interpretJDNDate(jdn).month;
 }
 
 uint8_t GregorianCalendar::interpretJDNDay(const JDN& jdn) noexcept
 {
-	GregorianDate date{ interpretJDNDate(jdn) };
-
-	return date.day;
+	return interpretJDNDate(jdn).day;
 }
