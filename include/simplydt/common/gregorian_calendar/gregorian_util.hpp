@@ -14,6 +14,7 @@ namespace GregorianCalendar {
 	/* Julian Day Number (JDN) */
 	using JDN = JulianDateSystem::JDN;
 
+	/* Gregorian calendar date */
 	typedef struct _GREGORIAN_DATE_STRUCT {
 		const uint16_t year;
 		const uint8_t month;
