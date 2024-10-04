@@ -293,10 +293,10 @@ Datetime::JDN Datetime::toJDN() const noexcept
 //	//
 //}
 
-//void Datetime::displace(const Duration& duration) noexcept	<- INCOMPLETE!
-//{
-//	//
-//}
+void Datetime::displace(const Duration& duration) noexcept
+{
+	this->m_julianDayNumber += duration.toJDN();
+}
 
 void Datetime::reset() noexcept
 {

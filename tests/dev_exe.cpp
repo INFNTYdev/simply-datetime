@@ -80,17 +80,20 @@ int main(size_t argc, char* argv[])
 	};
 
 	Datetime date2{
-		Datetime::Date{.year = 2024, .month = 10, .day = 4},
-		Datetime::Time{.hour = 2, .minute = 0, .second = 0 }
+		Datetime::Date{.year = 2024, .month = 10, .day = 3},
+		Datetime::Time{.hour = 1, .minute = 1, .second = 0 }
 	};
 
-	Duration demo{ date1.until(date2) };
+	dtOut(date1);
+	dtOut(date2);
 
-	uint32_t result{ demo.secondsUntil(Duration{2.}) };
+	Duration dur{ date1.until(date2) };
 
-	std::cout << demo << std::endl;
-	std::cout << result << std::endl;
-	std::cout << demo.durationStr(Duration::SIGN_L_D_H_M_S) << std::endl;
+	std::cout << "\nDuration: " << dur << std::endl;
+
+	date1.displace(dur);
+
+	dtOut(date1);
 
 	//\\//
 
