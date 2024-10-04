@@ -16,6 +16,12 @@ Duration::Duration(const JDN& duration) noexcept
 	//
 }
 
+Duration::Duration(JDN&& duration) noexcept
+	: m_duration{ std::move(duration) }
+{
+	//
+}
+
 Duration::Duration(const Duration& duration) noexcept
 	: m_duration{ duration.m_duration }
 {

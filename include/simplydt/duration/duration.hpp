@@ -63,6 +63,8 @@ public:
 
 	explicit Duration(const JDN& duration) noexcept;
 
+	explicit Duration(JDN&& duration) noexcept;
+
 	Duration(const Duration& duration) noexcept;
 
 	Duration(Duration&& duration) noexcept;
