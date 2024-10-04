@@ -76,12 +76,11 @@ int main(size_t argc, char* argv[])
 	// Start
 	Datetime date1{
 		Datetime::Date{.year = 2024, .month = 10, .day = 3},
-		Datetime::Time{.hour = 1, .minute = 0, .second = 0 }
+		Datetime::Time{.hour = 17, .minute = 54, .second = 0 }
 	};
 
 	Datetime date2{
-		Datetime::Date{.year = 2024, .month = 10, .day = 3},
-		Datetime::Time{.hour = 1, .minute = 1, .second = 0 }
+		std::chrono::system_clock::now()
 	};
 
 	dtOut(date1);
@@ -91,7 +90,7 @@ int main(size_t argc, char* argv[])
 
 	std::cout << "\nDuration: " << dur << std::endl;
 
-	date1.displace(dur);
+	date1 += dur;
 
 	dtOut(date1);
 

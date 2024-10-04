@@ -4,13 +4,16 @@
 
 //	Datetime : CONSTRUCTORS
 
-Datetime::Datetime(const Date& date, const Time& time) noexcept
-	: m_julianDayNumber{
-		(JulianDateSystem::gregorianToJDN(date.year, date.month, date.day)
-			+ CoordinatedUniversalTime::timeInDay(time.hour, time.minute, time.second))
-	}
+Datetime::Datetime(const TimePoint& time_point) noexcept
+	: m_julianDayNumber{ EPOCH_JDN }
 {
-	//
+	this->assumeDatetime(time_point);
+}
+
+Datetime::Datetime(const Date& date, const Time& time) noexcept
+	: m_julianDayNumber{ EPOCH_JDN }
+{
+	this->assumeDatetime(date, time);
 }
 
 Datetime::Datetime(const Date& date) noexcept
@@ -65,6 +68,13 @@ std::ostream& operator<<(std::ostream& os, const Datetime& dt) noexcept
 	return os;
 }
 
+Datetime& Datetime::operator=(const TimePoint& time_point) noexcept
+{
+	this->assumeDatetime(time_point);
+
+	return *this;
+}
+
 Datetime& Datetime::operator=(const Datetime& dt) noexcept
 {
 	if (this == &dt)
@@ -108,6 +118,43 @@ bool Datetime::operator<=(const Datetime& dt) noexcept
 bool Datetime::operator>=(const Datetime& dt) noexcept
 {
 	return ( this->isAfter(dt) || this->isEqual(dt) );
+}
+
+Datetime Datetime::operator+(const Duration& duration) const noexcept
+{
+	return this->after(duration);
+}
+
+Datetime Datetime::operator-(const Duration& duration) const noexcept
+{
+	switch (duration.isNegative()) {
+	case true:
+		return Datetime{ (this->m_julianDayNumber + (duration.toJDN() * (JDN)-1.)) };
+
+	default:
+		return Datetime{ (this->m_julianDayNumber - duration.toJDN()) };
+	}
+}
+
+Datetime& Datetime::operator+=(const Duration& duration) noexcept
+{
+	this->m_julianDayNumber += duration.toJDN();
+
+	return *this;
+}
+
+Datetime& Datetime::operator-=(const Duration& duration) noexcept
+{
+	switch (duration.isNegative()) {
+	case true:
+		this->m_julianDayNumber += (duration.toJDN() * (JDN)-1.);
+		break;
+
+	default:
+		this->m_julianDayNumber -= duration.toJDN();
+	}
+
+	return *this;
 }
 
 //	Datetime : OPERATOR END!
@@ -308,6 +355,37 @@ void Datetime::reset() noexcept
 
 
 //	Datetime : PRIVATE
+
+void Datetime::assumeDatetime(const Date& date, const Time& time) noexcept
+{
+	this->m_julianDayNumber = (
+		JulianDateSystem::gregorianToJDN(date.year, date.month, date.day)
+		+ CoordinatedUniversalTime::timeInDay(time.hour, time.minute, time.second)
+	);
+}
+
+void Datetime::assumeDatetime(const TimePoint& time_point) noexcept
+{
+	std::time_t timeT{ std::chrono::system_clock::to_time_t(time_point) };
+	std::tm* tm_ptr{ std::localtime(&timeT) };
+
+	// Retrieve datetime from time point
+	uint16_t year = static_cast<uint16_t>(tm_ptr->tm_year);// tm_year only measures years since 1900
+	uint8_t month = static_cast<uint8_t>(tm_ptr->tm_mon);
+	uint8_t day = static_cast<uint8_t>(tm_ptr->tm_mday);
+	uint8_t hour = static_cast<uint8_t>(tm_ptr->tm_hour);
+	uint8_t minute = static_cast<uint8_t>(tm_ptr->tm_min);
+	uint8_t second = static_cast<uint8_t>(tm_ptr->tm_sec);
+
+	year += 1900Ui16;
+	month += 1Ui8;
+
+	this->m_julianDayNumber = (
+		JulianDateSystem::gregorianToJDN(year, month, day)
+		+ CoordinatedUniversalTime::timeInDay(hour, minute, second)
+	);
+}
+
 //	Datetime : PRIVATE END!
 
 

@@ -36,6 +36,8 @@ public:
 	/* Maximum representable date (12/31/65535 11:59:59 PM) */
 	inline static const JDN MAX_JDN{ 25'657'591.49999999 };
 
+	Datetime(const TimePoint& time_point) noexcept;
+
 	Datetime(const Date& date, const Time& time) noexcept;
 
 	Datetime(const Date& date) noexcept;
@@ -54,6 +56,8 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const Datetime& dt) noexcept;
 
+	Datetime& operator=(const TimePoint& time_point) noexcept;
+
 	Datetime& operator=(const Datetime& dt) noexcept;
 
 	Datetime& operator=(Datetime&& dt) noexcept;
@@ -67,6 +71,18 @@ public:
 	bool operator<=(const Datetime& dt) noexcept;
 
 	bool operator>=(const Datetime& dt) noexcept;
+
+	/* Add duration to datetime */
+	Datetime operator+(const Duration& duration) const noexcept;
+
+	/* Subtract duration from datetime */
+	Datetime operator-(const Duration& duration) const noexcept;
+
+	/* Increase datetime by duration */
+	Datetime& operator+=(const Duration& duration) noexcept;
+
+	/* Decrease datetime by duration */
+	Datetime& operator-=(const Duration& duration) noexcept;
 
 	/* Returns datetime year */
 	uint16_t year() const noexcept;
@@ -141,7 +157,7 @@ public:
 	JDN toJDN() const noexcept;
 
 	/* Returns datetime as statndard library system clock time point */
-	TimePoint toTimePoint() const noexcept;
+	//TimePoint toTimePoint() const noexcept;//		<- INCOMPLETE!
 
 	/* Alter datetime with provided duration */
 	void displace(const Duration& duration) noexcept;
@@ -152,6 +168,10 @@ public:
 
 private:
 	JDN m_julianDayNumber;
+
+	void assumeDatetime(const Date& date, const Time& time) noexcept;
+
+	void assumeDatetime(const TimePoint& time_point) noexcept;
 
 };
 
