@@ -138,32 +138,24 @@ const char* GregorianCalendar::getMonthTitle(const uint8_t& month) noexcept
 
 GregorianCalendar::GregorianDate GregorianCalendar::interpretJDNDate(const JDN& jdn) noexcept
 {
-	// Calculate intermediate values
-	JDN a = ((JDN)4. * jdn + (JDN)274'277.);
-	JDN b = std::floor(a / (JDN)146'097.);
-	JDN c = std::floor((b * (JDN)3.) / (JDN)4.);
+	int Z = static_cast<int>(jdn + 0.5);
+	int A = Z;
 
-	JDN f = (jdn + (JDN)1'401. + c - (JDN)38.);
-	JDN e = ((JDN)4. * f + (JDN)3.);
-	JDN eSub = e - (std::floor(e / (JDN)1'461.) * (JDN)1'461.);
-	JDN g = std::floor(eSub / (JDN)4.);
-	JDN h = ((JDN)5. * g + (JDN)2.);
-	JDN hSub = h - (std::floor(h / (JDN)153.) * (JDN)153.);
-	JDN hSub2 = (std::floor(h / 153.) + (JDN)2.);
-	hSub2 = hSub2 - (std::floor(hSub2 / (JDN)12.) * (JDN)12.);
+	if (Z >= 2299161) {
+		int alpha = static_cast<int>((Z - 1867216.25) / 36524.25);
+		A = Z + 1 + alpha - static_cast<int>(alpha / 4);
+	}
 
-	// Calculate Gregorian date values
-	JDN gregorianDay{ (std::floor(hSub / (JDN)5.) + (JDN)1.) };
-	JDN gregorianMonth{ (hSub2 + (JDN)1.) };
-	JDN gregorianYear{
-		std::floor(e / 1'461. - 4'716. + (14. - gregorianMonth) / 12.)
-	};
+	int B = A + 1524;
+	int C = static_cast<int>((B - 122.1) / 365.25);
+	int D = static_cast<int>(365.25 * C);
+	int E = static_cast<int>((B - D) / 30.6001);
 
-	return GregorianDate{
-		.year = static_cast<uint16_t>(gregorianYear),
-		.month = static_cast<uint8_t>(gregorianMonth),
-		.day = static_cast<uint8_t>(gregorianDay)
-	};
+	int day = B - D - static_cast<int>(30.6001 * E);
+	int month = (E < 14) ? E - 1 : E - 13;
+	int year = (month > 2) ? C - 4716 : C - 4715;
+
+	return GregorianDate{ static_cast<uint16_t>(year), static_cast<uint8_t>(month), static_cast<uint8_t>(day) };
 }
  
 uint16_t GregorianCalendar::interpretJDNYear(const JDN& jdn) noexcept
@@ -179,4 +171,54 @@ uint8_t GregorianCalendar::interpretJDNMonth(const JDN& jdn) noexcept
 uint8_t GregorianCalendar::interpretJDNDay(const JDN& jdn) noexcept
 {
 	return interpretJDNDate(jdn).day;
+}
+
+bool GregorianCalendar::isBefore(const GregorianDate& d1, const GregorianDate& d2) noexcept
+{
+	if (d2.year < d1.year)
+		return true;
+	else if (d2.year > d1.year)
+		return false;
+
+	if (d2.month < d1.month)
+		return true;
+	else if (d2.month > d1.month)
+		return false;
+
+	if (d2.day < d1.day)
+		return true;
+	else
+		return false;
+}
+
+bool GregorianCalendar::isAfter(const GregorianDate& d1, const GregorianDate& d2) noexcept
+{
+	if (d2.year > d1.year)
+		return true;
+	else if (d2.year < d1.year)
+		return false;
+
+	if (d2.month > d1.month)
+		return true;
+	else if (d2.month < d1.month)
+		return false;
+
+	if (d2.day > d1.day)
+		return true;
+	else
+		return false;
+}
+
+bool GregorianCalendar::isEqual(const GregorianDate& d1, const GregorianDate& d2) noexcept
+{
+	if (d2.year != d1.year)
+		return false;
+
+	if (d2.month != d1.month)
+		return false;
+
+	if (d2.day != d1.day)
+		return false;
+
+	return true;
 }

@@ -8,8 +8,10 @@
 #include<iostream>
 #include"simplydt/common/gregorian_calendar/gregorian_util.hpp"
 #include"simplydt/common/coord_universal_time/utc_util.hpp"
+#include"simplydt/duration/duration.hpp"
 
 
+/* Standard datetime (YYYY/MM/dd HH:MM:SS) */
 class Datetime {
 
 public:
@@ -28,15 +30,29 @@ public:
 	};
 
 	/* Minimum representable date (01/01/0 00:00:00 AM) */
-	inline static const JDN MIN_JDN{ 1'721'059.5 };
+	inline static const JDN MIN_JDN{ 1'721'057.5 };
 	/* Standard library epoch date (01/01/1970 00:00:00 AM) */
 	inline static const JDN EPOCH_JDN{ 2'440'587.5 };
 	/* Maximum representable date (12/31/65535 11:59:59 PM) */
 	inline static const JDN MAX_JDN{ 25'657'591.49999999 };
 
+	Datetime(const Date& date, const Time& time) noexcept;
+
+	Datetime(const Date& date) noexcept;
+
+	explicit Datetime(const JDN& jdn) noexcept;
+
+	explicit Datetime(JDN&& jdn) noexcept;
+
+	Datetime(const Datetime& dt) noexcept;
+
+	Datetime(Datetime&& dt) noexcept;
+
 	Datetime() noexcept;
 
 	~Datetime() = default;
+
+	friend std::ostream& operator<<(std::ostream& os, const Datetime& dt) noexcept;
 
 	Datetime& operator=(const Datetime& dt) noexcept;
 
@@ -51,8 +67,6 @@ public:
 	bool operator<=(const Datetime& dt) noexcept;
 
 	bool operator>=(const Datetime& dt) noexcept;
-
-	friend std::ostream& operator<<(std::ostream& os, const Datetime& dt) noexcept;
 
 	/* Returns datetime year */
 	uint16_t year() const noexcept;
@@ -78,6 +92,9 @@ public:
 	/* Returns datetime time */
 	Time time() const noexcept;
 
+	/* Returns true if datetime is default datetime */
+	bool isDefault() const noexcept;
+
 	/* Returns datetime day-of-week literal */
 	const char* dayOfWeek() const noexcept;
 
@@ -99,6 +116,9 @@ public:
 	/* Returns true if provided datetime occurs before this one */
 	bool isAfter(const Datetime& dt) const noexcept;
 
+	/* Returns true if provided datetime matches this one */
+	bool isEqual(const Datetime& dt) const noexcept;
+
 	/* Returns absolute total number of days between this datetime and provided */
 	uint32_t daysUntil(const Datetime& dt) const noexcept;
 
@@ -112,10 +132,10 @@ public:
 	uint32_t secondsUntil(const Datetime& dt) const noexcept;
 
 	/* Returns duration of time between this datetime and provided */
-	//Duration until(const Datetime& dt) const noexcept;
+	Duration until(const Datetime& dt) const noexcept;
 
 	/* Returns datetime after the provided duration from this point */
-	//Datetime after(const Duration& duration) const noexcept;
+	Datetime after(const Duration& duration) const noexcept;
 
 	/* Returns datetime as Julian Day Number (JDN) */
 	JDN toJDN() const noexcept;
@@ -124,7 +144,7 @@ public:
 	TimePoint toTimePoint() const noexcept;
 
 	/* Alter datetime with provided duration */
-	//void displace(const Duration& duration) noexcept;
+	void displace(const Duration& duration) noexcept;
 
 	/* Reset datetime to standard library epoch */
 	void reset() noexcept;

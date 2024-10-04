@@ -92,6 +92,15 @@ namespace GregorianCalendar {
 	/* Evaluate Gregorian day from JDN */
 	uint8_t interpretJDNDay(const JDN& jdn) noexcept;
 
+	/* Returns true if provided d2 date occurs before d1 date */
+	bool isBefore(const GregorianDate& d1, const GregorianDate& d2) noexcept;
+
+	/* Returns true if provided d2 date occurs after d1 date */
+	bool isAfter(const GregorianDate& d1, const GregorianDate& d2) noexcept;
+
+	/* Returns true if provided dates reference same time point */
+	bool isEqual(const GregorianDate& d1, const GregorianDate& d2) noexcept;
+
 }
 
 

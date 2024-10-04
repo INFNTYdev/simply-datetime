@@ -36,11 +36,22 @@ static void ProjectInfoOut() noexcept
 
 void dtOut(const Datetime& dt) noexcept
 {
+	uint8_t spacing{ 16 };
+
 	std::cout
 		<< "\n--> Datetime Object Analysis <--"
-		<< "\n\tMonth: " << dt.monthTitle()
-		<< " (" << (int)dt.month() << ")"
-		<< "\n\tYear: " << dt.year()
+		<< "\n" << std::setw(spacing) << "Year: " << dt.year()
+		<< "\n" << std::setw(spacing) << "Month: " << dt.monthTitle()
+		<< "\n" << std::setw(spacing) << "Day of Week: " << dt.dayOfWeek()
+		<< "\n" << std::setw(spacing) << "Datetime: " << dt
+		<< "\n" << std::setw(spacing) << "JDN: " << std::setprecision(16) << dt.toJDN()
+		<< "\n" << std::setw(spacing) << "Attributes: "
+		<< "\n" << std::setw(spacing) << "\t-> Year = " << (int)dt.year()
+		<< ", Month = " << (int)dt.month()
+		<< ", Day = " << (int)dt.day()
+		<< "\n" << std::setw(spacing) << "\t-> Hour = " << (int)dt.hour()
+		<< ", Minute = " << (int)dt.minute()
+		<< ", Second = " << (int)dt.second()
 		<< std::endl;
 }
 
@@ -63,9 +74,23 @@ int main(size_t argc, char* argv[])
 	//\\//
 
 	// Start
-	Datetime demo{};
+	Datetime date1{
+		Datetime::Date{.year = 2024, .month = 10, .day = 3},
+		Datetime::Time{.hour = 1, .minute = 0, .second = 0 }
+	};
 
-	dtOut(demo);
+	Datetime date2{
+		Datetime::Date{.year = 2024, .month = 10, .day = 4},
+		Datetime::Time{.hour = 2, .minute = 0, .second = 0 }
+	};
+
+	Duration demo{ date1.until(date2) };
+
+	uint32_t result{ demo.secondsUntil(Duration{2.}) };
+
+	std::cout << demo << std::endl;
+	std::cout << result << std::endl;
+	std::cout << demo.durationStr(Duration::SIGN_L_D_H_M_S) << std::endl;
 
 	//\\//
 

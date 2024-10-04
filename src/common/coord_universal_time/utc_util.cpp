@@ -2,6 +2,19 @@
 #include"simplydt/common/coord_universal_time/utc_util.hpp"
 
 
+CoordinatedUniversalTime::JDN CoordinatedUniversalTime::timeInDay(const uint8_t& hour,
+    const uint8_t& minute, const uint8_t& second) noexcept
+{
+    // Calculate time as a fraction of a day
+    JDN timeAccumulated{
+        ((hour / (double)24.)
+        + (minute / (double)1'440.)
+        + (second / (double)86'400.))
+    };
+
+    return timeAccumulated;
+}
+
 CoordinatedUniversalTime::UTCTime CoordinatedUniversalTime::interpretJDNTime(const JDN& jdn) noexcept
 {
 	JDN multi{ .0 };
@@ -89,4 +102,54 @@ uint8_t CoordinatedUniversalTime::getPhaseIndex(const UTCTime& utc) noexcept
 const char* CoordinatedUniversalTime::getPhaseStr(const UTCTime& utc) noexcept
 {
     return Phases[getPhaseIndex(utc)];
+}
+
+bool CoordinatedUniversalTime::isBefore(const UTCTime& t1, const UTCTime& t2) noexcept
+{
+    if (t2.hour < t1.hour)
+        return true;
+    else if (t2.hour > t1.hour)
+        return false;
+
+    if (t2.minute < t1.minute)
+        return true;
+    else if (t2.minute > t1.minute)
+        return false;
+
+    if (t2.second < t1.second)
+        return true;
+    else
+        return false;
+}
+
+bool CoordinatedUniversalTime::isAfter(const UTCTime& t1, const UTCTime& t2) noexcept
+{
+    if (t2.hour > t1.hour)
+        return true;
+    else if (t2.hour < t1.hour)
+        return false;
+
+    if (t2.minute > t1.minute)
+        return true;
+    else if (t2.minute < t1.minute)
+        return false;
+
+    if (t2.second > t1.second)
+        return true;
+    else
+        return false;
+}
+
+bool CoordinatedUniversalTime::isEqual(const UTCTime& t1, const UTCTime& t2) noexcept
+{
+    if (t2.hour != t1.hour)
+        return false;
+
+    if (t2.minute != t1.minute)
+        return false;
+
+    if (t2.second != t1.second)
+        return false;
+
+    return true;
 }
