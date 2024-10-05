@@ -1,9 +1,9 @@
 # Simply Datetime | Project Directory
-###### INFINITY Systems, LLC. 2024
+###### Infinity Systems, LLC. 2024
 
 <br/>
 
-### Overview of the Simply Datetime project directory
+### Overview of project directory
 
 ## Directory:
 ```text
@@ -31,43 +31,15 @@ simply-datetime/
 │       │
 │       ├── common/
 │       │   │
-│       │   ├── interval/
+│       │   ├── gregorian_calendar/
 │       │   │
-│       │   ├── range/
+│       │   ├── julian_date_system/
 │       │   │
-│       │   └── sequence/
+│       │   └── universal_coordinated_time/
 │       │
 │       ├── datetime/
-│       │   │
-│       │   ├── comp/
-│       │   │   │
-│       │   │   └── virtual/
-│       │   │
-│       │   ├── date/
-│       │   │   │
-│       │   │   ├── comp/
-│       │   │   │   │
-│       │   │   │   └── virtual/
-│       │   │   │
-│       │   │   └── unit/
-│       │   │
-│       │   ├── sequence/
-│       │   │
-│       │   └── time/
-│       │       │
-│       │       ├── comp/
-│       │       │   │
-│       │       │   └── virtual/
-│       │       │
-│       │       └── unit/
 │       │
 │       └── duration/
-│           │
-│           ├── comp/
-│           │   │
-│           │   └── virtual/
-│           │
-│           └── unit/
 │
 ├── src/
 │
