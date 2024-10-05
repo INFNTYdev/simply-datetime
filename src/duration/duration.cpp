@@ -321,28 +321,29 @@ Duration::ElapsedTime Duration::elapsedTime() const noexcept
 	}
 }
 
-uint32_t Duration::convertedTo(Unit t_unit) const noexcept
+size_t Duration::convertedTo(Unit t_unit) const noexcept
 {
 	switch (t_unit) {
 	case Unit::DAY:
-		return static_cast<uint32_t>(this->m_duration);
+		return static_cast<size_t>(this->m_duration);
 
 	case Unit::HOUR:
-		return static_cast<uint32_t>(this->m_duration * (JDN)24.);
+		return static_cast<size_t>(this->m_duration * (JDN)24.);
 
 	case Unit::MINUTE:
-		return static_cast<uint32_t>(this->m_duration * (JDN)1'440.);
+		return static_cast<size_t>(this->m_duration * (JDN)1'440.);
 
-	// Convert to seconds
+		// Convert to seconds
 	default:
-		return static_cast<uint32_t>(this->m_duration * (JDN)86'400.);
+		return static_cast<size_t>(this->m_duration * (JDN)86'400.);
 	}
 }
 
 std::string Duration::durationStr(Layout layout) const noexcept
 {
-	std::string durStr{};
+	std::string durStr;
 	durStr.reserve(21Ui64);
+	durStr = "";
 
 	char delimiter{ ':' };
 
@@ -543,6 +544,11 @@ uint32_t Duration::secondsUntil(const Duration& duration) const noexcept
 		secDiff *= (JDN)-1.;
 
 	return static_cast<uint32_t>(secDiff);
+}
+
+Duration Duration::until(const Duration& duration) const noexcept
+{
+	return Duration{ (duration.m_duration - this->m_duration) };
 }
 
 Duration::JDN Duration::toJDN() const noexcept

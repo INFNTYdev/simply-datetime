@@ -28,7 +28,7 @@ namespace GregorianCalendar {
 		STANDARD,// Standard format (01/01/1970)
 	};
 
-	/* Gregorian date layouts */
+	/* Gregorian date string layouts */
 	enum DateLayout {
 		M_D_YYYY,// (mm/dd/YYYY) [ Example: 01-13-2024 ]
 		M_D_YY,// (mm/dd/YY) [ Example: 01-13-24 ]

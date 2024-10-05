@@ -36,7 +36,7 @@ static void ProjectInfoOut() noexcept
 
 void dtOut(const Datetime& dt) noexcept
 {
-	uint8_t spacing{ 16 };
+	uint8_t spacing{ 17 };
 
 	std::cout
 		<< "\n--> Datetime Object Analysis <--"
@@ -49,6 +49,8 @@ void dtOut(const Datetime& dt) noexcept
 		<< "\n" << std::setw(spacing) << "JDN: " << std::setprecision(16) << dt.toJDN()
 		<< "\n" << std::setw(spacing) << "Day of Week: " << dt.dayOfWeek()
 		<< "\n" << std::setw(spacing) << "Month: " << dt.monthTitle()
+		<< "\n" << std::setw(spacing) << "Days In Month: " << (int)dt.daysInMonth()
+		<< "\n" << std::setw(spacing) << "Days In Year: " << dt.daysInYear()
 		<< std::endl;
 }
 
@@ -60,6 +62,24 @@ int main(size_t argc, char* argv[])
 	ProjectInfoOut();
 
 	// Project developement time out
+	Datetime::TimePoint nowTimePoint{ std::chrono::system_clock::now() };
+
+	Datetime nowSnapshot{ nowTimePoint };
+
+	std::cout
+		<< "\n\tToday: " << nowSnapshot.datetimeStr(Datetime::DateFormat::STANDARD)
+		<< std::endl;
+
+	// Project start date: June 28th, 2024
+	Datetime projInauguration{
+		Datetime::Date{ .year = 2024, .month = 6, .day = 28 },
+		Datetime::Time{ .hour = 0, .minute = 0, .second = 0 }
+	};
+
+	std::cout
+		<< "\tElapsed dev time: "
+		<< projInauguration.until(nowSnapshot)
+		<< std::endl;
 
 	std::cout << "\n\nCONSOLE DEBUG:"
 		<< std::endl;
@@ -71,23 +91,20 @@ int main(size_t argc, char* argv[])
 	//\\//
 
 	// Start
-	Datetime date1{ std::chrono::system_clock::now() };
-
 	Datetime date2{
 		Datetime::Date{.year = 2025, .month = 2, .day = 23},
-		Datetime::Time{.hour = 0, .minute = 0, .second = 0 }
+		Datetime::Time{.hour = 19, .minute = 0, .second = 0 }
 	};
 
-	dtOut(date1);
+	dtOut(nowSnapshot);
 	dtOut(date2);
 
-	Duration dur{ date1.until(date2) };
+	Duration dur{ nowSnapshot.until(date2) };
 
-	std::cout << "\nIncreasing date1 by " << dur << "..." << std::endl;
+	std::cout << "\n\nDuration: " << dur << std::endl;
 
-	date1 += dur;
-
-	dtOut(date1);
+	std::cout << "\n\nChrono: " << Datetime{ nowTimePoint } << std::endl;
+	std::cout << "Chrono: " << Datetime{ nowSnapshot.toTimePoint() } << std::endl;
 
 	//\\//
 

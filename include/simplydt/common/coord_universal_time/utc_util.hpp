@@ -28,7 +28,7 @@ namespace CoordinatedUniversalTime {
 		STANDARD,// Standard format (12-hour)
 	};
 
-	/* UTC time layouts */
+	/* UTC time string layouts */
 	enum TimeLayout {
 		H_M_S,// (HH:MM:SS) [ Example: 08:30:00 ]
 		H_M_S_P,// (HH:MM:SS P) [ Example: 08:30:00 AM ]

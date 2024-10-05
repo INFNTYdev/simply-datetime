@@ -32,7 +32,7 @@ public:
 		const uint8_t second;
 	} ElapsedTime;
 
-	/* Duration string layout */
+	/* Duration string layouts */
 	enum Layout {
 		SIGN_D_H_M_S,// ( +/- dd:HH:MM:SS ) [ Example: -124:08:30:00 ]
 		D_H_M_S,// ( dd:HH:MM:SS ) [ Example: 124:08:30:00 ]
@@ -146,7 +146,7 @@ public:
 	ElapsedTime elapsedTime() const noexcept;
 
 	/* Returns elapsed duration compressed into single time unit */
-	uint32_t convertedTo(Unit t_unit) const noexcept;
+	size_t convertedTo(Unit t_unit) const noexcept;
 
 	/* Returns duration string in provided format */
 	std::string durationStr(Layout layout) const noexcept;
@@ -174,6 +174,9 @@ public:
 
 	/* Returns absolute total number of seconds between this duration and provided */
 	uint32_t secondsUntil(const Duration& duration) const noexcept;
+
+	/* Returns duration of time between this duration and provided */
+	Duration until(const Duration& duration) const noexcept;
 
 	/* Returns duration as a fraction of days */
 	JDN toJDN() const noexcept;

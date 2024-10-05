@@ -11,7 +11,7 @@
 #include"simplydt/duration/duration.hpp"
 
 
-/* Standard datetime (YYYY/MM/dd HH:MM:SS) */
+/* Standard datetime (YYYY/mm/dd HH:MM:SS) */
 class Datetime {
 
 public:
@@ -25,14 +25,14 @@ public:
 	using DateLayout = GregorianCalendar::DateLayout;
 	/* Date formats */
 	using DateFormat = GregorianCalendar::DateFormat;
+	/* Standard UTC time */
+	using Time = CoordinatedUniversalTime::UTCTime;
 	/* Time layouts */
 	using TimeLayout = CoordinatedUniversalTime::TimeLayout;
 	/* Time formats */
 	using TimeFormat = CoordinatedUniversalTime::TimeFormat;
-	/* Standard UTC time */
-	using Time = CoordinatedUniversalTime::UTCTime;
 
-	/* Datetime string layout */
+	/* Datetime string layouts */
 	enum Layout {
 		DATE_TIME,// date - time [Example: 01/01/1970 00:00:00 AM]
 		TIME_DATE,// time - date [Example: 00:00:00 AM 01/01/1970]
@@ -126,8 +126,14 @@ public:
 	/* Returns datetime month literal */
 	const char* monthTitle() const noexcept;
 
+	/* Returns total number of days in datetime month */
+	uint8_t daysInMonth() const noexcept;
+
+	/* Returns total number of days in datetime year */
+	uint16_t daysInYear() const noexcept;
+
 	/* Returns index of datetime day-of-week */
-	uint8_t dowIndex() const noexcept;
+	uint8_t dayOfWeekIndex() const noexcept;
 
 	/* Returns index of datetime month */
 	uint8_t monthIndex() const noexcept;
@@ -201,7 +207,7 @@ public:
 	JDN toJDN() const noexcept;
 
 	/* Returns datetime as statndard library system clock time point */
-	//TimePoint toTimePoint() const noexcept;//		<- INCOMPLETE!
+	TimePoint toTimePoint() const noexcept;
 
 	/* Alter datetime with provided duration */
 	void displace(const Duration& duration) noexcept;

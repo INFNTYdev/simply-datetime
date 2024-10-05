@@ -215,17 +215,27 @@ const char* Datetime::dayOfWeek() const noexcept
 
 const char* Datetime::monthTitle() const noexcept
 {
-	return GregorianCalendar::getMonthTitle(this->date().month);
+	return GregorianCalendar::getMonthTitle(this->month());
 }
 
-uint8_t Datetime::dowIndex() const noexcept
+uint8_t Datetime::daysInMonth() const noexcept
+{
+	return GregorianCalendar::getTotalDaysInMonth(this->date());
+}
+
+uint16_t Datetime::daysInYear() const noexcept
+{
+	return GregorianCalendar::getTotalDaysInYear(this->year());
+}
+
+uint8_t Datetime::dayOfWeekIndex() const noexcept
 {
 	return GregorianCalendar::getDayOfWeekIndex(this->date());
 }
 
 uint8_t Datetime::monthIndex() const noexcept
 {
-	return GregorianCalendar::getMonthIndex(this->date().month);
+	return GregorianCalendar::getMonthIndex(this->month());
 }
 
 std::string Datetime::datetimeStr(Layout layout, DateFormat d_format, DateLayout d_layout,
@@ -471,10 +481,16 @@ Datetime::JDN Datetime::toJDN() const noexcept
 	return this->m_julianDayNumber;
 }
 
-//Datetime::TimePoint Datetime::toTimePoint() const noexcept	<- INCOMPLETE!
-//{
-//	//
-//}
+Datetime::TimePoint Datetime::toTimePoint() const noexcept//	<- Bug
+{
+	// NOTE: Invalid time points being returned
+
+	size_t sinceEpoch{
+		(static_cast<size_t>(this->m_julianDayNumber - EPOCH_JDN) * 86'400Ui64)
+	};
+
+	return TimePoint{ std::chrono::seconds{ sinceEpoch } };
+}
 
 void Datetime::displace(const Duration& duration) noexcept
 {
