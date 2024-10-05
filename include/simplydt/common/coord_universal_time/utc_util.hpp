@@ -5,6 +5,7 @@
 
 
 #include<array>
+#include<string>
 #include"simplydt/common/julian_date_system/jdn_util.hpp"
 
 
@@ -21,6 +22,20 @@ namespace CoordinatedUniversalTime {
 		const uint8_t second;
 	} UTCTime;
 
+	/* UTC time formats */
+	enum TimeFormat {
+		MILITARY,// Military format (24-hour)
+		STANDARD,// Standard format (12-hour)
+	};
+
+	/* UTC time layouts */
+	enum TimeLayout {
+		H_M_S,// (HH:MM:SS) [ Example: 08:30:00 ]
+		H_M_S_P,// (HH:MM:SS P) [ Example: 08:30:00 AM ]
+		H_M,// (HH:MM) [ Example: 08:30 ]
+		H_M_P,// (HH:MM P) [ Example: 08:30 AM ]
+	};
+
 
 	/* Time phase labels */
 	const std::array<const char*, 2> Phases{
@@ -28,6 +43,9 @@ namespace CoordinatedUniversalTime {
 		"PM"
 	};
 
+
+	/* Returns integer as a double digit string */
+	std::string toDoubleDigitStr(const uint8_t& integer) noexcept;
 
 	/* Returns decimal percentage of day completed */
 	JDN timeInDay(const uint8_t& hour, const uint8_t& minute, const uint8_t& second) noexcept;
@@ -49,6 +67,9 @@ namespace CoordinatedUniversalTime {
 
 	/* Returns time phase literal for provided time */
 	const char* getPhaseStr(const UTCTime& utc) noexcept;
+
+	/* Returnsd gregorian date string in provided format */
+	std::string toTimeStr(const UTCTime& utc, TimeFormat format, TimeLayout layout) noexcept;
 
 	/* Returns true if provided t2 time occurs before t1 time */
 	bool isBefore(const UTCTime& t1, const UTCTime& t2) noexcept;

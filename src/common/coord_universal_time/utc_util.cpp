@@ -2,6 +2,14 @@
 #include"simplydt/common/coord_universal_time/utc_util.hpp"
 
 
+std::string CoordinatedUniversalTime::toDoubleDigitStr(const uint8_t& integer) noexcept
+{
+    if (integer > 9Ui8)
+        return std::to_string(integer);
+    else
+        return std::string{ ("0" + std::to_string(integer)) };
+}
+
 CoordinatedUniversalTime::JDN CoordinatedUniversalTime::timeInDay(const uint8_t& hour,
     const uint8_t& minute, const uint8_t& second) noexcept
 {
@@ -102,6 +110,55 @@ uint8_t CoordinatedUniversalTime::getPhaseIndex(const UTCTime& utc) noexcept
 const char* CoordinatedUniversalTime::getPhaseStr(const UTCTime& utc) noexcept
 {
     return Phases[getPhaseIndex(utc)];
+}
+
+std::string CoordinatedUniversalTime::toTimeStr(const UTCTime& utc, TimeFormat format, TimeLayout layout) noexcept
+{
+    char delimiter{ ':' };
+
+    std::string timeStr;
+    timeStr.reserve(12Ui64);
+    timeStr = "";
+
+    switch (format) {
+    case TimeFormat::STANDARD:
+        if (utc.hour == 0Ui8) {
+            timeStr += "12";
+            timeStr += delimiter;
+        }
+        else if (utc.hour < 13Ui8)
+            timeStr += (toDoubleDigitStr(utc.hour) + delimiter);
+        else
+            timeStr += (toDoubleDigitStr((utc.hour - 12Ui8)) + delimiter);
+
+        timeStr += toDoubleDigitStr(utc.minute);
+        break;
+
+    // Leave hour as 24-hour format
+    default:
+        timeStr += (toDoubleDigitStr(utc.hour) + delimiter);
+        timeStr += toDoubleDigitStr(utc.minute);
+    }
+
+    switch (layout) {
+    case TimeLayout::H_M_S_P:
+        timeStr += delimiter;
+        timeStr += toDoubleDigitStr(utc.second);
+        timeStr += ' ';
+        timeStr += getPhaseStr(utc);
+        break;
+
+    case TimeLayout::H_M_S:
+        timeStr += delimiter;
+        timeStr += toDoubleDigitStr(utc.second);
+        break;
+
+    case TimeLayout::H_M_P:
+        timeStr += ' ';
+        timeStr += getPhaseStr(utc);
+    }
+
+    return timeStr;
 }
 
 bool CoordinatedUniversalTime::isBefore(const UTCTime& t1, const UTCTime& t2) noexcept

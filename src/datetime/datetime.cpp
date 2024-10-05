@@ -63,7 +63,7 @@ Datetime::Datetime() noexcept
 
 std::ostream& operator<<(std::ostream& os, const Datetime& dt) noexcept
 {
-	os << dt.datetimeStr();
+	os << dt.datetimeStr(Datetime::Layout::DATE_TIME);
 
 	return os;
 }
@@ -228,14 +228,150 @@ uint8_t Datetime::monthIndex() const noexcept
 	return GregorianCalendar::getMonthIndex(this->date().month);
 }
 
-std::string Datetime::datetimeStr() const noexcept	// <- INCOMPLETE!
+std::string Datetime::datetimeStr(Layout layout, DateFormat d_format, DateLayout d_layout,
+	TimeFormat t_format, TimeLayout t_layout) const noexcept
 {
 	std::string dtStr;
-	dtStr.reserve(21Ui64);
+	dtStr.reserve(25Ui64);
+	dtStr = "";
 
-	dtStr = "N/a";
+	switch (layout) {
+	case Layout::TIME_DATE:
+		dtStr += CoordinatedUniversalTime::toTimeStr(this->time(), t_format, t_layout);
+		dtStr += ' ';
+		dtStr += GregorianCalendar::toDateStr(this->date(), d_format, d_layout);
+		break;
+
+	// Provide date first
+	default:
+		dtStr += GregorianCalendar::toDateStr(this->date(), d_format, d_layout);
+		dtStr += ' ';
+		dtStr += CoordinatedUniversalTime::toTimeStr(this->time(), t_format, t_layout);
+	}
 
 	return dtStr;
+}
+
+std::string Datetime::datetimeStr(DateFormat d_format, DateLayout d_layout,
+	TimeFormat t_format, TimeLayout t_layout) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		d_format,// Date format
+		d_layout,// Date layout
+		t_format,// Time format
+		t_layout// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(DateFormat d_format, DateLayout d_layout) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		d_format,// Date format
+		d_layout,// Date layout
+		TimeFormat::MILITARY,// Time format
+		TimeLayout::H_M_S// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(TimeFormat t_format, TimeLayout t_layout) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		DateFormat::RECORD,// Date format
+		DateLayout::YYYY_M_D,// Date layout
+		t_format,// Time format
+		t_layout// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(DateFormat d_format, TimeFormat t_format) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		d_format,// Date format
+		DateLayout::YYYY_M_D,// Date layout
+		t_format,// Time format
+		TimeLayout::H_M_S// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(DateLayout d_layout, TimeLayout t_layout) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		DateFormat::RECORD,// Date format
+		d_layout,// Date layout
+		TimeFormat::MILITARY,// Time format
+		t_layout// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(DateFormat d_format) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		d_format,// Date format
+		DateLayout::YYYY_M_D,// Date layout
+		TimeFormat::MILITARY,// Time format
+		TimeLayout::H_M_S// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(DateLayout d_layout) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		DateFormat::RECORD,// Date format
+		d_layout,// Date layout
+		TimeFormat::MILITARY,// Time format
+		TimeLayout::H_M_S// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(TimeFormat t_format) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		DateFormat::RECORD,// Date format
+		DateLayout::YYYY_M_D,// Date layout
+		t_format,// Time format
+		TimeLayout::H_M_S// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(TimeLayout t_layout) const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		DateFormat::RECORD,// Date format
+		DateLayout::YYYY_M_D,// Date layout
+		TimeFormat::MILITARY,// Time format
+		t_layout// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr(Layout layout) const noexcept
+{
+	return this->datetimeStr(
+		layout,// Datetime string layout
+		DateFormat::RECORD,// Date format
+		DateLayout::YYYY_M_D,// Date layout
+		TimeFormat::MILITARY,// Time format
+		TimeLayout::H_M_S// Time layout
+	);
+}
+
+std::string Datetime::datetimeStr() const noexcept
+{
+	return this->datetimeStr(
+		Layout::DATE_TIME,// Datetime string layout
+		DateFormat::RECORD,// Date format
+		DateLayout::YYYY_M_D,// Date layout
+		TimeFormat::MILITARY,// Time format
+		TimeLayout::H_M_S// Time layout
+	);
 }
 
 bool Datetime::isBefore(const Datetime& dt) const noexcept

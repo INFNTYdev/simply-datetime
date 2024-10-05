@@ -5,6 +5,7 @@
 
 
 #include<array>
+#include<string>
 #include"simplydt/common/julian_date_system/jdn_util.hpp"
 
 
@@ -20,6 +21,28 @@ namespace GregorianCalendar {
 		const uint8_t month;
 		const uint8_t day;
 	} GregorianDate;
+
+	/* Gregorian date formats */
+	enum DateFormat {
+		RECORD,// Record format (01-01-1970)
+		STANDARD,// Standard format (01/01/1970)
+	};
+
+	/* Gregorian date layouts */
+	enum DateLayout {
+		M_D_YYYY,// (mm/dd/YYYY) [ Example: 01-13-2024 ]
+		M_D_YY,// (mm/dd/YY) [ Example: 01-13-24 ]
+		M_YYYY,// (mm/YYYY) [ Example: 01-2024 ]
+		M_YY,// (mm/YY) [ Example: 01-24 ]
+		M_D,// (mm/dd) [ Example: 01-13 ]
+		YYYY_M_D,// (YYYY/mm/dd) [ Example: 2024-01-13 ]
+		YY_M_D,// (YY/mm/dd) [ Example: 24-01-13 ]
+		YYYY_D_M,// (YYYY/dd/mm) [ Example: 2024-13-01 ]
+		YY_D_M,// (YY/dd/mm) [ Example: 24-13-01 ]
+		YYYY_M,// (YYYY/mm) [ Example: 2024-01 ]
+		YY_M,// (YY/mm) [ Example: 24-01 ]
+		D_M,// (dd/mm) [ Example: 13-01 ]
+	};
 
 
 	/* Month labels */
@@ -49,6 +72,9 @@ namespace GregorianCalendar {
 		"Saturday"
 	};
 
+
+	/* Returns integer as a double digit string */
+	std::string toDoubleDigitStr(const uint16_t& integer) noexcept;
 
 	/* Returns true if provided year is a leap year */
 	bool isLeapYear(const uint16_t& year) noexcept;
@@ -91,6 +117,9 @@ namespace GregorianCalendar {
 
 	/* Evaluate Gregorian day from JDN */
 	uint8_t interpretJDNDay(const JDN& jdn) noexcept;
+
+	/* Returnsd gregorian date string in provided format */
+	std::string toDateStr(const GregorianDate& date, DateFormat format, DateLayout layout) noexcept;
 
 	/* Returns true if provided d2 date occurs before d1 date */
 	bool isBefore(const GregorianDate& d1, const GregorianDate& d2) noexcept;

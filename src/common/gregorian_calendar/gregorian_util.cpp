@@ -2,6 +2,16 @@
 #include"simplydt/common/gregorian_calendar/gregorian_util.hpp"
 
 
+std::string GregorianCalendar::toDoubleDigitStr(const uint16_t& integer) noexcept
+{
+	if (integer > 999Ui16)
+		return std::to_string((integer % 100Ui16));
+	else if (integer > 9Ui16)
+		return std::to_string(integer);
+	else
+		return std::string{ ("0" + std::to_string(integer)) };
+}
+
 bool GregorianCalendar::isLeapYear(const uint16_t& year) noexcept
 {
 	return ((year % 4Ui16) == 0 && (year % 100Ui16 != 0 || year % 400Ui16 == 0));
@@ -171,6 +181,83 @@ uint8_t GregorianCalendar::interpretJDNMonth(const JDN& jdn) noexcept
 uint8_t GregorianCalendar::interpretJDNDay(const JDN& jdn) noexcept
 {
 	return interpretJDNDate(jdn).day;
+}
+
+std::string GregorianCalendar::toDateStr(const GregorianDate& date, DateFormat format, DateLayout layout) noexcept
+{
+	char delimiter;
+
+	switch (format) {
+	case DateFormat::STANDARD:
+		delimiter = '/';
+		break;
+
+	default:
+		delimiter = '-';
+	}
+
+	std::string dateStr;
+	dateStr.reserve(12Ui64);
+	dateStr = "";
+
+	switch (layout) {
+	case DateLayout::M_D_YYYY:
+		dateStr += (toDoubleDigitStr(date.month) + delimiter);
+		dateStr += (toDoubleDigitStr(date.day) + delimiter);
+		dateStr += std::to_string(date.year);
+		break;
+	case DateLayout::M_D_YY:
+		dateStr += (toDoubleDigitStr(date.month) + delimiter);
+		dateStr += (toDoubleDigitStr(date.day) + delimiter);
+		dateStr += toDoubleDigitStr(date.year);
+		break;
+	case DateLayout::M_YYYY:
+		dateStr += (toDoubleDigitStr(date.month) + delimiter);
+		dateStr += std::to_string(date.year);
+		break;
+	case DateLayout::M_YY:
+		dateStr += (toDoubleDigitStr(date.month) + delimiter);
+		dateStr += toDoubleDigitStr(date.year);
+		break;
+	case DateLayout::M_D:
+		dateStr += (toDoubleDigitStr(date.month) + delimiter);
+		dateStr += toDoubleDigitStr(date.day);
+		break;
+	case DateLayout::YYYY_M_D:
+		dateStr += (std::to_string(date.year) + delimiter);
+		dateStr += (toDoubleDigitStr(date.month) + delimiter);
+		dateStr += toDoubleDigitStr(date.day);
+		break;
+	case DateLayout::YY_M_D:
+		dateStr += (toDoubleDigitStr(date.year) + delimiter);
+		dateStr += (toDoubleDigitStr(date.month) + delimiter);
+		dateStr += toDoubleDigitStr(date.day);
+		break;
+	case DateLayout::YYYY_D_M:
+		dateStr += (std::to_string(date.year) + delimiter);
+		dateStr += (toDoubleDigitStr(date.day) + delimiter);
+		dateStr += toDoubleDigitStr(date.month);
+		break;
+	case DateLayout::YY_D_M:
+		dateStr += (toDoubleDigitStr(date.year) + delimiter);
+		dateStr += (toDoubleDigitStr(date.day) + delimiter);
+		dateStr += toDoubleDigitStr(date.month);
+		break;
+	case DateLayout::YYYY_M:
+		dateStr += (std::to_string(date.year) + delimiter);
+		dateStr += toDoubleDigitStr(date.month);
+		break;
+	case DateLayout::YY_M:
+		dateStr += (toDoubleDigitStr(date.year) + delimiter);
+		dateStr += toDoubleDigitStr(date.month);
+		break;
+	case DateLayout::D_M:
+		dateStr += (toDoubleDigitStr(date.day) + delimiter);
+		dateStr += toDoubleDigitStr(date.month);
+		break;
+	}
+
+	return dateStr;
 }
 
 bool GregorianCalendar::isBefore(const GregorianDate& d1, const GregorianDate& d2) noexcept

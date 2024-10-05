@@ -40,18 +40,15 @@ void dtOut(const Datetime& dt) noexcept
 
 	std::cout
 		<< "\n--> Datetime Object Analysis <--"
-		<< "\n" << std::setw(spacing) << "Year: " << dt.year()
-		<< "\n" << std::setw(spacing) << "Month: " << dt.monthTitle()
-		<< "\n" << std::setw(spacing) << "Day of Week: " << dt.dayOfWeek()
-		<< "\n" << std::setw(spacing) << "Datetime: " << dt
+		<< "\n" << std::setw(spacing) << "Datetime: "
+		<< dt.datetimeStr(
+			Datetime::DateFormat::STANDARD, Datetime::DateLayout::M_D_YYYY,
+			Datetime::TimeFormat::STANDARD, Datetime::TimeLayout::H_M_S_P
+		)
+		<< "\n" << std::setw(spacing) << "Stamp: " << dt
 		<< "\n" << std::setw(spacing) << "JDN: " << std::setprecision(16) << dt.toJDN()
-		<< "\n" << std::setw(spacing) << "Attributes: "
-		<< "\n" << std::setw(spacing) << "\t-> Year = " << (int)dt.year()
-		<< ", Month = " << (int)dt.month()
-		<< ", Day = " << (int)dt.day()
-		<< "\n" << std::setw(spacing) << "\t-> Hour = " << (int)dt.hour()
-		<< ", Minute = " << (int)dt.minute()
-		<< ", Second = " << (int)dt.second()
+		<< "\n" << std::setw(spacing) << "Day of Week: " << dt.dayOfWeek()
+		<< "\n" << std::setw(spacing) << "Month: " << dt.monthTitle()
 		<< std::endl;
 }
 
@@ -74,13 +71,11 @@ int main(size_t argc, char* argv[])
 	//\\//
 
 	// Start
-	Datetime date1{
-		Datetime::Date{.year = 2024, .month = 10, .day = 3},
-		Datetime::Time{.hour = 17, .minute = 54, .second = 0 }
-	};
+	Datetime date1{ std::chrono::system_clock::now() };
 
 	Datetime date2{
-		std::chrono::system_clock::now()
+		Datetime::Date{.year = 2025, .month = 2, .day = 23},
+		Datetime::Time{.hour = 0, .minute = 0, .second = 0 }
 	};
 
 	dtOut(date1);
@@ -88,7 +83,7 @@ int main(size_t argc, char* argv[])
 
 	Duration dur{ date1.until(date2) };
 
-	std::cout << "\nDuration: " << dur << std::endl;
+	std::cout << "\nIncreasing date1 by " << dur << "..." << std::endl;
 
 	date1 += dur;
 

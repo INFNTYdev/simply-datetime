@@ -21,12 +21,21 @@ public:
 	using JDN = JulianDateSystem::JDN;
 	/* Gregorian calendar date */
 	using Date = GregorianCalendar::GregorianDate;
+	/* Date layouts */
+	using DateLayout = GregorianCalendar::DateLayout;
+	/* Date formats */
+	using DateFormat = GregorianCalendar::DateFormat;
+	/* Time layouts */
+	using TimeLayout = CoordinatedUniversalTime::TimeLayout;
+	/* Time formats */
+	using TimeFormat = CoordinatedUniversalTime::TimeFormat;
 	/* Standard UTC time */
 	using Time = CoordinatedUniversalTime::UTCTime;
 
 	/* Datetime string layout */
 	enum Layout {
-		//
+		DATE_TIME,// date - time [Example: 01/01/1970 00:00:00 AM]
+		TIME_DATE,// time - date [Example: 00:00:00 AM 01/01/1970]
 	};
 
 	/* Minimum representable date (01/01/0 00:00:00 AM) */
@@ -124,6 +133,41 @@ public:
 	uint8_t monthIndex() const noexcept;
 
 	/* Returns datetime string in provided layout */
+	std::string datetimeStr(Layout layout, DateFormat d_format,
+		DateLayout d_layout, TimeFormat t_format, TimeLayout t_layout) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(DateFormat d_format, DateLayout d_layout,
+		TimeFormat t_format, TimeLayout t_layout) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(DateFormat d_format, DateLayout d_layout) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(TimeFormat t_format, TimeLayout t_layout) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(DateFormat d_format, TimeFormat t_format) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(DateLayout d_layout, TimeLayout t_layout) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(DateFormat d_format) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(DateLayout d_layout) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(TimeFormat t_format) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(TimeLayout t_layout) const noexcept;
+
+	/* Returns datetime string in provided layout */
+	std::string datetimeStr(Layout layout) const noexcept;
+
+	/* Returns datetime string */
 	std::string datetimeStr() const noexcept;
 
 	/* Returns true if provided datetime occurs after this one */
