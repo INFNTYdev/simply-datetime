@@ -138,39 +138,63 @@ public:
 	/* Returns index of datetime month */
 	uint8_t monthIndex() const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns date string in provided configuration */
+	std::string dateStr(DateFormat d_format, DateLayout d_layout) const noexcept;
+
+	/* Returns date string in provided configuration */
+	std::string dateStr(DateFormat d_format) const noexcept;
+
+	/* Returns date string in provided configuration */
+	std::string dateStr(DateLayout d_layout) const noexcept;
+
+	/* Returns date string */
+	std::string dateStr() const noexcept;
+
+	/* Returns time string in provided configuration */
+	std::string timeStr(TimeFormat t_format, TimeLayout t_layout) const noexcept;
+
+	/* Returns time string in provided configuration */
+	std::string timeStr(TimeFormat t_format) const noexcept;
+
+	/* Returns time string in provided configuration */
+	std::string timeStr(TimeLayout t_layout) const noexcept;
+
+	/* Returns time string */
+	std::string timeStr() const noexcept;
+
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(Layout layout, DateFormat d_format,
 		DateLayout d_layout, TimeFormat t_format, TimeLayout t_layout) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(DateFormat d_format, DateLayout d_layout,
 		TimeFormat t_format, TimeLayout t_layout) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(DateFormat d_format, DateLayout d_layout) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(TimeFormat t_format, TimeLayout t_layout) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(DateFormat d_format, TimeFormat t_format) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(DateLayout d_layout, TimeLayout t_layout) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(DateFormat d_format) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(DateLayout d_layout) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(TimeFormat t_format) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(TimeLayout t_layout) const noexcept;
 
-	/* Returns datetime string in provided layout */
+	/* Returns datetime string in provided configuration */
 	std::string datetimeStr(Layout layout) const noexcept;
 
 	/* Returns datetime string */

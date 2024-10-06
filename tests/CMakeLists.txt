@@ -12,3 +12,6 @@ include(GoogleTest)
 
 
 # Unit Tests
+add_executable(DatetimeClassTests "unit/datetime_cls/datetime_tests.cpp")
+target_link_libraries(DatetimeClassTests PRIVATE gtest gtest_main simplydtlib)
+gtest_discover_tests(DatetimeClassTests)

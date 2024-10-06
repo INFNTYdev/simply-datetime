@@ -238,6 +238,46 @@ uint8_t Datetime::monthIndex() const noexcept
 	return GregorianCalendar::getMonthIndex(this->month());
 }
 
+std::string Datetime::dateStr(DateFormat d_format, DateLayout d_layout) const noexcept
+{
+	return GregorianCalendar::toDateStr(this->date(), d_format, d_layout);
+}
+
+std::string Datetime::dateStr(DateFormat d_format) const noexcept
+{
+	return this->dateStr(d_format, DateLayout::YYYY_M_D);
+}
+
+std::string Datetime::dateStr(DateLayout d_layout) const noexcept
+{
+	return this->dateStr(DateFormat::RECORD, d_layout);
+}
+
+std::string Datetime::dateStr() const noexcept
+{
+	return this->dateStr(DateFormat::RECORD, DateLayout::YYYY_M_D);
+}
+
+std::string Datetime::timeStr(TimeFormat t_format, TimeLayout t_layout) const noexcept
+{
+	return CoordinatedUniversalTime::toTimeStr(this->time(), t_format, t_layout);
+}
+
+std::string Datetime::timeStr(TimeFormat t_format) const noexcept
+{
+	return this->timeStr(t_format, TimeLayout::H_M_S);
+}
+
+std::string Datetime::timeStr(TimeLayout t_layout) const noexcept
+{
+	return this->timeStr(TimeFormat::MILITARY, t_layout);
+}
+
+std::string Datetime::timeStr() const noexcept
+{
+	return this->timeStr(TimeFormat::MILITARY, TimeLayout::H_M_S);
+}
+
 std::string Datetime::datetimeStr(Layout layout, DateFormat d_format, DateLayout d_layout,
 	TimeFormat t_format, TimeLayout t_layout) const noexcept
 {
