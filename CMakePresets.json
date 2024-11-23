@@ -10,8 +10,7 @@
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_COMPILER": "cl.exe",
-        "CMAKE_CXX_COMPILER": "cl.exe",
-        "PROJECT_TESTING": "ON"
+        "CMAKE_CXX_COMPILER": "cl.exe"
       }
     },
     {
