@@ -1,8 +1,10 @@
 
-# \src\ DIRECTORY CMAKE SCRIPT
+#============================#
+#   \src\ Directory Script   #
+#============================#
 
 
-# Library Build
+
 add_library(
 	simplydtlib
 	"common/julian_date_system/jdn_util.cpp"
