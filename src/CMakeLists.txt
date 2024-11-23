@@ -13,3 +13,10 @@ add_library(
 	"duration/duration.cpp"
 	"datetime/datetime.cpp"
 )
+
+target_include_directories(
+	simplydtlib
+
+	PUBLIC
+	"${CMAKE_SOURCE_DIR}/include"
+)
