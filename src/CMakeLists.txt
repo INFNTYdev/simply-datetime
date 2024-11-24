@@ -20,3 +20,5 @@ target_include_directories(
 	PUBLIC
 	"${CMAKE_SOURCE_DIR}/include"
 )
+
+message(STATUS "SDT INCLUDE: ${CMAKE_SOURCE_DIR}/include")
