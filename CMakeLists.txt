@@ -37,6 +37,15 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 add_subdirectory(src)
 
+
+target_include_directories(
+	simplydtlib
+
+	PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
+
+
 if(SIMPLYDT_TESTING)
     add_subdirectory(3rdparty/googletest)
 
