@@ -1,9 +1,9 @@
 # Simply Datetime Library
-![Static Badge](https://img.shields.io/badge/latest_version-v4.1.0.0-blue)
+##### Infinity Systems, LLC. 2025
 
 <br/>
 
-##### Infinity Systems, LLC. 2025
+![Static Badge](https://img.shields.io/badge/version-v4.1.0.0-blue)
 
 <br/>
 
