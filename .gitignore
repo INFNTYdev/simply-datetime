@@ -1,0 +1,17 @@
+
+# Ignore IDE project directories
+/.vs
+/.vscode
+
+# Ignore binary output directories
+/build
+/install
+/out
+
+# Ignore Doxygen output directory
+/docs/ref/doxygen
+
+# Ignore generated CMake headers
+/include/meta/version.h
+/include/meta/info.h
+
