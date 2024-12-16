@@ -43,11 +43,7 @@ if(${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "CLI" OR ${LOCAL_PROJECT_SCOPE
 # LIBRARY BINARY
 else()
 
-    if(APPLE)
-        message(STATUS "LIBRARY FOR MACOS (INCOMPLETE)")
-    else()
-        message(STATUS "LIBRARY FOR LINUX OR WINDOWS (INCOMPLETE)")
-    endif()
+    add_library("${PRIMARY_BINARY_NAME}" STATIC)
     
 endif()
 
