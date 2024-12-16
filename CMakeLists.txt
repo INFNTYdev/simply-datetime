@@ -1,17 +1,20 @@
 
-#==============================
+#==================================================
 #
-#     Root CMakeLists.txt
+#     Infinity Systems, LLC. 2025 and
+#     Jamon Bailey
 #
-#==============================
+#     Simply Datetime Build Generation Script
+#
+#==================================================
 
 
 
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
-set(LOCAL_CMAKE_PROJECT_NAME "<CMAKE_PROJECT_NAME>")
+set(LOCAL_CMAKE_PROJECT_NAME "simply_datetime_core")
 
-project("${LOCAL_CMAKE_PROJECT_NAME}" VERSION 0.0.0.0 LANGUAGES CXX)
+project("${LOCAL_CMAKE_PROJECT_NAME}" VERSION 4.1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,11 +24,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
-set(LOCAL_PROJECT_SCOPE "<~auto~>")
-string(TOUPPER "${LOCAL_CMAKE_PROJECT_NAME}" LOCAL_PROJECT_SCOPE)
-
-
-include(FetchContent)
+set(LOCAL_PROJECT_SCOPE "SIMPLYDT")
 
 
 set(CLI_DEBUGGING OFF)
