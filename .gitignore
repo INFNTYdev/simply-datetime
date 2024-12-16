@@ -1,7 +1,0 @@
-/.vs
-/.vscode
-/compile
-bin/
-build/
-/docs/diagram/*.bkp
-/docs/diagram/*.dtmp
