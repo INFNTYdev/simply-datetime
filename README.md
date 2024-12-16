@@ -3,7 +3,7 @@
 
 <br/>
 
-![Static Badge](https://img.shields.io/badge/latest_version-v4.1.0.0-blue)
+![Static Badge](https://img.shields.io/badge/version-v4.1.0.0-blue)
 
 <br/>
 
