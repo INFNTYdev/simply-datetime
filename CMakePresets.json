@@ -10,7 +10,9 @@
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe"
+                "CMAKE_CXX_COMPILER": "cl.exe",
+		"SIMPLYDT_PROJECT_TESTING": "ON",
+		"SIMPLYDT_PROJECT_CLI_DEBUG": "ON"
             }
         },
         {
@@ -34,7 +36,9 @@
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_CXX_COMPILER": "g++",
+		"SIMPLYDT_PROJECT_TESTING": "ON",
+		"SIMPLYDT_PROJECT_CLI_DEBUG": "ON"
             }
         },
         {
