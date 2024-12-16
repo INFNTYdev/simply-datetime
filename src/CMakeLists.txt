@@ -65,7 +65,7 @@ target_compile_features(
 )
 
 
-# Source subdirs...
+add_subdirectory(gregorian_calendar)
 
 
 target_link_libraries(
