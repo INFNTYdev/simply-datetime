@@ -12,3 +12,12 @@
 <br/>
 
 ### ( ***Nothing here yet, come back soon!*** )
+
+<br/>
+
+## ***Acknowledgements***
+
+> ### Tomohiko Sakamoto
+> *"Your day of week algorithm saved my life, thank you very much Mr. Sakamoto!"*
+
+<br/>
