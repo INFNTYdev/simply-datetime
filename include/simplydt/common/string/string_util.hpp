@@ -44,7 +44,7 @@ namespace SimplyDt {
 
             do {
 
-                multi *= 10;
+                multi *= (UINT_T)10;
 
             } while ((integer / multi) % (UINT_T)10 != (UINT_T)0);
 
