@@ -15,7 +15,7 @@ void ProjectInfoOut() noexcept
 		<< " Patch: " << SIMPLYDTMetadata::VERSION_PATCH
 		<< " Tweak: " << SIMPLYDTMetadata::VERSION_TWEAK
 		<< "\n\t-> (dev_exe.exe)\n"
-		<< "\n\tC++ 20+"
+		<< "\n\tC++ 20"
 		<< "\n\n" << std::endl;
 }
 
