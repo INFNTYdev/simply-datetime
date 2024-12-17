@@ -1,6 +1,6 @@
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-//    GREGORIAN CALENDAR UTILITY TESTS    //
+//    GREGORIAN CALENDAR UTILITY TESTS    \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
 
@@ -36,7 +36,19 @@ namespace DTStringUtilityTests {
 
 	TEST(GregorianCalendarUtilityTestSuite, DetermineTotalDaysInMonth)
 	{
-		//
+		std::vector<std::pair<std::pair<uint16_t, uint8_t>, uint8_t>> testSet{
+			{{2024, 12}, 31},    // December 2024
+		};
+
+		for (std::pair<std::pair<uint16_t, uint8_t>, uint8_t>& set : testSet) {
+
+			const uint16_t* sampleYear = &set.first.first;
+			const uint8_t* sampleMonth = &set.first.second;
+			const uint8_t* expect = &set.second;
+
+			ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonthTotalDays(*sampleYear, *sampleMonth), *expect);
+
+		}
 	}
 
 }
