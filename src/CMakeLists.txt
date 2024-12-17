@@ -65,6 +65,7 @@ target_compile_features(
 )
 
 
+add_subdirectory(common)
 add_subdirectory(gregorian_calendar)
 
 
