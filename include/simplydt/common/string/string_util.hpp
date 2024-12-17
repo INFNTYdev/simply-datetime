@@ -46,7 +46,7 @@ namespace SimplyDt {
 
                 multi *= 10;
 
-            } while ((integer / multi) > 1);
+            } while ((integer / multi) % (UINT_T)10 != (UINT_T)0);
 
             return std::to_string(integer % multi);
         }
