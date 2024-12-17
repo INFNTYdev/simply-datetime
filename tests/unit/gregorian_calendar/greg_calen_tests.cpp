@@ -68,4 +68,29 @@ namespace DTStringUtilityTests {
 		}
 	}
 
+	TEST(GregorianCalendarUtilityTestSuite, DetermineMonthIndex)
+	{
+		uint8_t sample{ 255 };
+
+		while (sample >= (uint8_t)0) {
+
+			// Valid indicies
+			if (sample >= 1 && sample <= 12) {
+				const uint8_t expect{ (uint8_t)(sample - 1) };
+
+				ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonthIndex(sample), expect);
+
+				--sample;
+
+				continue;
+			}
+
+			// Invalid indicies
+			ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonthIndex(sample), 0);
+
+			--sample;
+
+		}
+	}
+
 }
