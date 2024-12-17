@@ -23,5 +23,4 @@ target_link_libraries(
 )
 
 
-# Unit testing subdirs...
-
+add_subdirectory("string")
