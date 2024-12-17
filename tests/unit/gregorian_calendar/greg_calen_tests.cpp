@@ -14,14 +14,14 @@ namespace DTStringUtilityTests {
 	TEST(GregorianCalendarUtilityTestSuite, DetectLeapYear)
 	{
 		std::vector<std::pair<uint16_t, bool>> testSet{
-			{ 2024, true },
-			{ 2000, true },
-			{ 1970, false },
 			{ 2032, true },
+			{ 2024, true },
+			{ 2008, true },
+			{ 2000, true },
+			{ 1996, true },
 			{ 1985, false },
 			{ 1977, false },
-			{ 2008, true },
-			{ 1996, true },
+			{ 1970, false },
 		};
 
 		for (std::pair<uint16_t, bool>& set : testSet) {
