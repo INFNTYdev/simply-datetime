@@ -1,16 +1,33 @@
 
 #include<iostream>
-#include"simplydt/common/string/string_util.hpp"
+#include"meta/info.h"
+#include"meta/version.h"
+
+
+void ProjectInfoOut() noexcept
+{
+    std::cout << '\n'
+		<< "\n\t" << SIMPLYDTMetadata::PUBLISHER << "\n"
+		<< "\n\t[ " << SIMPLYDTMetadata::OFFICIAL_NAME << " ]"
+		<< "\n\tDeveloper executable"
+		<< "\n\tRelease: " << SIMPLYDTMetadata::VERSION_MAJOR
+		<< " Version: " << SIMPLYDTMetadata::VERSION_MINOR
+		<< " Patch: " << SIMPLYDTMetadata::VERSION_PATCH
+		<< " Tweak: " << SIMPLYDTMetadata::VERSION_TWEAK
+		<< "\n\t-> (dev_exe.exe)\n"
+		<< "\n\tC++ 20+"
+		<< "\n\n" << std::endl;
+}
 
 
 int main(int argc, char* argv[])
 {
-    //
-    std::cout << "\nWorking properly." << std::endl;
+	ProjectInfoOut();
 
-    unsigned long int testYear{ 2024 };
+	// DO NOT DELETE ABOVE
 
-    std::string demo{ SimplyDt::String::toDoubleDigitStr(testYear) };
+
+    //\\//
     
     return 0;
 }
