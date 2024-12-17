@@ -74,19 +74,17 @@ namespace DTStringUtilityTests {
 
 		while (sample >= (uint8_t)0) {
 
-			// Valid indicies
-			if (sample >= 1 && sample <= 12) {
+			const bool isValidIndex = (sample >= 1 && sample <= 12);
+
+			if (isValidIndex) {
 				const uint8_t expect{ (uint8_t)(sample - 1) };
-
 				ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonthIndex(sample), expect);
-
-				--sample;
-
-				continue;
 			}
+			else
+				ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonthIndex(sample), 0);
 
-			// Invalid indicies
-			ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonthIndex(sample), 0);
+			if (sample == 0)
+				break;
 
 			--sample;
 
