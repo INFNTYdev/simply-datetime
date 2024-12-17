@@ -47,3 +47,13 @@ uint8_t SimplyDt::GregorianCalendar::Util::getMonthTotalDays(const uint16_t& yea
     \*****************************************************************************/
     
 }
+
+uint16_t SimplyDt::GregorianCalendar::Util::getYearTotalDays(const uint16_t& year) noexcept
+{
+    uint16_t totalDays{ 0 };
+
+    for (uint8_t month{ 1 }; month <= (uint8_t)12; ++month)
+        totalDays += getMonthTotalDays(year, month);
+
+    return totalDays;
+}
