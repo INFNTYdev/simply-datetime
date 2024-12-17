@@ -42,6 +42,10 @@ namespace SimplyDt
             STANDARD    ///< Standard format (01/01/1970)
         };
 
+        /*!
+        * @brief
+        * Gregorian date presentation layouts.
+        */
         enum DateLayout {
             M_D_YYYY,    ///< mm/dd/YYYY [ Example: 01-29-1970 ]
 		    M_D_YY,      ///< mm/dd/YY [ Example: 01-29-70 ]
