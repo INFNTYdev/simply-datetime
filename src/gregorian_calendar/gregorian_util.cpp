@@ -57,3 +57,11 @@ uint16_t SimplyDt::GregorianCalendar::Util::getYearTotalDays(const uint16_t& yea
 
     return totalDays;
 }
+
+uint8_t SimplyDt::GregorianCalendar::Util::getMonthIndex(const uint8_t& month) noexcept
+{
+    if (month >= (uint8_t)1 && month <= (uint8_t)12)
+        return month - (uint8_t)1;
+    
+    return 0;
+}
