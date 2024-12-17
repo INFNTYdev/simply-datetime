@@ -51,4 +51,21 @@ namespace DTStringUtilityTests {
 		}
 	}
 
+	TEST(GregorianCalendarUtilityTestSuite, DetermineTotalDaysInYear)
+	{
+		std::vector<std::pair<uint16_t, uint16_t>> testSet{
+			{2024, 366},
+			{2001, 365},
+		};
+
+		for (std::pair<uint16_t, uint16_t>& set : testSet) {
+
+			const uint16_t* sample = &set.first;
+			const uint16_t* expect = &set.second;
+
+			ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getYearTotalDays(*sample), *expect);
+
+		}
+	}
+
 }
