@@ -37,8 +37,8 @@ uint8_t SimplyDt::GregorianCalendar::Util::getMonthTotalDays(const uint16_t& yea
     case (uint8_t)11:
         return (uint8_t)30;
 
+    // January, March, May, July, August, October and December
     default:
-        // January, March, May, July, August, October and December
         return (uint8_t)31;
     }
 
