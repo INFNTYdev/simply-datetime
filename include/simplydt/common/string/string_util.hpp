@@ -29,7 +29,27 @@ namespace SimplyDt {
     */
     namespace String {
 
-        //
+        /*!
+        * @brief
+        * Returns provided integer as a double
+        * digit string.
+        */
+        template <typename UINT_T>
+        std::string toDoubleDigitStr(const UINT_T& integer) noexcept
+        {
+            if (integer <= (UINT_T)99)
+                return std::to_string(integer);
+
+            UINT_T multi{ 10 };
+
+            do {
+
+                multi *= 10;
+
+            } while ((integer / multi) > 1);
+
+            return std::to_string(integer % multi);
+        }
 
     }
 
