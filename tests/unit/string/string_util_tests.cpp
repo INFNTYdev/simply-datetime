@@ -25,10 +25,10 @@ namespace DTStringUtilityTests {
 
 		for (std::pair<uint16_t, std::string>& set : testSet) {
 
-			const uint16_t* test = &set.first;
+			const uint16_t* sample = &set.first;
 			const char* expect = set.second.data();
 
-			ASSERT_EQ(SimplyDt::String::toDoubleDigitStr(*test), expect);
+			ASSERT_EQ(SimplyDt::String::toDoubleDigitStr(*sample), expect);
 
 		}
 	}
