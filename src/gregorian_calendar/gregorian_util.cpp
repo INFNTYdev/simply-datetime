@@ -65,3 +65,11 @@ uint8_t SimplyDt::GregorianCalendar::Util::getMonthIndex(const uint8_t& month) n
     
     return 0;
 }
+
+const char* SimplyDt::GregorianCalendar::Util::getMonth(const uint8_t& month) noexcept
+{
+    if (month == 0 || month > (uint8_t)12)
+        return nullptr;
+
+    return SimplyDt::GregorianCalendar::Months[getMonthIndex(month)];
+}
