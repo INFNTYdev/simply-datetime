@@ -1,7 +1,7 @@
 
 #include<iostream>
-#include"meta/info.h"
-#include"meta/version.h"
+#include"simplydt/meta/info.h"
+#include"simplydt/meta/version.h"
 
 
 void ProjectInfoOut() noexcept
