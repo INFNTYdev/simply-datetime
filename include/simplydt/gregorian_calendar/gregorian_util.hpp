@@ -130,7 +130,7 @@ namespace SimplyDt {
             */
             const char* getDayOfWeek(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;
 
-            std::string_view getDayOfWeekAbbrev(const uint8_t& month) noexcept;// UNPLANNED!
+            std::string_view getDayOfWeekAbbrev(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;// UNPLANNED!
 
         }
 
