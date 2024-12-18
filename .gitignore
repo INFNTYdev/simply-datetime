@@ -12,6 +12,5 @@
 /docs/ref/doxygen
 
 # Ignore generated CMake headers
-/include/meta/version.h
-/include/meta/info.h
-
+/include/simplydt/meta/version.h
+/include/simplydt/meta/info.h
