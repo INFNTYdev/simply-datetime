@@ -156,4 +156,35 @@ namespace DTStringUtilityTests {
 		}
 	}
 
+	TEST(GregorianCalendarUtilityTestSuite, DetermineDayOfWeekLiteralFromDate)
+	{
+		std::vector<std::pair<SimplyDt::GregorianCalendar::Date, std::string>> testSet{
+			{{.year=2013, .month=10, .day=20}, "Sunday"},
+			{{.year=2035, .month=7, .day=2}, "Monday"},
+			{{.year=1994, .month=3, .day=1}, "Tuesday"},
+			{{.year=2024, .month=12, .day=18}, "Wednesday"},
+			{{.year=1970, .month=9, .day=10}, "Thursday"},
+			{{.year=2001, .month=2, .day=23}, "Friday"},
+			{{.year=1964, .month=5, .day=16}, "Saturday"},
+		};
+
+		for (std::pair<SimplyDt::GregorianCalendar::Date, std::string>& set : testSet) {
+
+			const uint16_t* sampleYear = &set.first.year;
+			const uint8_t* sampleMonth = &set.first.month;
+			const uint8_t* sampleDay = &set.first.day;
+			const std::string expect{ set.second };
+
+			ASSERT_EQ(
+				SimplyDt::GregorianCalendar::Util::getDayOfWeek(
+					*sampleYear,
+					*sampleMonth,
+					*sampleDay
+				),
+				expect
+			);
+
+		}
+	}
+
 }
