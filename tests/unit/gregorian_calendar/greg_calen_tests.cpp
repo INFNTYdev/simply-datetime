@@ -115,7 +115,7 @@ namespace DTStringUtilityTests {
 			const bool isValidIndex = (sample >= 1 && sample <= 12);
 
 			if (isValidIndex) {
-				const char* expect = testSet[sample - 1].second.data();
+				const std::string expect{ testSet[sample - 1].second };
 				ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonth(sample), expect);
 			}
 			else {
