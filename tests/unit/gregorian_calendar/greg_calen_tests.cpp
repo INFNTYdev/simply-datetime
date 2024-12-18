@@ -119,7 +119,7 @@ namespace DTStringUtilityTests {
 				ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonth(sample), expect);
 			}
 			else {
-				const std::string expect{ "January" };
+				const char* expect{ nullptr };
 				ASSERT_EQ(SimplyDt::GregorianCalendar::Util::getMonth(sample), expect);
 			}
 
