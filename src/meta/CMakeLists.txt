@@ -99,14 +99,14 @@ configure_file(
 )
 
 configure_file(
-	"${CMAKE_SOURCE_DIR}/include/meta/templ/version.h.in"
-	"${CMAKE_SOURCE_DIR}/include/meta/version.h"
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/templ/version.h.in"
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/version.h"
 	@ONLY
 )
 
 configure_file(
-	"${CMAKE_SOURCE_DIR}/include/meta/templ/info.h.in"
-	"${CMAKE_SOURCE_DIR}/include/meta/info.h"
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/templ/info.h.in"
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/info.h"
 	@ONLY
 )
 
