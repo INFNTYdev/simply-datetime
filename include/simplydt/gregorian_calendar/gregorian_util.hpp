@@ -17,6 +17,7 @@
 
 
 #include<cstdint>
+#include<string_view>
 #include"simplydt/gregorian_calendar/gregorian_defs.hpp"
 
 
@@ -109,6 +110,8 @@ namespace SimplyDt {
             */
             const char* getMonth(const uint8_t& month) noexcept;
 
+            std::string_view getMonthAbbrev(const uint8_t& month) noexcept;// UNPLANNED!
+
             /*!
             * @brief
             * Determine day-of-week index of specified date.
@@ -126,6 +129,8 @@ namespace SimplyDt {
             * Day-of-week literal of provided date
             */
             const char* getDayOfWeek(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;
+
+            std::string_view getDayOfWeekAbbrev(const uint8_t& month) noexcept;// UNPLANNED!
 
         }
 
