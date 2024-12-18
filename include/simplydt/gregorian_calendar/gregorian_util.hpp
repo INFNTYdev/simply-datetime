@@ -34,6 +34,37 @@ namespace SimplyDt {
 
             /*!
             * @brief
+            * Evaluate if provided year is valid.
+            * 
+            * @details
+            * Evaluates if provided year is acceptable in
+            * terms of the libraries capabilities.
+            * 
+            * @return
+            * True if provided year is acceptable
+            */
+            bool isValidYear(const uint16_t& year) noexcept;
+
+            /*!
+            * @brief
+            * Validate provided month.
+            * 
+            * @return
+            * True if provided month is valid
+            */
+            bool isValidMonth(const uint8_t& month) noexcept;
+
+            /*!
+            * @brief
+            * Validate provided day.
+            * 
+            * @return
+            * True if provided day is valid
+            */
+            bool isValidDay(const uint8_t& day) noexcept;
+
+            /*!
+            * @brief
             * Evaluate if provided year is a leap year.
             * 
             * @return
