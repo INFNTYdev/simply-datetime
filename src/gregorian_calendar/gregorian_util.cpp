@@ -160,3 +160,11 @@ uint8_t SimplyDt::GregorianCalendar::Util::getDayOfWeekIndex(const uint16_t& yea
     \*****************************************************************************/
 
 }
+
+const char* SimplyDt::GregorianCalendar::Util::getDayOfWeek(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept
+{
+    if (!isValidMonth(month) || !isValidDay(day))
+        return nullptr;
+
+    return SimplyDt::GregorianCalendar::DaysOfWeek[getDayOfWeekIndex(year, month, day)];
+}
