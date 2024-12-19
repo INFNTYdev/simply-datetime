@@ -8,7 +8,7 @@
 add_executable(
 	gregorian_calen_tests
 
-	"${CMAKE_CURRENT_SOURCE_DIR}/greg_calen_tests.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/greg_util_tests.cpp"
 )
 
 target_link_libraries(
