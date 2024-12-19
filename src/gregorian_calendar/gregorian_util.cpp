@@ -189,9 +189,34 @@ std::string_view SimplyDt::GregorianCalendar::Util::getDayOfWeekAbbrev(const uin
     return original.substr(0, (size_t)3);
 }
 
-bool SimplyDt::GregorianCalendar::Util::jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn, SimplyDt::GregorianCalendar::Date& date) noexcept
+void SimplyDt::GregorianCalendar::Util::jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn, SimplyDt::GregorianCalendar::Date& date) noexcept
 {
-    //
 
-    return false;
+    /*****************************************************************************\
+    *             vvv           AI GENERATED CODE BELOW           vvv             *
+    \*****************************************************************************/
+
+    // This is a mess...
+
+    int Z = static_cast<int>(jdn + (double)0.5);
+    int A = Z;
+
+    if (Z >= 2299161) {
+        int alpha = static_cast<int>((Z - (double)1867216.25) / (double)36524.25);
+        A = Z + 1 + alpha - static_cast<int>(alpha / 4);
+    }
+
+    int B = A + 1524;
+    int C = static_cast<int>((B - (double)122.1) / (double)365.25);
+    int D = static_cast<int>((double)365.25 * C);
+    int E = static_cast<int>((B - D) / (double)30.6001);
+
+    date.day = static_cast<uint8_t>(B - D - static_cast<int>((double)30.6001 * E));
+    date.month = static_cast<uint8_t>((E < 14) ? E - 1 : E - 13);
+    date.year = static_cast<uint16_t>((date.month > 2) ? C - 4716 : C - 4715);
+
+    /*****************************************************************************\
+    *             ^^^           AI GENERATED CODE ABOVE           ^^^             *
+    \*****************************************************************************/
+
 }
