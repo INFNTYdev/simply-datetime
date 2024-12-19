@@ -133,6 +133,8 @@ namespace SimplyDt {
 
             std::string_view getDayOfWeekAbbrev(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;// UNPLANNED!
 
+            SimplyDt::GregorianCalendar::Date jdnToDate() noexcept;// UNPLANNED!
+
         }
 
     }
