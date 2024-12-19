@@ -119,7 +119,7 @@ namespace SimplyDt {
             * @return
             * Abbreviated literal of provided month
             */
-            std::string_view getMonthAbbrev(const uint8_t& month) noexcept;// UNPLANNED!
+            std::string_view getMonthAbbrev(const uint8_t& month) noexcept;
 
             /*!
             * @brief
@@ -147,7 +147,7 @@ namespace SimplyDt {
             * @return
             * Abbreviated literal of date day-of-week
             */
-            std::string_view getDayOfWeekAbbrev(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;// UNPLANNED!
+            std::string_view getDayOfWeekAbbrev(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;
 
             /*!
             * @brief
