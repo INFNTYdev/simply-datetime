@@ -27,7 +27,11 @@ namespace SimplyDt {
     */
     namespace JulianCalendar {
 
-        //
+        /*!
+        * @brief
+        * Julian Day Number.
+        */
+        using JDN = double;
 
     }
 
