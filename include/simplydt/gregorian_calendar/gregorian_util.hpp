@@ -19,6 +19,7 @@
 #include<cstdint>
 #include<string_view>
 #include"simplydt/gregorian_calendar/gregorian_defs.hpp"
+#include"simplydt/julian_calendar/julian_defs.hpp"
 
 
 namespace SimplyDt {
@@ -133,7 +134,7 @@ namespace SimplyDt {
 
             std::string_view getDayOfWeekAbbrev(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;// UNPLANNED!
 
-            SimplyDt::GregorianCalendar::Date jdnToDate() noexcept;// UNPLANNED!
+            SimplyDt::GregorianCalendar::Date jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn) noexcept;// UNPLANNED!
 
         }
 
