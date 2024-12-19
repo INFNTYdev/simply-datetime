@@ -3,6 +3,8 @@
 #include"simplydt/meta/info.h"
 #include"simplydt/meta/version.h"
 
+#include"simplydt/gregorian_calendar/gregorian_util.hpp"
+
 
 void ProjectInfoOut() noexcept
 {
@@ -28,6 +30,10 @@ int main(int argc, char* argv[])
 
 
     //\\//
+	SimplyDt::GregorianCalendar::Date someDate{};
+	SimplyDt::JulianCalendar::JDN someJDN{ 2'440'587.5 };
+
+	SimplyDt::GregorianCalendar::Util::jdnToDate(someJDN, someDate);
     
     return 0;
 }
