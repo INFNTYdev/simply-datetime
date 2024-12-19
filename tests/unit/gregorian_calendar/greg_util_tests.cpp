@@ -9,7 +9,7 @@
 #include"simplydt/gregorian_calendar/gregorian_util.hpp"
 
 
-namespace DTStringUtilityTests {
+namespace GregorianCalendarTests {
 
 	TEST(GregorianCalendarUtilityTestSuite, DetectLeapYear)
 	{
