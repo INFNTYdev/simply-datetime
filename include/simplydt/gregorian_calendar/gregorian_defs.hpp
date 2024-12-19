@@ -38,13 +38,13 @@ namespace SimplyDt
         * Gregorian date presentation formats.
         */
         enum DateFormat {
-            RECORD,     ///< Record format (01-01-1970)
-            STANDARD    ///< Standard format (01/01/1970)
+            RECORD,     ///< Record format ( 01-29-1970 )
+            STANDARD    ///< Standard format ( 01/29/1970 )
         };
 
         /*!
         * @brief
-        * Gregorian date presentation layouts.
+        * Gregorian date layouts.
         */
         enum DateLayout {
             M_D_YYYY,    ///< mm/dd/YYYY [ Example: 01-29-1970 ]
