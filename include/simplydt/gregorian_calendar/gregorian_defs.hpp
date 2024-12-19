@@ -67,9 +67,9 @@ namespace SimplyDt
         */
         struct Date
         {
-            const uint16_t year;    ///< Date year
-            const uint8_t month;    ///< Date month
-            const uint8_t day;      ///< Date day
+            uint16_t year;    ///< Date year
+            uint8_t month;    ///< Date month
+            uint8_t day;      ///< Date day
         };
 
         /*!
