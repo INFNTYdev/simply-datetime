@@ -99,7 +99,7 @@ namespace SimplyDt {
             * Determine month index of specified month.
             * 
             * @return
-            * Month index of provided month
+            * Index of provided month
             */
             uint8_t getMonthIndex(const uint8_t& month) noexcept;
 
@@ -108,10 +108,17 @@ namespace SimplyDt {
             * Determine month name of specified month.
             * 
             * @return
-            * Month literal of provided month
+            * Literal of provided month
             */
             const char* getMonth(const uint8_t& month) noexcept;
 
+            /*!
+            * @brief
+            * Get abbreviated name of specified month.
+            * 
+            * @return
+            * Abbreviated literal of provided month
+            */
             std::string_view getMonthAbbrev(const uint8_t& month) noexcept;// UNPLANNED!
 
             /*!
@@ -132,9 +139,24 @@ namespace SimplyDt {
             */
             const char* getDayOfWeek(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;
 
+            /*!
+            * @brief
+            * Get abbreviated name of specified date
+            * day-of-week.
+            * 
+            * @return
+            * Abbreviated literal of date day-of-week
+            */
             std::string_view getDayOfWeekAbbrev(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;// UNPLANNED!
 
-            SimplyDt::GregorianCalendar::Date jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn) noexcept;// UNPLANNED!
+            /*!
+            * @brief
+            * Convert Julian Day Number to Gregorian date.
+            * 
+            * @return
+            * Julian Day Number conversion success boolean
+            */
+            bool jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn, SimplyDt::GregorianCalendar::Date& date) noexcept;// UNPLANNED!
 
         }
 
