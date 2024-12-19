@@ -156,7 +156,7 @@ namespace SimplyDt {
             * @return
             * Julian Day Number conversion success boolean
             */
-            bool jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn, SimplyDt::GregorianCalendar::Date& date) noexcept;
+            void jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn, SimplyDt::GregorianCalendar::Date& date) noexcept;
 
         }
 
