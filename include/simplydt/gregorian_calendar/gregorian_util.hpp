@@ -36,7 +36,7 @@ namespace SimplyDt {
 
             /*!
             * @brief
-            * Evaluate if provided year is valid.
+            * Validate provided year.
             * 
             * @details
             * Evaluates if provided year is acceptable in
