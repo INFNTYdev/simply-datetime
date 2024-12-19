@@ -65,6 +65,14 @@ uint8_t SimplyDt::GregorianCalendar::Util::getMonthTotalDays(const uint16_t& yea
     
 }
 
+bool SimplyDt::GregorianCalendar::Util::isValidDate(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept
+{
+    if (!isValidYear(year) || !isValidMonth(month) || !isValidDay(day))
+        return false;
+
+    return getMonthTotalDays(year, month) >= day;
+}
+
 uint16_t SimplyDt::GregorianCalendar::Util::getYearTotalDays(const uint16_t& year) noexcept
 {
     uint16_t totalDays{ 0 };
