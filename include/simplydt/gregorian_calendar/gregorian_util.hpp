@@ -42,7 +42,8 @@ namespace SimplyDt {
             * terms of the libraries capabilities.
             * 
             * @return
-            * True if provided year is acceptable
+            * True if provided year is within acceptable
+            * range
             */
             bool isValidYear(const uint16_t& year) noexcept;
 
@@ -51,7 +52,7 @@ namespace SimplyDt {
             * Validate provided month.
             * 
             * @return
-            * True if provided month is valid
+            * True if provided month is within valid range
             */
             bool isValidMonth(const uint8_t& month) noexcept;
 
@@ -60,7 +61,7 @@ namespace SimplyDt {
             * Validate provided day.
             * 
             * @return
-            * True if provided day is valid
+            * True if provided day is within valid range
             */
             bool isValidDay(const uint8_t& day) noexcept;
 
