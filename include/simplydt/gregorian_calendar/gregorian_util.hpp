@@ -152,9 +152,6 @@ namespace SimplyDt {
             /*!
             * @brief
             * Convert Julian Day Number to Gregorian date.
-            * 
-            * @return
-            * Julian Day Number conversion success boolean
             */
             void jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn, SimplyDt::GregorianCalendar::Date& date) noexcept;
 
