@@ -97,7 +97,7 @@ namespace SimplyDt {
             * @return
             * True if provided date exist on Gregorian calendar
             */
-            bool isValidDate(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;// INCOMPLETE!
+            bool isValidDate(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept;
 
             /*!
             * @brief
