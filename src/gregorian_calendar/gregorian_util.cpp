@@ -91,6 +91,16 @@ const char* SimplyDt::GregorianCalendar::Util::getMonth(const uint8_t& month) no
     return SimplyDt::GregorianCalendar::Months[getMonthIndex(month)];
 }
 
+std::string_view SimplyDt::GregorianCalendar::Util::getMonthAbbrev(const uint8_t& month) noexcept
+{
+    if (!isValidMonth(month))
+        return nullptr;
+    
+    std::string_view original{ SimplyDt::GregorianCalendar::Months[getMonthIndex(month)] };
+
+    return original.substr(0, (size_t)3);
+}
+
 uint8_t SimplyDt::GregorianCalendar::Util::getDayOfWeekIndex(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept
 {
     if (!isValidMonth(month) || !isValidDay(day))
@@ -167,4 +177,21 @@ const char* SimplyDt::GregorianCalendar::Util::getDayOfWeek(const uint16_t& year
         return nullptr;
 
     return SimplyDt::GregorianCalendar::DaysOfWeek[getDayOfWeekIndex(year, month, day)];
+}
+
+std::string_view SimplyDt::GregorianCalendar::Util::getDayOfWeekAbbrev(const uint16_t& year, const uint8_t& month, const uint8_t& day) noexcept
+{
+    if (!isValidMonth(month) || !isValidDay(day))
+        return nullptr;
+
+    std::string_view original{ SimplyDt::GregorianCalendar::DaysOfWeek[getDayOfWeekIndex(year, month, day)] };
+
+    return original.substr(0, (size_t)3);
+}
+
+bool SimplyDt::GregorianCalendar::Util::jdnToDate(const SimplyDt::JulianCalendar::JDN& jdn, SimplyDt::GregorianCalendar::Date& date) noexcept
+{
+    //
+
+    return false;
 }
