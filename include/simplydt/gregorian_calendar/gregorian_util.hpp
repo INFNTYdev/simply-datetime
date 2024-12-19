@@ -88,7 +88,11 @@ namespace SimplyDt {
             /*!
             * @brief
             * Evaluate if provided date conforms to Gregorian
-            * calendar.
+            * calendar rules.
+            * 
+            * @note
+            * This evaluation also takes the libraries limitations
+            * into account.
             * 
             * @return
             * True if provided date exist on Gregorian calendar
