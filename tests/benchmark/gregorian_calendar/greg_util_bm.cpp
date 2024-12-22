@@ -52,6 +52,72 @@ namespace GregorianCalendarBenchmark {
         }
     }
     BENCHMARK(BM_validateDay);
+
+    static void BM_validateLeapYear(benchmark::State& state)
+    {
+        const uint16_t testLeapYear{ 2024 };
+
+        for (auto _ : state) {
+
+            benchmark::DoNotOptimize(
+                SimplyDt::GregorianCalendar::Util::isLeapYear(testLeapYear)
+            );
+
+        }
+    }
+    BENCHMARK(BM_validateLeapYear);
+
+    static void BM_calculateMonthTotalDays(benchmark::State& state)
+    {
+        const uint16_t testYear{ 2020 };
+        const uint8_t testMonth{ 6 };
+
+        for (auto _ : state) {
+
+            benchmark::DoNotOptimize(
+                SimplyDt::GregorianCalendar::Util::getMonthTotalDays(
+                    testYear,
+                    testMonth
+                )
+            );
+
+        }
+    }
+    BENCHMARK(BM_calculateMonthTotalDays);
+
+    static void BM_validateDate(benchmark::State& state)
+    {
+        const uint16_t testYear{ 2001 };
+        const uint8_t testMonth{ 2 };
+        const uint8_t testDay{ 23 };
+
+        for (auto _ : state) {
+
+            benchmark::DoNotOptimize(
+                SimplyDt::GregorianCalendar::Util::isValidDate(
+                    testYear,
+                    testMonth,
+                    testDay
+                )
+            );
+
+        }
+    }
+    BENCHMARK(BM_validateDate);
+
+    static void BM_calculateYearTotalDays(benchmark::State& state)
+    {
+        const uint16_t testYear{ 2019 };
+
+        for (auto _ : state) {
+
+            benchmark::DoNotOptimize(
+                SimplyDt::GregorianCalendar::Util::getYearTotalDays(testYear)
+            );
+
+        }
+    }
+    BENCHMARK(BM_calculateYearTotalDays);
     
 }
 
