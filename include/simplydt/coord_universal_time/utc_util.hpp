@@ -18,6 +18,7 @@
 
 
 #include<cstdint>
+#include<cmath>
 #include"simplydt/coord_universal_time/utc_defs.hpp"
 #include"simplydt/gregorian_calendar/gregorian_defs.hpp"
 #include"simplydt/julian_calendar/julian_defs.hpp"
