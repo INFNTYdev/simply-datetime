@@ -43,7 +43,7 @@ namespace SimplyDt {
             * True if provided hour is within valid
             * range
             */
-            bool isValidHour(const uint8_t& hour) noexcept;
+            inline bool isValidHour(const uint8_t& hour) noexcept;
 
             /*!
             * @brief
@@ -53,7 +53,7 @@ namespace SimplyDt {
             * True if provided minute is within valid
             * range
             */
-            bool isValidMinute(const uint8_t& minute) noexcept;
+            inline bool isValidMinute(const uint8_t& minute) noexcept;
 
             /*!
             * @brief
@@ -63,7 +63,7 @@ namespace SimplyDt {
             * True if provided second is within valid
             * range
             */
-            bool isValidSecond(const uint8_t& second) noexcept;
+            inline bool isValidSecond(const uint8_t& second) noexcept;
 
             /*!
             * @brief
@@ -73,7 +73,7 @@ namespace SimplyDt {
             * @return
             * True if provided time is valid
             */
-            bool isValidTime(const uint8_t& hour, const uint8_t& minute, const uint8_t& second) noexcept;
+            inline bool isValidTime(const uint8_t& hour, const uint8_t& minute, const uint8_t& second) noexcept;
 
             /*!
             * @brief
