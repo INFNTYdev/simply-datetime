@@ -58,6 +58,7 @@ add_subdirectory(src)
 
 if(UNIT_TESTING)
 	add_subdirectory(3rdparty/googletest)
+	add_subdirectory(3rdparty/benchmark)
 endif()
 
 if(CLI_DEBUGGING OR UNIT_TESTING)
