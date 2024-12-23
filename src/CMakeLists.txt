@@ -1,16 +1,78 @@
 
-#============================#
-#   \src\ Directory Script   #
-#============================#
+#================================
+#     /src Directory Script
+#================================
 
 
 
-add_library(
-	simplydtlib
+add_subdirectory(meta)
 
-	"common/julian_date_system/jdn_util.cpp"
-	"common/gregorian_calendar/gregorian_util.cpp"
-	"common/coord_universal_time/utc_util.cpp"
-	"duration/duration.cpp"
-	"datetime/datetime.cpp"
+
+set(PRIMARY_BINARY_NAME "${${LOCAL_PROJECT_SCOPE}_PRIMARY_BINARY_NAME}")
+
+# EXECUTABLE BINARY
+if(${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "CLI" OR ${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "GUI")
+
+    set(ENTRY_POINT_SRC "<MAIN_CPP_FILE>.cpp")
+
+    # COMMAND LINE EXECUTABLE
+    if(${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "CLI")
+
+        if(APPLE)
+            message(STATUS "COMMAND LINE EXECUTABLE SOFTWARE FOR MACOS (INCOMPLETE)")
+        else()
+            add_executable("${PRIMARY_BINARY_NAME}" ${ENTRY_POINT_SRC})
+        endif()
+
+    # GRAPHICAL USER INTERFACE EXECUTABLE
+    elseif(${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "GUI")
+
+        if(APPLE)
+            set(MACOS_PLIST_SRC ${CMAKE_SOURCE_DIR}/config/platform/macos/Info.plist)
+
+            add_executable("${PRIMARY_BINARY_NAME}" MACOSX_BUNDLE ${ENTRY_POINT_SRC})
+            set_target_properties("${PRIMARY_BINARY_NAME}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${MACOS_PLIST_SRC})
+        else()
+            set(WIN32_DPI_MANIFEST_SRC ${CMAKE_SOURCE_DIR}/config/platform/windows/win32dpi.manifest)
+
+            add_executable("${PRIMARY_BINARY_NAME}" WIN32 ${ENTRY_POINT_SRC} ${WIN32_DPI_MANIFEST_SRC})
+        endif()
+
+    endif()
+
+# LIBRARY BINARY
+else()
+
+    add_library("${PRIMARY_BINARY_NAME}" STATIC)
+    
+endif()
+
+target_include_directories(
+    "${PRIMARY_BINARY_NAME}"
+
+    PUBLIC
+    "${CMAKE_SOURCE_DIR}/include"
+)
+
+
+add_library(CompileOptions INTERFACE)
+
+target_compile_features(
+    CompileOptions
+
+    INTERFACE
+    cxx_std_20
+)
+
+
+add_subdirectory(common)
+add_subdirectory(gregorian_calendar)
+add_subdirectory(coord_universal_time)
+
+
+target_link_libraries(
+    "${PRIMARY_BINARY_NAME}"
+
+    PUBLIC
+    CompileOptions
 )

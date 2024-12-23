@@ -1,0 +1,115 @@
+
+#=====================================
+#     /src/meta Directory Script
+#=====================================
+
+
+
+set(${LOCAL_PROJECT_SCOPE}_PUBLISHER "Infinity Systems, LLC. 2025" CACHE STRING "Product publisher" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE "Library" CACHE STRING "Product type" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE "API" CACHE STRING "Product interface type" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_PRODUCT_UUID "ISJTB-CXX-XL-20230401-000001" CACHE STRING "Product universally unique identifier" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_PRODUCT_LICENSE_TYPE "Proprietary" CACHE STRING "Product license type" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_PRODUCT_NAME "Simply Datetime Library" CACHE STRING "Product official name" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_PRODUCT_SHORT_NAME "Simply Datetime" CACHE STRING "Product shortend name" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_PRIMARY_BINARY_NAME "simplydt" CACHE STRING "Product main binary" FORCE)
+
+set(${LOCAL_PROJECT_SCOPE}_TARGET_PLATFORM 0 CACHE STRING "Product target platform tip" FORCE)
+set(${LOCAL_PROJECT_SCOPE}_META_PREFIX "${LOCAL_PROJECT_SCOPE}" CACHE STRING "Project metadata prefix" FORCE)
+
+
+if(WIN32)
+	set(${LOCAL_PROJECT_SCOPE}_TARGET_PLATFORM 1 CACHE STRING "Product target platform tip" FORCE)
+
+	if(${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE STREQUAL "Executable")
+		set(
+			${LOCAL_PROJECT_SCOPE}_PRIMARY_BINARY_NAME
+			
+			"${${LOCAL_PROJECT_SCOPE}_PRIMARY_BINARY_NAME}.exe" CACHE STRING
+			
+			"Product main executable" FORCE
+		)
+	endif()
+elseif(APPLE)
+	set(${LOCAL_PROJECT_SCOPE}_TARGET_PLATFORM 3 CACHE STRING "Product target platform tip" FORCE)
+elseif(UNIX)
+	set(${LOCAL_PROJECT_SCOPE}_TARGET_PLATFORM 2 CACHE STRING "Product target platform tip" FORCE)
+endif()
+
+
+if(
+	NOT ${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "API"
+	AND NOT ${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "CLI"
+	AND NOT ${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "GUI"
+)
+	message(FATAL_ERROR "Invalid project configuration specified!\nInvalid interface type: ${${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE}")
+endif()
+
+if(${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE STREQUAL "Executable" AND ${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "API")
+	message(FATAL_ERROR "Project configured as an executable but attempting to create a library!")
+elseif(${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE STREQUAL "Library" AND NOT ${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE STREQUAL "API")
+	message(FATAL_ERROR "Project configured as a library but attempting to create an executable!")
+elseif(NOT ${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE STREQUAL "Executable" AND NOT ${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE STREQUAL "Library")
+	message(FATAL_ERROR "Invalid project configuration specified!\nInvalid product type: ${${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE}")
+endif()
+
+
+set(RESOLVED_SFTW_PUBLISHER "${${LOCAL_PROJECT_SCOPE}_PUBLISHER}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_PRODUCT_TYPE "${${LOCAL_PROJECT_SCOPE}_PRODUCT_TYPE}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_INTERFACE_TYPE "${${LOCAL_PROJECT_SCOPE}_INTERFACE_TYPE}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_PRODUCT_UUID "${${LOCAL_PROJECT_SCOPE}_PRODUCT_UUID}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_PRODUCT_LICENSE_TYPE "${${LOCAL_PROJECT_SCOPE}_PRODUCT_LICENSE_TYPE}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_PRODUCT_NAME "${${LOCAL_PROJECT_SCOPE}_PRODUCT_NAME}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_PRODUCT_SHORT_NAME "${${LOCAL_PROJECT_SCOPE}_PRODUCT_SHORT_NAME}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_PRIMARY_BINARY_NAME "${${LOCAL_PROJECT_SCOPE}_PRIMARY_BINARY_NAME}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_TARGET_PLATFORM "${${LOCAL_PROJECT_SCOPE}_TARGET_PLATFORM}" CACHE STRING "Temporary" FORCE)
+set(RESOLVED_SFTW_META_PREFIX "${${LOCAL_PROJECT_SCOPE}_META_PREFIX}" CACHE STRING "Temporary" FORCE)
+
+set(
+	TEMP_CACHE_VARS
+
+	RESOLVED_SFTW_PUBLISHER
+	RESOLVED_SFTW_PRODUCT_TYPE
+	RESOLVED_SFTW_INTERFACE_TYPE
+	RESOLVED_SFTW_PRODUCT_UUID
+	RESOLVED_SFTW_PRODUCT_LICENSE_TYPE
+	RESOLVED_SFTW_PRODUCT_NAME
+	RESOLVED_SFTW_PRODUCT_SHORT_NAME
+	RESOLVED_SFTW_PRIMARY_BINARY_NAME
+	RESOLVED_SFTW_TARGET_PLATFORM
+	RESOLVED_SFTW_META_PREFIX
+)
+
+configure_file(
+	"${CMAKE_SOURCE_DIR}/docs/templ/README.md.in"
+	"${CMAKE_SOURCE_DIR}/README.md"
+	@ONLY
+)
+
+configure_file(
+	"${CMAKE_SOURCE_DIR}/docs/templ/Doxyfile.in"
+	"${CMAKE_SOURCE_DIR}/docs/Doxyfile"
+	@ONLY
+)
+
+configure_file(
+	"${CMAKE_SOURCE_DIR}/docs/templ/inaug.md.in"
+	"${CMAKE_SOURCE_DIR}/docs/prj/inaug.md"
+	@ONLY
+)
+
+configure_file(
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/templ/version.h.in"
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/version.h"
+	@ONLY
+)
+
+configure_file(
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/templ/info.h.in"
+	"${CMAKE_SOURCE_DIR}/include/simplydt/meta/info.h"
+	@ONLY
+)
+
+foreach(tempvar ${TEMP_CACHE_VARS})
+	unset(${tempvar} CACHE)
+endforeach()

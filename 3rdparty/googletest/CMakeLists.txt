@@ -1,7 +1,7 @@
 
-#============================================#
-#   \3rdparty\googletest\ Directory Script   #
-#============================================#
+#================================================
+#     /3rdparty/googletest Directory Script
+#================================================
 
 
 
@@ -10,18 +10,20 @@ message(STATUS "Fetching GoogleTest library source...")
 include(FetchContent)
 
 FetchContent_Declare(
-    googletest
+	googletest
 
-    GIT_REPOSITORY
-    https://github.com/google/googletest.git
+	GIT_REPOSITORY
+	https://github.com/google/googletest.git
 
-    GIT_TAG
-    v1.15.2
+	GIT_TAG
+	v1.15.2
 )
 
 FetchContent_GetProperties(googletest)
 
-
 set(googletest_BUILD_DIR "${FETCHCONTENT_BASE_DIR}/googletest-build" PARENT_SCOPE)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(googletest)
+

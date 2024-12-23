@@ -1,9 +1,9 @@
-# Simply Datetime Library
-###### Infinity Systems, LLC. 2025
+# @RESOLVED_SFTW_PRODUCT_NAME@
+###### @RESOLVED_SFTW_PUBLISHER@
 
 <br/>
 
-![Static Badge](https://img.shields.io/badge/version-v4.1.0.0-blue)
+![Static Badge](https://img.shields.io/badge/version-v@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@.@CMAKE_PROJECT_VERSION_TWEAK@-blue)
 
 <br/>
 

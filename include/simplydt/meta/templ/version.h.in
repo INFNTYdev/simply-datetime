@@ -1,0 +1,53 @@
+
+/*!
+* @file version.h
+*
+* @brief
+* @RESOLVED_SFTW_PRODUCT_SHORT_NAME@ version document.
+*
+* @details
+* Version information for @RESOLVED_SFTW_PRODUCT_NAME@.
+*/
+
+
+
+#ifndef @RESOLVED_SFTW_META_PREFIX@_METADATA_VERSION_STRUCT_H_
+#define @RESOLVED_SFTW_META_PREFIX@_METADATA_VERSION_STRUCT_H_
+
+
+
+/*!
+* @brief
+* Metadata for @RESOLVED_SFTW_PRODUCT_NAME@.
+*/
+namespace @RESOLVED_SFTW_META_PREFIX@Metadata {
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ version major.
+    */
+    const unsigned long int VERSION_MAJOR{ @CMAKE_PROJECT_VERSION_MAJOR@ };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ version minor.
+    */
+    const unsigned long int VERSION_MINOR{ @CMAKE_PROJECT_VERSION_MINOR@ };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ version patch.
+    */
+    const unsigned long int VERSION_PATCH{ @CMAKE_PROJECT_VERSION_PATCH@ };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ version tweak.
+    */
+    const unsigned long int VERSION_TWEAK{ @CMAKE_PROJECT_VERSION_TWEAK@ };
+
+}
+
+
+
+#endif // @RESOLVED_SFTW_META_PREFIX@_METADATA_VERSION_STRUCT_H_

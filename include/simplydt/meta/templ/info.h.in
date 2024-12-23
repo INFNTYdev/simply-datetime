@@ -1,0 +1,83 @@
+
+/*!
+* @file info.h
+*
+* @brief
+* @RESOLVED_SFTW_PRODUCT_SHORT_NAME@ metadata document.
+*
+* @details
+* Metadata for @RESOLVED_SFTW_PRODUCT_NAME@.
+*/
+
+
+
+#ifndef @RESOLVED_SFTW_META_PREFIX@_METADATA_INFORMATION_STRUCT_H_
+#define @RESOLVED_SFTW_META_PREFIX@_METADATA_INFORMATION_STRUCT_H_
+
+
+
+/*!
+* @brief
+* Metadata for @RESOLVED_SFTW_PRODUCT_NAME@.
+*/
+namespace @RESOLVED_SFTW_META_PREFIX@Metadata {
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ publisher.
+    */
+    const char* PUBLISHER{ "@RESOLVED_SFTW_PUBLISHER@" };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ software type.
+    */
+    const char* SOFTWARE_TYPE{ "@RESOLVED_SFTW_PRODUCT_TYPE@" };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ software interface type.
+    */
+    const char* INTERFACE_TYPE{ "@RESOLVED_SFTW_INTERFACE_TYPE@" };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ universally unique identifier.
+    */
+    const char* UUID{ "@RESOLVED_SFTW_PRODUCT_UUID@" };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ license type.
+    */
+    const char* LICENSE_TYPE{ "@RESOLVED_SFTW_PRODUCT_LICENSE_TYPE@" };
+
+    /*!
+    * @brief
+    * Software official name.
+    */
+    const char* OFFICIAL_NAME{ "@RESOLVED_SFTW_PRODUCT_NAME@" };
+
+    /*!
+    * @brief
+    * Software shortend name.
+    */
+    const char* SHORT_NAME{ "@RESOLVED_SFTW_PRODUCT_SHORT_NAME@" };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ primary binary.
+    */
+    const char* PRIMARY_BINARY{ "@RESOLVED_SFTW_PRIMARY_BINARY_NAME@" };
+
+    /*!
+    * @brief
+    * @RESOLVED_SFTW_PRODUCT_NAME@ target platform.
+    */
+    const unsigned short TARGET_PLATFORM{ @RESOLVED_SFTW_TARGET_PLATFORM@ };
+
+}
+
+
+
+#endif // @RESOLVED_SFTW_META_PREFIX@_METADATA_INFORMATION_STRUCT_H_
