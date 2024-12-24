@@ -54,14 +54,19 @@ else()
 endif()
 
 
+if(DEFINED CACHE{${LOCAL_PROJECT_SCOPE}_PY_EXT_MODULES} AND ${LOCAL_PROJECT_SCOPE}_PY_EXT_MODULES)
+	message(STATUS "${LOCAL_CMAKE_PROJECT_NAME} Python extension module build - enabled")
+	set(BUILD_PYTHON_EXT_MODULES ON)
+endif()
+
+
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_subdirectory(src)
 # Other subdirs...
 
 
-if(DEFINED CACHE{${LOCAL_PROJECT_SCOPE}_PY_EXT_MODULES} AND ${LOCAL_PROJECT_SCOPE}_PY_EXT_MODULES)
-	message(STATUS "${LOCAL_CMAKE_PROJECT_NAME} Python extension module build - enabled")
+if(BUILD_PYTHON_EXT_MODULES)
 	add_subdirectory(python)
 endif()
 
