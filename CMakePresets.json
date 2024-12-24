@@ -11,8 +11,9 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe",
-		"SIMPLYDT_PROJECT_TESTING": "ON",
-		"SIMPLYDT_PROJECT_CLI_DEBUG": "ON"
+                "SIMPLYDT_PROJECT_TESTING": "ON",
+                "SIMPLYDT_PROJECT_CLI_DEBUG": "ON",
+                "SIMPLYDT_PY_EXT_MODULES": "ON"
             }
         },
         {
@@ -37,8 +38,8 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
-		"SIMPLYDT_PROJECT_TESTING": "ON",
-		"SIMPLYDT_PROJECT_CLI_DEBUG": "ON"
+                "SIMPLYDT_PROJECT_TESTING": "ON",
+                "SIMPLYDT_PROJECT_CLI_DEBUG": "ON"
             }
         },
         {
