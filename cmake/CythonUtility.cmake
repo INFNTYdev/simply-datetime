@@ -68,7 +68,7 @@ function(Cython_Mark_For_Compilation)
         "Generating C++ code for '${CYTHON_SRC_FILE}' Cython document"
     )
 
-    message(STATUS "Set '${CYTHON_SRC_FILE}' to be compiled to: ${CPP_OUTPUT}")
+    message(STATUS "Set '${CYTHON_SRC_FILE}' to be compiled in: ${CPP_OUTPUT}")
 
 endfunction()
 
