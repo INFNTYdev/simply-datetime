@@ -6,72 +6,69 @@
 
 
 # Mark Cython code document for compilation to CXX
-function(Cython_Mark_For_Compilation _cython_src _cpp_output)
+function(Cython_Mark_For_Compilation)
 
     if(NOT DEFINED Cython_FOUND OR NOT Cython_FOUND OR NOT DEFINED Cython_EXECUTABLE)
-        message(FATAL_ERROR "\nCannot compile Cython files without Cython executable.\n")
+        message(FATAL_ERROR "\nCython executable is not present.\n")
     endif()
 
-    if(NOT EXISTS ${_cython_src})
-        message(FATAL_ERROR "\nInvalid Cython source: ${_cython_src}\n")
+    set(OPTION_ARGS)
+    set(SINGLE_VALUE_ARGS "SOURCE" "INCLUDE")
+    set(MULTI_VALUE_ARGS "DEPENDS")
+
+    cmake_parse_arguments(ARG "${OPTION_ARGS}" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+
+    if(NOT DEFINED ARG_SOURCE)
+        message(FATAL_ERROR "\n'SOURCE' argument is required.\n")
     endif()
+
+    if(NOT DEFINED ARG_INCLUDE)
+        message(FATAL_ERROR "\n'INCLUDE' argument is required.\n")
+    endif()
+
+    if(NOT EXISTS ${ARG_INCLUDE})
+        message(FATAL_ERROR "\nInvalid include directory: ${ARG_INCLUDE}\n")
+    endif()
+
+    if(NOT DEFINED ARG_DEPENDS)
+        set(ARG_DEPENDS)
+    endif()
+
+    list(APPEND ARG_DEPENDS "${ARG_SOURCE}")
+
+    foreach(file_dep IN LISTS ARG_DEPENDS)
+        if(NOT EXISTS ${file_dep})
+            message(FATAL_ERROR "\nInvalid Cython source file dependency: ${file_dep}\n")
+        endif()
+    endforeach()
     
-    get_filename_component(cython_src_file ${_cython_src} NAME)
+    get_filename_component(CYTHON_SRC_FILE ${ARG_SOURCE} NAME)
+    get_filename_component(CYTHON_SRC_NAME ${ARG_SOURCE} NAME_WE)
 
-    # Compile with NO include directory
-    if(ARGC EQUAL 2)
+    set(CPP_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${CYTHON_SRC_NAME}_py.cpp")
 
-        add_custom_command(
-            OUTPUT
-            "${_cpp_output}"
+    add_custom_command(
+        OUTPUT
+        "${CPP_OUTPUT}"
 
-            COMMAND
-            ${Cython_EXECUTABLE}
+        COMMAND
+        ${Cython_EXECUTABLE}    # Cython compiler path
 
-            ARGS
-            --cplus
-            -3
-            -o "${_cpp_output}"
-            "${_cython_src}"
+        ARGS
+        --cplus                 # Generate C++ files instead of C
+        -3                      # Python version syntax
+        -I "${ARG_INCLUDE}"     # Cython file include directory
+        -o "${CPP_OUTPUT}"      # Resulting C++ wrapper path
+        "${ARG_SOURCE}"         # Cython file to compile
 
-            DEPENDS
-            "${cython_src_file}"
+        DEPENDS
+        ${ARG_DEPENDS}
 
-            COMMENT
-            "Generating C++ code for '${cython_src_file}' Cython document"
-        )
+        COMMENT
+        "Generating C++ code for '${CYTHON_SRC_FILE}' Cython document"
+    )
 
-    # Compile with include directory
-    elseif(ARGC EQUAL 3)
-
-        set(src_header_dir ${ARGV2})
-
-        add_custom_command(
-            OUTPUT
-            "${_cpp_output}"
-
-            COMMAND
-            ${Cython_EXECUTABLE}
-
-            ARGS
-            --cplus
-            -3
-            -I "${src_header_dir}"
-            -o "${_cpp_output}"
-            "${_cython_src}"
-
-            DEPENDS
-            "${cython_src_file}"
-
-            COMMENT
-            "Generating C++ code for '${cython_src_file}' Cython document"
-        )
-
-    else()
-        message(FATAL_ERROR "\nInvalid number of arguments provided to function.\n")
-    endif()
-
-    message(STATUS "Set '${cython_src_file}' to be compiled to: ${_cpp_output}")
+    message(STATUS "Set '${CYTHON_SRC_FILE}' to be compiled to: ${CPP_OUTPUT}")
 
 endfunction()
 
