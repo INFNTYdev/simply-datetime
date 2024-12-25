@@ -2,6 +2,7 @@
 # Ignore IDE project directories
 /.vs
 /.vscode
+.idea
 
 # Ignore binary output directories
 /build
