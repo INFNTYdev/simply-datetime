@@ -13,7 +13,7 @@ function(Cythonize)
     endif()
 
     set(OPTION_ARGS)
-    set(SINGLE_VALUE_ARGS "SOURCE" "INCLUDE" "INSTALL")
+    set(SINGLE_VALUE_ARGS "SOURCE" "INCLUDE" "STAGE")
     set(MULTI_VALUE_ARGS "DEPENDS")
 
     cmake_parse_arguments(ARG "${OPTION_ARGS}" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
@@ -47,8 +47,8 @@ function(Cythonize)
 
     set(CPP_OUTPUT)
 
-    if(DEFINED ARG_INSTALL)
-        set(CPP_OUTPUT "${ARG_INSTALL}/${CYTHON_SRC_NAME}_py.cpp")
+    if(DEFINED ARG_STAGE)
+        set(CPP_OUTPUT "${ARG_STAGE}/${CYTHON_SRC_NAME}_py.cpp")
     else()
         set(CPP_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${CYTHON_SRC_NAME}_py.cpp")
     endif()
