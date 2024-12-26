@@ -11,7 +11,7 @@ find_package(Cython REQUIRED)
 include(CythonUtility)
 
 
-Cython_Mark_For_Compilation(
+Cythonize(
     SOURCE
     "${CMAKE_CURRENT_SOURCE_DIR}/simplydt/simplydt_lib/_core.pyx"
 
