@@ -13,7 +13,7 @@ function(Cython_Mark_For_Compilation)
     endif()
 
     set(OPTION_ARGS)
-    set(SINGLE_VALUE_ARGS "SOURCE" "INCLUDE")
+    set(SINGLE_VALUE_ARGS "SOURCE" "INCLUDE" "INSTALL")
     set(MULTI_VALUE_ARGS "DEPENDS")
 
     cmake_parse_arguments(ARG "${OPTION_ARGS}" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
@@ -45,7 +45,13 @@ function(Cython_Mark_For_Compilation)
     get_filename_component(CYTHON_SRC_FILE ${ARG_SOURCE} NAME)
     get_filename_component(CYTHON_SRC_NAME ${ARG_SOURCE} NAME_WE)
 
-    set(CPP_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${CYTHON_SRC_NAME}_py.cpp")
+    set(CPP_OUTPUT)
+
+    if(DEFINED ARG_INSTALL)
+        set(CPP_OUTPUT "${ARG_INSTALL}/${CYTHON_SRC_NAME}_py.cpp")
+    else()
+        set(CPP_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${CYTHON_SRC_NAME}_py.cpp")
+    endif()
 
     add_custom_command(
         OUTPUT
