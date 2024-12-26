@@ -27,7 +27,7 @@ function(Cython_Mark_For_Compilation)
     endif()
 
     if(NOT EXISTS ${ARG_INCLUDE})
-        message(FATAL_ERROR "\nInvalid include directory: ${ARG_INCLUDE}\n")
+        message(FATAL_ERROR "\nInvalid include directory path: ${ARG_INCLUDE}\n")
     endif()
 
     if(NOT DEFINED ARG_DEPENDS)
