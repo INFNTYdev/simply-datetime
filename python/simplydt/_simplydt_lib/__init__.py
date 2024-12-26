@@ -1,6 +1,6 @@
 
 """
-Simply Datetime library.
+Python Simply Datetime library core.
 """
 
 
