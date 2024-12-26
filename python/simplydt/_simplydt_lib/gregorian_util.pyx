@@ -1,5 +1,5 @@
 
-from . cimport _core as sdtlib
+from .core cimport *
 
 
 """
@@ -8,4 +8,4 @@ Namespace: SimplyDt::GregorianCalendar::Util
 def is_valid_year(year: int) -> bool:
     """ Validate provided year. """
     # Check integer range here...
-    return sdtlib.isValidYear(<uint16_t>year)
+    return isValidYear(<uint16_t>year)
