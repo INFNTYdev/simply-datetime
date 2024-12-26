@@ -6,7 +6,7 @@
 
 
 # Mark Cython code document for compilation to CXX
-function(Cython_Mark_For_Compilation)
+function(Cythonize)
 
     if(NOT DEFINED Cython_FOUND OR NOT Cython_FOUND OR NOT DEFINED Cython_EXECUTABLE)
         message(FATAL_ERROR "\nCython executable is not present.\n")
@@ -91,25 +91,29 @@ function(Add_Python_Library _name _cpp_py_src)
         message(FATAL_ERROR "\nMissing Python headers.\n")
     endif()
 
-    Python_add_library(
-        ${_name}
+    set(OPTION_ARGS)
+    set(SINGLE_VALUE_ARGS)
+    set(MULTI_VALUE_ARGS)
 
-        MODULE
-        "${_cpp_py_src}"
-    )
-
-    target_include_directories(
-        ${_name}
-
-        PRIVATE
-        ${Python_INCLUDE_DIRS}
-    )
-
-    target_link_libraries(
-        ${_name}
-
-        PRIVATE
-        ${Python_LIBRARIES}
-    )
+#    Python_add_library(
+#        ${_name}
+#
+#        MODULE
+#        "${_cpp_py_src}"
+#    )
+#
+#    target_include_directories(
+#        ${_name}
+#
+#        PRIVATE
+#        ${Python_INCLUDE_DIRS}
+#    )
+#
+#    target_link_libraries(
+#        ${_name}
+#
+#        PRIVATE
+#        ${Python_LIBRARIES}
+#    )
 
 endfunction()
