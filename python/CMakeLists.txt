@@ -21,7 +21,7 @@ Cythonize(
     DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/simplydt/_simplydt_lib/core.pxd"
 
-    INSTALL
+    STAGE
     "${CMAKE_CURRENT_BINARY_DIR}/cython/_simplydt_lib"
 )
 
