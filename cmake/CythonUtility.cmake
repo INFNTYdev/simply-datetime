@@ -9,7 +9,7 @@
 function(Cythonize)
 
     if(NOT DEFINED Cython_FOUND OR NOT Cython_FOUND OR NOT DEFINED Cython_EXECUTABLE)
-        message(FATAL_ERROR "\nCython executable is not present.\n")
+        message(FATAL_ERROR "\nCython executable is not accessible.\n")
     endif()
 
     set(OPTION_ARGS)
@@ -81,39 +81,51 @@ endfunction()
 
 
 # Create Python extension module library
-function(Add_Python_Library _name _cpp_py_src)
+function(Add_Python_Library)
 
     if(NOT DEFINED Python_FOUND OR NOT Python_FOUND OR NOT DEFINED Python_LIBRARIES)
-        message(FATAL_ERROR "\nCannot create Python extensions without Python libraries.\n")
+        message(FATAL_ERROR "\nPython libraries are not accessible.\n")
     endif()
 
     if(NOT DEFINED Python_INCLUDE_DIRS)
-        message(FATAL_ERROR "\nMissing Python headers.\n")
+        message(FATAL_ERROR "\nPython headers are not accessible.\n")
+    endif()
+
+    if(ARGC EQUAL 0)
+        message(FATAL_ERROR "\nNo name provided to Python extension module target.\n")
     endif()
 
     set(OPTION_ARGS)
     set(SINGLE_VALUE_ARGS)
-    set(MULTI_VALUE_ARGS)
+    set(MULTI_VALUE_ARGS "SOURCES")
 
-#    Python_add_library(
-#        ${_name}
-#
-#        MODULE
-#        "${_cpp_py_src}"
-#    )
-#
-#    target_include_directories(
-#        ${_name}
-#
-#        PRIVATE
-#        ${Python_INCLUDE_DIRS}
-#    )
-#
-#    target_link_libraries(
-#        ${_name}
-#
-#        PRIVATE
-#        ${Python_LIBRARIES}
-#    )
+    cmake_parse_arguments(ARG "${OPTION_ARGS}" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+
+    if(NOT DEFINED ARG_SOURCES)
+        message(FATAL_ERROR "\n'SOURCES' argument is required.\n")
+    endif()
+
+    Python_add_library(
+        ${ARGV0}
+
+        MODULE
+        ${ARG_SOURCES}
+    )
+
+    target_include_directories(
+        ${ARGV0}
+
+        PRIVATE
+        ${Python_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(
+        ${ARGV0}
+
+        PRIVATE
+        ${Python_LIBRARIES}
+    )
+
+    message(STATUS "Set to build '${ARGV0}' Python extension module")
 
 endfunction()
