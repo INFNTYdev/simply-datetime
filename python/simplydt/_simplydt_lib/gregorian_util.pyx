@@ -3,8 +3,10 @@ from .core cimport *
 
 
 """
-Namespace: SimplyDt::GregorianCalendar::Util
+SimplyDt::GregorianCalendar::Util
 """
+
+
 def is_valid_year(year: int) -> bool:
     """ Validate provided year. """
     # Check integer range here...
