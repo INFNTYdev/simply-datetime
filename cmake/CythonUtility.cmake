@@ -80,6 +80,48 @@ endfunction()
 
 
 
+# Copy pure Python modules in a directory to build tree
+function(Python_Source_Dir_To_Build)
+
+    set(OPTION_ARGS)
+    set(SINGLE_VALUE_ARGS "DIRECTORY" "STAGE")
+    set(MULTI_VALUE_ARGS)
+
+    cmake_parse_arguments(ARG "${OPTION_ARGS}" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+
+    set(ORIGIN_PY_MODULE_DIR)
+    set(DEST_PY_MODULE_DIR)
+
+    if(NOT DEFINED ARG_DIRECTORY)
+        set(ORIGIN_PY_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+    else()
+        set(ORIGIN_PY_MODULE_DIR ${ARG_DIRECTORY})
+    endif()
+
+    if(NOT EXISTS ${ORIGIN_PY_MODULE_DIR})
+        message(FATAL_ERROR "\nInvalid Python module source directory path: ${ORIGIN_PY_MODULE_DIR}\n")
+    endif()
+
+    if(NOT DEFINED ARG_STAGE)
+        message(FATAL_ERROR "\n'STAGE' argument is required.\n")
+    endif()
+
+    set(DEST_PY_MODULE_DIR ${ARG_STAGE})
+
+    file(GLOB ORIGIN_PY_MODULES "${ORIGIN_PY_MODULE_DIR}/*.py")
+
+    if(NOT EXISTS ${DEST_PY_MODULE_DIR})
+        file(MAKE_DIRECTORY ${DEST_PY_MODULE_DIR})
+    endif()
+
+    foreach(py_module ${ORIGIN_PY_MODULES})
+        file(COPY ${py_module} DESTINATION ${DEST_PY_MODULE_DIR})
+    endforeach()
+
+endfunction()
+
+
+
 # Create Python extension module library
 function(Add_Python_Library)
 
