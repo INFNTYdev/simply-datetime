@@ -34,7 +34,7 @@ set(
 
 set(
     ${LOCAL_PROJECT_SCOPE}_PYTHON_PACKAGE_DIR
-    "${CMAKE_CURRENT_BINARY_DIR}/simplydt"
+    "${CMAKE_CURRENT_BINARY_DIR}/package/simplydt"
     CACHE STRING
     "Simply Datetime Python package build directory root"
 )
