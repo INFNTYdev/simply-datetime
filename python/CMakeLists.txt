@@ -11,48 +11,37 @@ find_package(Cython REQUIRED)
 include(CythonUtility)
 
 
-Cythonize(
-    SOURCE
-    "${CMAKE_CURRENT_SOURCE_DIR}/simplydt/_simplydt_lib/gregorian_util.pyx"
-
-    INCLUDE
-    "${CMAKE_SOURCE_DIR}/include"
-
-    DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/simplydt/_simplydt_lib/core.pxd"
-
-    STAGE
-    "${CMAKE_CURRENT_BINARY_DIR}/cython/_simplydt_lib"
+set(
+    ${LOCAL_PROJECT_SCOPE}_PYTHON_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    CACHE STRING
+    "Python Simply Datetime directory"
 )
 
-
-Add_Python_Library(
-    pysimplydt
-
-    SOURCES
-    "${CMAKE_CURRENT_BINARY_DIR}/cython/_simplydt_lib/gregorian_util_py.cpp"
+set(
+    ${LOCAL_PROJECT_SCOPE}_CYTHON_ARTIFACT_DIR
+    "${CMAKE_CURRENT_BINARY_DIR}/cython"
+    CACHE STRING
+    "Cython intermediate compilation directory"
 )
 
-target_include_directories(
-    pysimplydt
-
-    PRIVATE
-    "${CMAKE_SOURCE_DIR}/include"
+set(
+    ${LOCAL_PROJECT_SCOPE}_PYTHON_SRC_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/simplydt"
+    CACHE STRING
+    "Python Simply Datetime source tree root"
 )
 
-target_link_libraries(
-    pysimplydt
-
-    PRIVATE
-    simplydt
+set(
+    ${LOCAL_PROJECT_SCOPE}_PYTHON_PACKAGE_DIR
+    "${CMAKE_CURRENT_BINARY_DIR}/simplydt"
+    CACHE STRING
+    "Simply Datetime Python package build directory root"
 )
 
-add_custom_command(
-    TARGET
-    pysimplydt
+set(CYTHON_ARTIFACT_DIR ${${LOCAL_PROJECT_SCOPE}_CYTHON_ARTIFACT_DIR})
+set(PYTHON_SRC_DIR ${${LOCAL_PROJECT_SCOPE}_PYTHON_SRC_DIR})
+set(PYTHON_PACKAGE_DIR ${${LOCAL_PROJECT_SCOPE}_PYTHON_PACKAGE_DIR})
 
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-        "$<TARGET_FILE:pysimplydt>"
-        "${CMAKE_CURRENT_BINARY_DIR}/simplydt/_simplydt_lib/$<TARGET_FILE_NAME:pysimplydt>"
-)
+
+add_subdirectory("simplydt")
