@@ -80,8 +80,8 @@ endfunction()
 
 
 
-# Copy pure Python modules in a directory to build tree
-function(Python_Source_Dir_To_Build)
+# Copy pure Python modules in directory to another directory
+function(Stage_Python_Files)
 
     set(OPTION_ARGS)
     set(SINGLE_VALUE_ARGS "DIRECTORY" "STAGE")
@@ -105,6 +105,8 @@ function(Python_Source_Dir_To_Build)
     if(NOT DEFINED ARG_STAGE)
         message(FATAL_ERROR "\n'STAGE' argument is required.\n")
     endif()
+
+    # If this were for a single file, draw the line here...
 
     set(DEST_PY_MODULE_DIR ${ARG_STAGE})
 
