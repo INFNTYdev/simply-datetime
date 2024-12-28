@@ -8,7 +8,7 @@
 # Add compiled Cython files to a Python extension modules sources
 function(Add_Module_Sources)
 
-    set(OPTION_ARGS)
+    set(OPTION_ARGS "NO_TEMP")
     set(SINGLE_VALUE_ARGS "MODULE")
     set(MULTI_VALUE_ARGS "SOURCES")
 
@@ -22,7 +22,7 @@ function(Add_Module_Sources)
         message(FATAL_ERROR "\n'SOURCES' argument is required.\n")
     endif()
 
-    get_property(PY_EXT_MOD_SRCS GLOBAL PROPERTY ${ARG_MODULE}_EXTENSION_MODULE_SRCS)
+    get_property(PY_EXT_MOD_SRCS GLOBAL PROPERTY ${ARG_MODULE}_EXTENSION_MODULE_SOURCES)
 
     if(NOT DEFINED PY_EXT_MOD_SRCS)
         message(FATAL_ERROR "\nNo global extension module source property exists for '${ARG_MODULE}' target.\n")
@@ -31,16 +31,18 @@ function(Add_Module_Sources)
     foreach(ext_mod_src ${ARG_SOURCES})
         list(APPEND PY_EXT_MOD_SRCS "${ext_mod_src}")
 
-        get_filename_component(DIRECTORY_PATH ${ext_mod_src} DIRECTORY)
+        if(NOT ARG_NO_TEMP)
+            get_filename_component(DIRECTORY_PATH ${ext_mod_src} DIRECTORY)
 
-        if(NOT EXISTS ${DIRECTORY_PATH})
-            file(MAKE_DIRECTORY ${DIRECTORY_PATH})
+            if(NOT EXISTS ${DIRECTORY_PATH})
+                file(MAKE_DIRECTORY ${DIRECTORY_PATH})
+            endif()
+
+            file(WRITE ${ext_mod_src} "\n// Temporary dummy file for ${ARG_MODULE} Python extension module target\n")
         endif()
-
-        file(WRITE ${ext_mod_src} "\n// Temporary dummy file for ${ARG_MODULE} Python extension module target\n")
     endforeach()
 
-    set_property(GLOBAL PROPERTY ${ARG_MODULE}_EXTENSION_MODULE_SRCS "${PY_EXT_MOD_SRCS}")
+    set_property(GLOBAL PROPERTY ${ARG_MODULE}_EXTENSION_MODULE_SOURCES "${PY_EXT_MOD_SRCS}")
 
 endfunction()
 
@@ -49,7 +51,7 @@ endfunction()
 # Add targets to Python extension module dependencies
 function(Add_Module_Dependencies)
 
-    set(OPTION_ARGS)
+    set(OPTION_ARGS "NO_TEMP")
     set(SINGLE_VALUE_ARGS "NEW_TARGET" "MODULE")
     set(MULTI_VALUE_ARGS "TARGETS" "SOURCES")
 
@@ -83,13 +85,25 @@ function(Add_Module_Dependencies)
 
         list(APPEND PY_EXT_MOD_TRGTS ${ARG_NEW_TARGET})
 
-        Add_Module_Sources(
-            MODULE
-            ${ARG_MODULE}
+        if(ARG_NO_TEMP)
+            Add_Module_Sources(
+                NO_TEMP
 
-            SOURCES
-            ${ARG_SOURCES}
-        )
+                MODULE
+                ${ARG_MODULE}
+
+                SOURCES
+                ${ARG_SOURCES}
+            )
+        else()
+            Add_Module_Sources(
+                MODULE
+                ${ARG_MODULE}
+
+                SOURCES
+                ${ARG_SOURCES}
+            )
+        endif()
     endif()
 
     if(ARG_TARGETS)
