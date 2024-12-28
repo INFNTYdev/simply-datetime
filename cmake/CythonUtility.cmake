@@ -74,13 +74,15 @@ function(Cythonize)
         "Generating C++ code for '${CYTHON_SRC_FILE}' Cython document"
     )
 
+    set(LAST_CYTHONIZED "${CPP_OUTPUT}" PARENT_SCOPE)
+
     message(STATUS "Set '${CYTHON_SRC_FILE}' to be compiled in: ${CPP_OUTPUT}")
 
 endfunction()
 
 
 
-# Copy pure Python modules in directory to another directory
+# Copy pure Python modules to another directory
 function(Stage_Python_Files)
 
     set(OPTION_ARGS)
